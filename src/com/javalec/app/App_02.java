@@ -1,4 +1,4 @@
-package com.javalec.copy;
+package com.javalec.app;
 
 import java.awt.EventQueue;
 
@@ -16,14 +16,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class Copy extends JFrame {
+public class App_02 extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JLabel lblIPhone;
 	private JLabel lblScreen;
 	private JLabel lblTimer;
+	private JLabel lblSearch;
 
 	/**
 	 * Launch the application.
@@ -32,7 +35,7 @@ public class Copy extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Copy frame = new Copy();
+					App_02 frame = new App_02();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +47,7 @@ public class Copy extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Copy() {
+	public App_02() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(600, 100, 375, 680);
 		contentPane = new JPanel();
@@ -61,6 +64,7 @@ public class Copy extends JFrame {
             }
         });
 		timer.start();
+		contentPane.add(getLblSearch());
 		contentPane.add(getLblScreen()); // Design-lblScreen-icon에서 사진 넣으세요
 		contentPane.add(getLblIPhone());
 		
@@ -69,7 +73,7 @@ public class Copy extends JFrame {
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
 			lblIPhone = new JLabel("New label");
-			lblIPhone.setIcon(new ImageIcon(Copy.class.getResource("/com/javalec/image/아이폰 테두리.png")));
+			lblIPhone.setIcon(new ImageIcon(App_02.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 			lblIPhone.setBounds(0, 0, 374, 680);
 		}
 		return lblIPhone;
@@ -77,18 +81,18 @@ public class Copy extends JFrame {
 	private JLabel getLblScreen() {
 		if (lblScreen == null) {
 			lblScreen = new JLabel("New label");
-			lblScreen.setIcon(new ImageIcon(Copy.class.getResource("/com/javalec/image/아이폰 홈 화면.png")));
+			lblScreen.setIcon(new ImageIcon(App_02.class.getResource("/com/javalec/image/App02.png")));
 			lblScreen.setBounds(8, 10, 358, 665);
 		}
 		return lblScreen;
 	}
 	private JLabel getLblTimer() {
 		if (lblTimer == null) {
-			lblTimer = new JLabel("12 : 00");
-			lblTimer.setForeground(new Color(255, 255, 255));
+			lblTimer = new JLabel("");
+			lblTimer.setForeground(new Color(0, 0, 0));
 			lblTimer.setHorizontalAlignment(SwingConstants.CENTER);
 			lblTimer.setFont(new Font("굴림", Font.BOLD, 16));
-			lblTimer.setBounds(36, 32, 62, 21);
+			lblTimer.setBounds(28, 34, 62, 21);
 		}
 		return lblTimer;
 	}
@@ -101,5 +105,24 @@ public class Copy extends JFrame {
 		String currentTime = dateFormat.format(new Date());
 		lblTimer.setFont(new Font("굴림", Font.BOLD, 16));
 		lblTimer.setText(currentTime);
+	}
+	private JLabel getLblSearch() {
+		if (lblSearch == null) {
+			lblSearch = new JLabel("");
+			lblSearch.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					clickAction();
+				}
+			});
+			lblSearch.setBounds(28, 133, 316, 29);
+		}
+		return lblSearch;
+	}
+	// --- Function ---
+	private void clickAction() {
+		this.setVisible(false);
+		App_03 app_03 = new App_03();
+		app_03.setVisible(true);
 	}
 } // End
