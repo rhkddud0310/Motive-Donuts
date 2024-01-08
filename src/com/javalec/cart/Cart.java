@@ -8,20 +8,29 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import com.javalec.account.Account;
 import com.javalec.base.Main;
+import com.javalec.dao.CartDao;
+import com.javalec.dto.CartDto;
 import com.javalec.menu.Menu;
-import javax.swing.JScrollPane;
+import com.javalec.purchase.Purchase;
 
 public class Cart extends JFrame {
 
@@ -39,6 +48,22 @@ public class Cart extends JFrame {
 	private JLabel lblMenu1;
 	private JLabel lblHome1;
 	private JLabel lblNewLabel;
+	private JScrollPane scrollPane;
+	private JTable cart_Table;
+	private JButton btnAddItem;
+	private JButton btnCheckout;
+	
+	
+	//Table
+	
+	private final DefaultTableModel outerTable = new DefaultTableModel();
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * Launch the application.
@@ -85,6 +110,9 @@ public class Cart extends JFrame {
 		contentPane.add(getLblCart1());
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
+		contentPane.add(getScrollPane());
+		contentPane.add(getBtnAddItem());
+		contentPane.add(getBtnCheckout());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -256,6 +284,151 @@ public class Cart extends JFrame {
 		}
 		return lblNewLabel;
 	}
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(33, 131, 311, 375);
+			scrollPane.setViewportView(getCart_Table());
+			cartTableInit(); 
+			cartTableData(); 
+		}
+		return scrollPane;
+	}
+	private JTable getCart_Table() {
+		if (cart_Table == null) {
+			cart_Table = new JTable();
+		
+			cart_Table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			cart_Table.setModel(outerTable);
+		}
+		return cart_Table;
+	}
+	private JButton getBtnAddItem() {
+		if (btnAddItem == null) {
+			btnAddItem = new JButton("아이템 추가하기");
+			btnAddItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					backToMenu(); 
+				}
+			});
+			btnAddItem.setBounds(227, 93, 117, 29);
+		}
+		return btnAddItem;
+	}
+	private JButton getBtnCheckout() {
+		if (btnCheckout == null) {
+			btnCheckout = new JButton("결제하기");
+			btnCheckout.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					moveToPurchase();
+				}
+			});
+			btnCheckout.setBounds(133, 518, 117, 29);
+		}
+		return btnCheckout;
+	}
+	
+	
+	//FUNCTIONS
+	
+	
+	//CART TABLE 초기화
+	private void cartTableInit() {
+		
+		// Table Column 명 정하기
+		outerTable.addColumn("");
+		outerTable.addColumn("");
+		outerTable.addColumn("");
+		outerTable.addColumn("");
+		outerTable.setColumnCount(4);
+
+
+		// Table Column 크기 정하기
+		int colNo = 0;
+		TableColumn col = cart_Table.getColumnModel().getColumn(colNo);
+		int width = 100;
+		col.setPreferredWidth(width);
+		
+		colNo = 1;
+		col = cart_Table.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		colNo = 2;
+		col = cart_Table.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		colNo = 3;
+		col = cart_Table.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+
+		cart_Table.setAutoResizeMode(cart_Table.AUTO_RESIZE_OFF);
+
+		int i = outerTable.getRowCount();
+		for (int j = 0; j < i; j++) {
+			outerTable.removeRow(0);
+		}	
+	
+	}
+	
+	
+	
+	//CART TABLE DATA 불러오기 
+	
+	private void cartTableData() {
+		CartDao CartDao = new CartDao();
+		ArrayList<CartDto> dtoList = CartDao.selectList();
+
+		int listCount = dtoList.size();
+
+		for (int i = 0; i < listCount; i++) {
+
+			String[] temp = { dtoList.get(i).getImage(),
+							  dtoList.get(i).getProname(),
+							  Integer.toString(dtoList.get(i).getSellprice()),						  
+							  Integer.toString(dtoList.get(i).getPurqty()), };
+			outerTable.addRow(temp);
+		}
+
+	}
+
+	
+	//CART TABLE 에서 "아이템 추가하기" 눌렸을 경우 MENU 페이지로 이동한다. 
+	
+	private void backToMenu() {
+
+			this.setVisible(false);
+			Menu menu = new Menu();
+			Menu.main(null);
+				
+		}
+		
+	//CART TABLE 에서 "결제하기" 눌렸을 경우 PURCHASE 페이지로 이동한다. 
+		
+	private void moveToPurchase() {	
+		
+		this.setVisible(false);
+		Purchase purchase = new Purchase();
+		Purchase.main(null);
+				
+	}
+
+	//CART TABLE 에서 "결제하기" 눌렸을 경우 PURCHASE TABLE 에 값을 UPDATE 해준다. 
+	
+	
+	
+	
+	
+	//CART TABLE 에서 "결제하기" 눌렸을 경우 MYORDERS TABLE 에 값을 UPDATE 해준다. 
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
