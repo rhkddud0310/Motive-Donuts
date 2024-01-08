@@ -30,6 +30,8 @@ import javax.swing.table.TableColumn;
 
 import com.javalec.account.Account;
 import com.javalec.base.Main;
+import com.javalec.dao.PurchaseDao;
+import com.javalec.dto.PurchaseDto;
 import com.javalec.menu.Menu;
 
 
@@ -125,7 +127,7 @@ public class Purchase extends JFrame {
 		contentPane.add(getLblPaymentMethod());
 		contentPane.add(getLblNewLabel());
 		contentPane.add(getLblTimer());
-		Timer timer = new Timer(1000, new ActionListener() {
+		Timer timer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateTime(); // 분마다 시간 업데이트
@@ -454,7 +456,7 @@ public class Purchase extends JFrame {
 			scrollPane.setViewportView(getTable_Purchase());
 			purchaseTableInit(); 
 			purchaseTableData(); 
-			myPoints(); 
+			//myPoints(); 
 		}
 		return scrollPane;
 	}

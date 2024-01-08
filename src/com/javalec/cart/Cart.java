@@ -256,4 +256,16 @@ public class Cart extends JFrame {
 		}
 		return lblNewLabel;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 } // End
