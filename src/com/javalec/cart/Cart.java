@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import com.javalec.account.Account;
 import com.javalec.base.Main;
 import com.javalec.menu.Menu;
+import javax.swing.JScrollPane;
 
 public class Cart extends JFrame {
 
@@ -37,6 +38,7 @@ public class Cart extends JFrame {
 	private JLabel lblCart1;
 	private JLabel lblMenu1;
 	private JLabel lblHome1;
+	private JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -66,6 +68,7 @@ public class Cart extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setUndecorated(true); // 타이틀 바 없애기
+		contentPane.add(getLblNewLabel());
 		contentPane.add(getLblTimer());
 		Timer timer = new Timer(1000, new ActionListener() {
             @Override
@@ -244,6 +247,13 @@ public class Cart extends JFrame {
 			Account account = new Account();
 			account.setVisible(true);
 		}
-		
-		
+	private JLabel getLblNewLabel() {
+		if (lblNewLabel == null) {
+			lblNewLabel = new JLabel("장바구니");
+			lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 24));
+			lblNewLabel.setForeground(new Color(0, 0, 0));
+			lblNewLabel.setBounds(23, 85, 141, 34);
+		}
+		return lblNewLabel;
+	}
 } // End
