@@ -69,7 +69,7 @@ public class Menu extends JFrame {
 		contentPane.setLayout(null);
 		setUndecorated(true); // 타이틀 바 없애기
 		contentPane.add(getLblTimer());
-		Timer timer = new Timer(1000, new ActionListener() {
+		Timer timer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateTime(); // 분마다 시간 업데이트
