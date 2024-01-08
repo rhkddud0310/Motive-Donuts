@@ -1,4 +1,4 @@
-package com.javalec.purchase;
+package com.javalec.dto;
 
 import java.io.FileInputStream;
 

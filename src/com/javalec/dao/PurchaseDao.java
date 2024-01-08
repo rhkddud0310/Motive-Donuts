@@ -1,4 +1,4 @@
-package com.javalec.purchase;
+package com.javalec.dao;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.javalec.common.ShareVar;
+import com.javalec.dto.PurchaseDto;
 
 public class PurchaseDao {
 
