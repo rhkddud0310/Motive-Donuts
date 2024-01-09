@@ -1,4 +1,4 @@
-package com.javalec.cart;
+package com.javalec.paymentcomplete;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -11,14 +11,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -28,14 +31,17 @@ import javax.swing.table.TableColumn;
 
 import com.javalec.account.Account;
 import com.javalec.base.Main;
+import com.javalec.cart.Cart;
 import com.javalec.dao.CartDao;
-import com.javalec.dto.CartDto;
+import com.javalec.dao.PurchaseDao;
+import com.javalec.dto.PurchaseDto;
+
 import com.javalec.menu.Menu;
-import com.javalec.purchase.Purchase;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
-public class Cart extends JFrame {
+public class PaymentComplete extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -51,25 +57,26 @@ public class Cart extends JFrame {
 	private JLabel lblMenu1;
 	private JLabel lblHome1;
 	private JLabel lblNewLabel;
+	private JLabel lblPaymentMethod;
+	private JLabel lblMyPoints;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JScrollPane scrollPane;
-	private JTable cart_Table;
-	private JButton btnAddItem;
-	private JButton btnCheckout;
-	private int purseq;
-	private String custid;
-	private String proname;
+	private JTable table_Purchase;
+	private JTextField tfMuy;
+	private JTextField tfMyPoints;
+	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
+	private JLabel lblNewLabel_2_1_1_1_1;
 	
-	//Table
+	
+	//Table 
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
-	private JLabel lblNewLabel_1;
+	private JTextField tfPaymentMethod;
+	private JLabel lblTotalPrice;
+	private JTextField tfTotalPrice;
 	
 	
-	
-	
-	
-	
-	
+
 
 	/**
 	 * Launch the application.
@@ -78,7 +85,7 @@ public class Cart extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Cart frame = new Cart();
+					PaymentComplete frame = new PaymentComplete();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -90,15 +97,27 @@ public class Cart extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Cart() {
+	public PaymentComplete() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+				purchaseTableInit(); 
+				purchaseTableData(); 
+			
+	
+				
+			}
+		});
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 0, 0));
 		setBounds(600, 100, 375, 680);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		setUndecorated(true);
 		contentPane.setLayout(null);
-		setUndecorated(true); // 타이틀 바 없애기
+		contentPane.add(getLblMyPoints());
+		contentPane.add(getLblPaymentMethod());
 		contentPane.add(getLblNewLabel());
 		contentPane.add(getLblTimer());
 		Timer timer = new Timer(100, new ActionListener() {
@@ -117,9 +136,11 @@ public class Cart extends JFrame {
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
 		contentPane.add(getScrollPane());
-		contentPane.add(getBtnAddItem());
-		contentPane.add(getBtnCheckout());
-		contentPane.add(getLblNewLabel_1());
+		contentPane.add(getTfMyPoints());
+		contentPane.add(getLblNewLabel_2_1_1_1_1());
+		contentPane.add(getTfPaymentMethod());
+		contentPane.add(getTfTotalPrice());
+		contentPane.add(getLblTotalPrice());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -127,32 +148,33 @@ public class Cart extends JFrame {
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
 			lblIPhone = new JLabel("New label");
-			lblIPhone.setIcon(new ImageIcon(Cart.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 			lblIPhone.setBounds(0, 0, 374, 680);
+			lblIPhone.setIcon(new ImageIcon(PaymentComplete.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 		}
 		return lblIPhone;
 	}
 	private JLabel getLblHomeScreen() {
 		if (lblHomeScreen == null) {
 			lblHomeScreen = new JLabel("New label");
-			lblHomeScreen.setIcon(new ImageIcon(Cart.class.getResource("/com/javalec/image/아이폰 홈 화면.png")));
 			lblHomeScreen.setBounds(8, 10, 358, 665);
+			lblHomeScreen.setIcon(new ImageIcon(PaymentComplete.class.getResource("/com/javalec/image/아이폰 홈 화면.png")));
 		}
 		return lblHomeScreen;
 	}
 	private JLabel getLblTimer() {
 		if (lblTimer == null) {
 			lblTimer = new JLabel("12 : 00");
+			lblTimer.setBounds(36, 32, 62, 21);
 			lblTimer.setForeground(new Color(255, 255, 255));
 			lblTimer.setHorizontalAlignment(SwingConstants.CENTER);
 			lblTimer.setFont(new Font("굴림", Font.BOLD, 16));
-			lblTimer.setBounds(36, 32, 62, 21);
 		}
 		return lblTimer;
 	}
 	private JLabel getLblHome() {
 		if (lblHome == null) {
 			lblHome = new JLabel("");
+			lblHome.setBounds(40, 600, 50, 50);
 			lblHome.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -161,13 +183,13 @@ public class Cart extends JFrame {
 			});
 			lblHome.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Home button.png")));
 			lblHome.setHorizontalAlignment(SwingConstants.CENTER);
-			lblHome.setBounds(40, 600, 50, 50);
 		}
 		return lblHome;
 	}
 	private JLabel getLblMenu() {
 		if (lblMenu == null) {
 			lblMenu = new JLabel("");
+			lblMenu.setBounds(120, 600, 50, 50);
 			lblMenu.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -176,13 +198,13 @@ public class Cart extends JFrame {
 			});
 			lblMenu.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Menu button.png")));
 			lblMenu.setHorizontalAlignment(SwingConstants.CENTER);
-			lblMenu.setBounds(120, 600, 50, 50);
 		}
 		return lblMenu;
 	}
 	private JLabel getLblCart() {
 		if (lblCart == null) {
 			lblCart = new JLabel("");
+			lblCart.setBounds(200, 600, 50, 50);
 			lblCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -191,13 +213,13 @@ public class Cart extends JFrame {
 			});
 			lblCart.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Cart button.png")));
 			lblCart.setHorizontalAlignment(SwingConstants.CENTER);
-			lblCart.setBounds(200, 600, 50, 50);
 		}
 		return lblCart;
 	}
 	private JLabel getLblAccount() {
 		if (lblAccount == null) {
 			lblAccount = new JLabel("");
+			lblAccount.setBounds(280, 600, 50, 50);
 			lblAccount.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -206,43 +228,42 @@ public class Cart extends JFrame {
 			});
 			lblAccount.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Account button.png")));
 			lblAccount.setHorizontalAlignment(SwingConstants.CENTER);
-			lblAccount.setBounds(280, 600, 50, 50);
 		}
 		return lblAccount;
 	}
 	private JLabel getLblHome1() {
 		if (lblHome1 == null) {
 			lblHome1 = new JLabel("Home");
+			lblHome1.setBounds(44, 645, 42, 15);
 			lblHome1.setFont(new Font("굴림", Font.BOLD, 12));
 			lblHome1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblHome1.setBounds(44, 645, 42, 15);
 		}
 		return lblHome1;
 	}
 	private JLabel getLblMenu1() {
 		if (lblMenu1 == null) {
 			lblMenu1 = new JLabel("Menu");
+			lblMenu1.setBounds(124, 645, 42, 15);
 			lblMenu1.setHorizontalAlignment(SwingConstants.CENTER);
 			lblMenu1.setFont(new Font("굴림", Font.BOLD, 12));
-			lblMenu1.setBounds(124, 645, 42, 15);
 		}
 		return lblMenu1;
 	}
 	private JLabel getLblCart1() {
 		if (lblCart1 == null) {
 			lblCart1 = new JLabel("Cart");
+			lblCart1.setBounds(204, 645, 42, 15);
 			lblCart1.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCart1.setFont(new Font("굴림", Font.BOLD, 12));
-			lblCart1.setBounds(204, 645, 42, 15);
 		}
 		return lblCart1;
 	}
 	private JLabel getLblAccount1() {
 		if (lblAccount1 == null) {
 			lblAccount1 = new JLabel("Account");
+			lblAccount1.setBounds(276, 645, 62, 15);
 			lblAccount1.setHorizontalAlignment(SwingConstants.CENTER);
 			lblAccount1.setFont(new Font("굴림", Font.BOLD, 12));
-			lblAccount1.setBounds(276, 645, 62, 15);
 		}
 		return lblAccount1;
 	}
@@ -282,132 +303,157 @@ public class Cart extends JFrame {
 			Account account = new Account();
 			account.setVisible(true);
 		}
+		
+		
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
-			lblNewLabel = new JLabel("장바구니");
-			lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 24));
+			lblNewLabel = new JLabel("결제가 완료되었습니다!");
+			lblNewLabel.setBounds(59, 114, 271, 34);
 			lblNewLabel.setForeground(new Color(0, 0, 0));
-			lblNewLabel.setBounds(23, 85, 141, 34);
+			lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 25));
 		}
 		return lblNewLabel;
+	}
+	private JLabel getLblPaymentMethod() {
+		if (lblPaymentMethod == null) {
+			lblPaymentMethod = new JLabel("결제수단:");
+			lblPaymentMethod.setBounds(59, 448, 61, 16);
+			lblPaymentMethod.setForeground(new Color(0, 0, 0));
+		}
+		return lblPaymentMethod;
+	}
+	private JLabel getLblMyPoints() {
+		if (lblMyPoints == null) {
+			lblMyPoints = new JLabel("마이포인트: ");
+			lblMyPoints.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+			lblMyPoints.setBounds(59, 485, 61, 16);
+			lblMyPoints.setForeground(new Color(0, 0, 0));
+		}
+		return lblMyPoints;
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(33, 131, 311, 375);
-			scrollPane.setViewportView(getCart_Table());
-			cartTableInit(); 
-			cartTableData(); 
+			scrollPane.setBounds(17, 177, 340, 178);
+			scrollPane.setViewportView(getTable_Purchase());
 		}
 		return scrollPane;
 	}
-	private JTable getCart_Table() {
-		if (cart_Table == null) {
-			cart_Table = new JTable();
-			cart_Table.addMouseMotionListener(new MouseMotionAdapter() {
-				@Override
-				public void mouseDragged(MouseEvent e) {
-					deleteItem();
-					cartTableInit(); 
-					cartTableData(); 
-
-				}
-			});
-			cart_Table.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					cartTableClick(); 
-				
-				}
-			});
+	private JTable getTable_Purchase() {
+		if (table_Purchase == null) {
+			table_Purchase = new JTable();
+			table_Purchase.setForeground(new Color(0, 0, 0));
+			table_Purchase.setBackground(new Color(244, 208, 208));
+			
+			table_Purchase.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			table_Purchase.setModel(outerTable);
+			
+		}
+		return table_Purchase;
+	}
+	
+	private JTextField getTfMyPoints() {
+		if (tfMyPoints == null) {
+			tfMyPoints = new JTextField();
+			tfMyPoints.setHorizontalAlignment(SwingConstants.TRAILING);
+			tfMyPoints.setEditable(false);
+			tfMyPoints.setColumns(10);
+			tfMyPoints.setBackground(new Color(244, 208, 208));
+			tfMyPoints.setBounds(132, 480, 130, 26);
+		}
+		return tfMyPoints;
+	}
+	private JLabel getLblNewLabel_2_1_1_1_1() {
+		if (lblNewLabel_2_1_1_1_1 == null) {
+			lblNewLabel_2_1_1_1_1 = new JLabel("Pts");
+			lblNewLabel_2_1_1_1_1.setBounds(274, 485, 35, 16);
+		}
+		return lblNewLabel_2_1_1_1_1;
+	}
+	
+	private JTextField getTfPaymentMethod() {
+		if (tfPaymentMethod == null) {
+			tfPaymentMethod = new JTextField();
+			tfPaymentMethod.setHorizontalAlignment(SwingConstants.TRAILING);
+			tfPaymentMethod.setEditable(false);
+			tfPaymentMethod.setColumns(10);
+			tfPaymentMethod.setBackground(new Color(244, 208, 208));
+			tfPaymentMethod.setBounds(132, 443, 130, 26);
+		}
+		return tfPaymentMethod;
+	}
+	private JLabel getLblTotalPrice() {
+		if (lblTotalPrice == null) {
+			lblTotalPrice = new JLabel("결제금액:");
+			lblTotalPrice.setForeground(Color.BLACK);
+			lblTotalPrice.setBounds(59, 409, 61, 16);
+		}
+		return lblTotalPrice;
+	}
+	private JTextField getTfTotalPrice() {
+		if (tfTotalPrice == null) {
+			tfTotalPrice = new JTextField();
+			tfTotalPrice.setHorizontalAlignment(SwingConstants.TRAILING);
+			tfTotalPrice.setEditable(false);
+			tfTotalPrice.setColumns(10);
+			tfTotalPrice.setBackground(new Color(244, 208, 208));
+			tfTotalPrice.setBounds(132, 404, 130, 26);
+		}
+		return tfTotalPrice;
+	}
+	
+	//FUNCTIONS
+	
+	
+	// TABLE 초기화
+	private void purchaseTableInit() {
 		
-			cart_Table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			cart_Table.setModel(outerTable);
-		}
-		return cart_Table;
-	}
-	private JButton getBtnAddItem() {
-		if (btnAddItem == null) {
-			btnAddItem = new JButton("아이템 추가하기");
-			btnAddItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					backToMenu(); 
-				}
-			});
-			btnAddItem.setBounds(227, 93, 117, 29);
-		}
-		return btnAddItem;
-	}
-	private JButton getBtnCheckout() {
-		if (btnCheckout == null) {
-			btnCheckout = new JButton("결제하기");
-			btnCheckout.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					moveToPurchase();
-				}
-			});
-			btnCheckout.setBounds(120, 538, 117, 29);
-		}
-		return btnCheckout;
-	}
-	private JLabel getLblNewLabel_1() {
-		if (lblNewLabel_1 == null) {
-			lblNewLabel_1 = new JLabel("Select & Swipe to delete item!");
-			lblNewLabel_1.setBounds(37, 510, 236, 16);
-		}
-		return lblNewLabel_1;
-	}
-	
-	
-	//---------FUNCTIONS-----------
-	
-	
-	//CART TABLE 초기화
-	private void cartTableInit() {
 		
 		// Table Column 명 정하기
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.setColumnCount(4);
+				outerTable.addColumn("");
+				outerTable.addColumn("");
+				outerTable.addColumn("");
+				outerTable.addColumn("");
+				outerTable.setColumnCount(4);
 
-
+		
 		// Table Column 크기 정하기
-		int colNo = 0;
-		TableColumn col = cart_Table.getColumnModel().getColumn(colNo);
-		int width = 100;
-		col.setPreferredWidth(width);
-		
-		colNo = 1;
-		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
-		col.setPreferredWidth(width);
-		
-		colNo = 2;
-		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
-		col.setPreferredWidth(width);
-		
-		colNo = 3;
-		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
-		col.setPreferredWidth(width);
+				int colNo = 0;
+				TableColumn col = table_Purchase.getColumnModel().getColumn(colNo);
+				int width = 100;
+				col.setPreferredWidth(width);
+				
+				colNo = 1;
+				col = table_Purchase.getColumnModel().getColumn(colNo);
+				width = 100;
+				col.setPreferredWidth(width);
+				
+				colNo = 2;
+				col = table_Purchase.getColumnModel().getColumn(colNo);
+				width = 100;
+				col.setPreferredWidth(width);
+				
+				colNo = 3;
+				col = table_Purchase.getColumnModel().getColumn(colNo);
+				width = 100;
+				col.setPreferredWidth(width);
 
-		cart_Table.setAutoResizeMode(cart_Table.AUTO_RESIZE_OFF);
+				table_Purchase.setAutoResizeMode(table_Purchase.AUTO_RESIZE_OFF);
 
-		int i = outerTable.getRowCount();
-		for (int j = 0; j < i; j++) {
-			outerTable.removeRow(0);
-		}	
-	
+				int i = outerTable.getRowCount();
+				for (int j = 0; j < i; j++) {
+					outerTable.removeRow(0);
+				}		
+				
 	}
 	
-	//CART TABLE DATA 불러오기 
+
 	
-	private void cartTableData() {
-		CartDao CartDao = new CartDao();
-		ArrayList<CartDto> dtoList = CartDao.selectList();
+	//PURCHASE TABLE DATA 불러오기 
+	
+	private void purchaseTableData() {
+		PurchaseDao PurchaseDao = new PurchaseDao();
+		ArrayList<PurchaseDto> dtoList = PurchaseDao.selectList();
 
 		int listCount = dtoList.size();
 
@@ -422,88 +468,5 @@ public class Cart extends JFrame {
 
 	}
 	
-	
-	//CART TABLE 클릭하였을경우 
-	
-	private void cartTableClick() {
-	
-			int i = cart_Table.getSelectedRow();
-			String tkSequence = (String) cart_Table.getValueAt(i, 1);
 
-			CartDao dao = new CartDao(tkSequence);
-			CartDto dto = dao.cartTableClick();
-
-			purseq = dto.getPurseq();
-			custid = dto.getCustid();
-			proname = dto.getProname();
-	
-	}
-	
-	
-	//CART TABLE 에서 "아이템 추가하기" 눌렸을 경우 MENU 페이지로 이동한다. 
-	
-	private void backToMenu() {
-
-			this.setVisible(false);
-			Menu menu = new Menu();
-			Menu.main(null);
-				
-		}
-		
-	//CART TABLE 에서 "결제하기" 눌렸을 경우 PURCHASE 페이지로 이동한다. 
-		
-	private void moveToPurchase() {	
-		
-		this.setVisible(false);
-		Purchase purchase = new Purchase();
-		Purchase.main(null);
-				
-	}
-	
-	
-	//CART TABLE 에서 SWIPE 경우 PURCHASE table 에서 데이터에서 삭제 
-	
-	private void deleteItem() {
-
-
-		CartDao dao = new CartDao(purseq, custid, proname);
-		boolean result = dao.deleteItem();
-
-		if (result == true) {
-			JOptionPane.showMessageDialog(null, "장바구니에서 삭제되었습니다.");
-		} else {
-			JOptionPane.showMessageDialog(null, "입력중 문제가 발생");
-		}
-
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 } // End
