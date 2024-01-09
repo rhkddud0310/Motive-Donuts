@@ -44,7 +44,36 @@ public class CartDto {
 	}
 
 	
+	
+	
+	public CartDto(String proname) {
+		super();
+		this.proname = proname;
+	}
+	
+	
+	
+	
+	
+	public CartDto(int purseq, String custid, String proname, int purqty, String purdate, String category) {
+		super();
+		this.purseq = purseq;
+		this.custid = custid;
+		this.proname = proname;
+		this.purqty = purqty;
+		this.purdate = purdate;
+		this.category = category;
+	}
+	
+	
+	
+	
+	
+	
+	
 	//Setters & Getters
+
+
 
 
 	public String getImage() {
