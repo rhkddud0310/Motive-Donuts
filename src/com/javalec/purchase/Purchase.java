@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -30,9 +31,13 @@ import javax.swing.table.TableColumn;
 
 import com.javalec.account.Account;
 import com.javalec.base.Main;
+import com.javalec.cart.Cart;
+import com.javalec.dao.CartDao;
 import com.javalec.dao.PurchaseDao;
 import com.javalec.dto.PurchaseDto;
 import com.javalec.menu.Menu;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class Purchase extends JFrame {
@@ -114,6 +119,15 @@ public class Purchase extends JFrame {
 	 * Create the frame.
 	 */
 	public Purchase() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+				purchaseTableInit(); 
+				purchaseTableData(); 
+				myPoints(); 
+				
+			}
+		});
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 0, 0));
 		setBounds(600, 100, 375, 680);
@@ -314,7 +328,7 @@ public class Purchase extends JFrame {
 		// Cart화면
 		private void cartScreen() {
 			this.setVisible(false);
-			Purchase cart = new Purchase();
+			Cart cart = new Cart();
 			cart.setVisible(true);
 		}
 		
@@ -422,6 +436,11 @@ public class Purchase extends JFrame {
 	private JButton getBtnUsePoints() {
 		if (btnUsePoints == null) {
 			btnUsePoints = new JButton("사용");
+			btnUsePoints.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+//					usePoint(); 
+				}
+			});
 			btnUsePoints.setBounds(218, 392, 117, 29);
 		}
 		return btnUsePoints;
@@ -454,9 +473,6 @@ public class Purchase extends JFrame {
 			scrollPane = new JScrollPane();
 			scrollPane.setBounds(17, 115, 340, 178);
 			scrollPane.setViewportView(getTable_Purchase());
-			purchaseTableInit(); 
-			purchaseTableData(); 
-			//myPoints(); 
 		}
 		return scrollPane;
 	}
@@ -476,6 +492,7 @@ public class Purchase extends JFrame {
 	private JTextField getTfMyPoints() {
 		if (tfMyPoints == null) {
 			tfMyPoints = new JTextField();
+			tfMyPoints.setHorizontalAlignment(SwingConstants.CENTER);
 			tfMyPoints.setEditable(false);
 			tfMyPoints.setColumns(10);
 			tfMyPoints.setBackground(new Color(244, 208, 208));
@@ -610,22 +627,31 @@ public class Purchase extends JFrame {
 		int point = 0;
 
 		PurchaseDao dao = new PurchaseDao(point);
-		PurchaseDto dto = dao.myPoints();
-
-		tfMyPoints.setText(Integer.toString(dto.getPoint()));
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		point = dao.myPoints();
+		tfMyPoints.setText(Integer.toString(point));
+	
 		
 	}
+	
+	
+//	//사용할 포인트 작성 +  '사용' 눌렀을시 포인트할인 tf 안에 update 된 값을 넣어주기 
+//	
+//	private void usePoint() {
+//		
+//		int point = Integer.parseInt(tfMyPoints.getText());
+//		
+//		PurchaseDao purchasedao = new PurchaseDao(point);
+//		boolean result = purchasedao.usePoint();
+//		
+//		if(result ==true) {
+//			JOptionPane.showMessageDialog(null, "포인트가 적용되었습니다."); 
+//		}else {
+//			JOptionPane.showMessageDialog(null, "문제발생");
+//		}
+	
+//	}
+	
+	
 	
 	
 	

@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -31,6 +32,7 @@ import com.javalec.dao.CartDao;
 import com.javalec.dto.CartDto;
 import com.javalec.menu.Menu;
 import com.javalec.purchase.Purchase;
+
 
 public class Cart extends JFrame {
 
@@ -52,11 +54,14 @@ public class Cart extends JFrame {
 	private JTable cart_Table;
 	private JButton btnAddItem;
 	private JButton btnCheckout;
-	
+	private int purseq;
+	private String custid;
+	private String proname;
 	
 	//Table
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
+	private JButton btnDeleteItem;
 	
 	
 	
@@ -113,6 +118,7 @@ public class Cart extends JFrame {
 		contentPane.add(getScrollPane());
 		contentPane.add(getBtnAddItem());
 		contentPane.add(getBtnCheckout());
+		contentPane.add(getBtnDeleteItem());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -297,6 +303,12 @@ public class Cart extends JFrame {
 	private JTable getCart_Table() {
 		if (cart_Table == null) {
 			cart_Table = new JTable();
+			cart_Table.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					cartTableClick(); 
+				}
+			});
 		
 			cart_Table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			cart_Table.setModel(outerTable);
@@ -323,13 +335,30 @@ public class Cart extends JFrame {
 					moveToPurchase();
 				}
 			});
-			btnCheckout.setBounds(133, 518, 117, 29);
+			btnCheckout.setBounds(190, 518, 117, 29);
 		}
 		return btnCheckout;
 	}
+	private JButton getBtnDeleteItem() {
+		if (btnDeleteItem == null) {
+			btnDeleteItem = new JButton("아이템 삭제하기");
+			btnDeleteItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					deleteAction();
+					cartTableInit(); 
+					cartTableData(); 
+
+
+				
+				}
+			});
+			btnDeleteItem.setBounds(61, 518, 117, 29);
+		}
+		return btnDeleteItem;
+	}
 	
 	
-	//FUNCTIONS
+	//---------FUNCTIONS-----------
 	
 	
 	//CART TABLE 초기화
@@ -373,8 +402,6 @@ public class Cart extends JFrame {
 	
 	}
 	
-	
-	
 	//CART TABLE DATA 불러오기 
 	
 	private void cartTableData() {
@@ -393,8 +420,27 @@ public class Cart extends JFrame {
 		}
 
 	}
-
 	
+	
+	//CART TABLE 클릭하였을경우 
+	
+	private void cartTableClick() {
+	
+			int i = cart_Table.getSelectedRow();
+			String tkSequence = (String) cart_Table.getValueAt(i, 1);
+
+			CartDao dao = new CartDao(tkSequence);
+			CartDto dto = dao.cartTableClick();
+
+			purseq = dto.getPurseq();
+			custid = dto.getCustid();
+			proname = dto.getProname();
+	
+	
+	}
+	
+	
+
 	//CART TABLE 에서 "아이템 추가하기" 눌렸을 경우 MENU 페이지로 이동한다. 
 	
 	private void backToMenu() {
@@ -414,14 +460,39 @@ public class Cart extends JFrame {
 		Purchase.main(null);
 				
 	}
+	
+	
+	
+	//CART TABLE 에서 아이템삭제 눌렀을 경우 PURCHASE table 에서 데이터에서 삭제 
+	
+	private void deleteAction() {
 
-	//CART TABLE 에서 "결제하기" 눌렸을 경우 PURCHASE TABLE 에 값을 UPDATE 해준다. 
+
+		CartDao dao = new CartDao(purseq, custid, proname);
+		boolean result = dao.deleteAction();
+
+		if (result == true) {
+			JOptionPane.showMessageDialog(null, "장바구니에서 삭제되었습니다.");
+		} else {
+			JOptionPane.showMessageDialog(null, "입력중 문제가 발생");
+		}
+
+	}
+			
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
 	
 	
 	
 	
-	
-	//CART TABLE 에서 "결제하기" 눌렸을 경우 MYORDERS TABLE 에 값을 UPDATE 해준다. 
 	
 	
 	
