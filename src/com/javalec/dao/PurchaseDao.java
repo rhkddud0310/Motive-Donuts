@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -102,21 +103,17 @@ public class PurchaseDao {
 	//마이 포인트 표시 
 	
 	
-	public PurchaseDto myPoints() {
-		PurchaseDto purchaseDto = null; 
-		String where = "select sum( " + point;
-		String where2 = " ) from myorder where custid = 'jojo' ";
-
+	public int myPoints() {
+		int returnPoint=0; 
+		String where = "select sum(point) from myorder where custid = 'jojo' ";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement(); 
 			
-			ResultSet rs = stmt_mysql.executeQuery(where+where2); 
+			ResultSet rs = stmt_mysql.executeQuery(where); 
 			if(rs.next()) {
-				int point = rs.getInt(1);
-			
-				purchaseDto = new PurchaseDto(point);
+				returnPoint = rs.getInt(1);
 			}
 			conn_mysql.close();
 	
@@ -125,14 +122,39 @@ public class PurchaseDao {
 			e.printStackTrace();
 		}
 	
-		return purchaseDto; 						
+		return returnPoint; 						
 	}
 	
 	
-	
+	//사용할 포인트 작성 +  '사용' 눌렀을시 포인트할인 tf 안에 update 된 값을 넣어주기 
 	
 
-
+//	public boolean usePoint() {
+//		PreparedStatement ps = null; 
+//		try {
+//			Class.forName("com.mysql.cj.jdbc.Driver");
+//			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+//			Statement stmt_mysql = conn_mysql.createStatement(); 
+//			
+//			String A = "update myorder set point = ? ";
+//					
+//			
+//			ps = conn_mysql.prepareStatement(A);
+//			ps.setInt(1, );
+//			
+//			ps.executeUpdate();
+//			
+//			conn_mysql.close();
+//			
+//		}catch(Exception e) {
+//			return false;
+//		}
+//		
+//		return true;	
+		
+		
+		
+// }
 	
 	
 	
