@@ -86,8 +86,6 @@ public class CartDao {
 
 
 
-
-
 	public ArrayList<CartDto> selectList() {
 		ArrayList<CartDto> dtoList = new ArrayList<CartDto>(); 
 		String whereDefault = "SELECT pr.image, pr.proname, pr.sellprice, p.purqty FROM purchase p, product pr WHERE pr.proname = p.proname ";
@@ -131,7 +129,7 @@ public class CartDao {
 	
 		public CartDto cartTableClick() {
 			CartDto CartDto = null; 
-			String where = "SELECT purseq, custid, proname, purqty, purdate, category FROM purchase ";
+			String where = "SELECT purseq, custid, proname, purqty, purdate, status FROM purchase ";
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -165,9 +163,11 @@ public class CartDao {
 	
 	//CART TABLE 에서 아이템삭제 눌렀을 경우 PURCHASE table 에서 데이터에서 삭제 
 	
-	public boolean deleteAction() {
+	public boolean deleteItem() {
 		
 		PreparedStatement ps = null;
+	
+		
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -175,9 +175,9 @@ public class CartDao {
 			Statement stmt_mysql = conn_mysql.createStatement(); 
 			
 			String A = "delete from purchase ";
-			String B = " where purseq = ? AND custid =? and proname=? ";
+			String B = "where purseq =? AND custid =? and proname =? ";
 			
-			
+		//	System.out.println(A+B);
 			ps = conn_mysql.prepareStatement(A+B);
 			ps.setInt(1, purseq);
 			ps.setString(2, custid);
