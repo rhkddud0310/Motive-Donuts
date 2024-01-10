@@ -1,6 +1,6 @@
 /*	---------------------------------------------------------------------------------------------
 
-		(1) Desc :	Menu를 카테고리 별로 나열하는 Page 구현하기.
+		(1) Desc :	Menu Page에서 돋보기 선택 시 제품 검색 Page 구현하기.
 		
 		(2) Date
 			1) 2024.01.10. (Ver 0.0.0.0)
@@ -9,8 +9,6 @@
 		
 		(4) History
 			1) 이대근 팀장님께서 만드신 기본 IPhone 배경화면 Class 가져오기.
-			
-			2) Menu Page 전용 배경화면으로 변경하기.
 				
 	--------------------------------------------------------------------------------------------- */
 
@@ -40,11 +38,8 @@ import java.util.Date;
 
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.Rectangle;
 
-public class Menu extends JFrame {
+public class ProductSearch_01 extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -59,11 +54,6 @@ public class Menu extends JFrame {
 	private JLabel lblCart1;
 	private JLabel lblMenu1;
 	private JLabel lblHome1;
-	private JLabel lblMenuLogo;
-	private JLabel lblproSearch;
-	private JComboBox comboBox;
-	private JLabel lblCartCount;
-	private JLabel lblCartCountNum;
 
 	/**
 	 * Launch the application.
@@ -72,7 +62,7 @@ public class Menu extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Menu frame = new Menu();
+					ProductSearch_01 frame = new ProductSearch_01();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -84,7 +74,7 @@ public class Menu extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Menu() {
+	public ProductSearch_01() {
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 0, 0));
 		setBounds(600, 100, 375, 680);
@@ -109,11 +99,6 @@ public class Menu extends JFrame {
 		contentPane.add(getLblCart1());
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
-		contentPane.add(getLblMenuLogo());
-		contentPane.add(getLblproSearch());
-		contentPane.add(getComboBox());
-		contentPane.add(getLblCartCount());
-		contentPane.add(getLblCartCountNum());
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -121,7 +106,7 @@ public class Menu extends JFrame {
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
 			lblIPhone = new JLabel("New label");
-			lblIPhone.setIcon(new ImageIcon(Menu.class.getResource("/com/javalec/image/아이폰 테두리.png")));
+			lblIPhone.setIcon(new ImageIcon(ProductSearch_01.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 			lblIPhone.setBounds(0, 0, 374, 680);
 		}
 		return lblIPhone;
@@ -129,7 +114,7 @@ public class Menu extends JFrame {
 	private JLabel getLblScreen() {
 		if (lblScreen == null) {
 			lblScreen = new JLabel("New label");
-			lblScreen.setIcon(new ImageIcon(Menu.class.getResource("/com/javalec/image/Menu Page 배경화면.png")));
+			lblScreen.setIcon(new ImageIcon(ProductSearch_01.class.getResource("/com/javalec/image/아이폰 홈 화면.png")));
 			lblScreen.setBounds(8, 10, 358, 665);
 		}
 		return lblScreen;
@@ -276,52 +261,6 @@ public class Menu extends JFrame {
 			Account account = new Account();
 			account.setVisible(true);
 		}
-	private JLabel getLblMenuLogo() {
-		if (lblMenuLogo == null) {
-			lblMenuLogo = new JLabel("Menu");
-			lblMenuLogo.setFont(new Font("CookieRun Regular", Font.BOLD, 32));
-			lblMenuLogo.setBounds(30, 85, 110, 45);
-		}
-		return lblMenuLogo;
-	}
-	private JLabel getLblproSearch() {
-		if (lblproSearch == null) {
-			lblproSearch = new JLabel("");
-			lblproSearch.setHorizontalAlignment(SwingConstants.CENTER);
-			lblproSearch.setIcon(new ImageIcon(Menu.class.getResource("/com/javalec/image/돋보기_검색.png")));
-			lblproSearch.setBounds(305, 150, 35, 35);
-		}
-		return lblproSearch;
-	}
-	private JComboBox getComboBox() {
-		if (comboBox == null) {
-			comboBox = new JComboBox();
-			comboBox.setForeground(new Color(255, 255, 255));
-			comboBox.setFont(new Font("맑은 고딕", Font.BOLD, 13));
-			comboBox.setBackground(new Color(147, 8, 42));
-			comboBox.setBounds(25, 547, 260, 35);
-			comboBox.setRenderer(new CustomComboBoxRenderer());
-		}
-		return comboBox;
-	}
-	private JLabel getLblCartCount() {
-		if (lblCartCount == null) {
-			lblCartCount = new JLabel("\r\n");
-			lblCartCount.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-			lblCartCount.setIcon(new ImageIcon(Menu.class.getResource("/com/javalec/image/장바구니로 이동.png")));
-			lblCartCount.setHorizontalAlignment(SwingConstants.CENTER);
-			lblCartCount.setBounds(290, 532, 75, 58);
-		}
-		return lblCartCount;
-	}
-	private JLabel getLblCartCountNum() {
-		if (lblCartCountNum == null) {
-			lblCartCountNum = new JLabel("15");
-			lblCartCountNum.setForeground(new Color(255, 255, 255));
-			lblCartCountNum.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-			lblCartCountNum.setHorizontalAlignment(SwingConstants.CENTER);
-			lblCartCountNum.setBounds(309, 557, 30, 21);
-		}
-		return lblCartCountNum;
-	}
+		
+		
 } // End
