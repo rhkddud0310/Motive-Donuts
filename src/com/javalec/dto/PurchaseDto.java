@@ -16,10 +16,32 @@ public class PurchaseDto {
 	int sellprice; 
 	int point;
 	
+	int orderseq; 
+	String payment; 
+	int payprice;	
+	int accupoints; 
+	String orderdate;
+	int spendpoints;
+	
 
 	
 	//Constructor
 	
+
+
+	public PurchaseDto(String custid, String proname, int orderseq, String payment, int payprice, int accupoints,
+			String orderdate, int spendpoints) {
+		super();
+		this.custid = custid;
+		this.proname = proname;
+		this.orderseq = orderseq;
+		this.payment = payment;
+		this.payprice = payprice;
+		this.accupoints = accupoints;
+		this.orderdate = orderdate;
+		this.spendpoints = spendpoints;
+	}
+
 
 
 	public PurchaseDto(String image, String proname, int sellprice, int purqty) {
@@ -55,6 +77,22 @@ public class PurchaseDto {
 
 
 	
+	public PurchaseDto(int purseq, String image, String proname, int sellprice, int purqty) {
+		super();
+		this.purseq = purseq; 
+		this.image = image;
+		this.proname = proname;
+		this.sellprice = sellprice;
+		this.purqty = purqty;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	//SETTERS GETTERS
@@ -66,6 +104,78 @@ public class PurchaseDto {
 
 	public String getImage() {
 		return image;
+	}
+
+
+
+	public int getOrderseq() {
+		return orderseq;
+	}
+
+
+
+	public void setOrderseq(int orderseq) {
+		this.orderseq = orderseq;
+	}
+
+
+
+	public String getPayment() {
+		return payment;
+	}
+
+
+
+	public void setPayment(String payment) {
+		this.payment = payment;
+	}
+
+
+
+	public int getPayprice() {
+		return payprice;
+	}
+
+
+
+	public void setPayprice(int payprice) {
+		this.payprice = payprice;
+	}
+
+
+
+	public int getAccupoints() {
+		return accupoints;
+	}
+
+
+
+	public void setAccupoints(int accupoints) {
+		this.accupoints = accupoints;
+	}
+
+
+
+	public String getOrderdate() {
+		return orderdate;
+	}
+
+
+
+	public void setOrderdate(String orderdate) {
+		this.orderdate = orderdate;
+	}
+
+
+
+	public int getSpendpoints() {
+		return spendpoints;
+	}
+
+
+
+	public void setSpendpoints(int spendpoints) {
+		this.spendpoints = spendpoints;
 	}
 
 
