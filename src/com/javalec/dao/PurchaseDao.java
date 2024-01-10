@@ -27,7 +27,7 @@ public class PurchaseDao {
 	String proname; 
 	int purqty; 
 	String purdate; 
-	String category; 
+	String status; 
 	int point; 
 	int spendpoints;
 	
@@ -38,8 +38,22 @@ public class PurchaseDao {
 	int accupoints; 
 	String orderdate;
 	
+	
+	
+	
+	
+	
 
 	
+	public PurchaseDao(String proname, int orderseq, int payprice) {
+		super();
+		this.proname = proname;
+		this.orderseq = orderseq;
+		this.payprice = payprice;
+	}
+
+
+
 	public PurchaseDao() {
 		// TODO Auto-generated constructor stub
 	}
@@ -49,8 +63,9 @@ public class PurchaseDao {
 	//Constructor
 	
 	
-	public PurchaseDao(String image, String proname, int sellprice, int purqty) {
+	public PurchaseDao(int purseq, String image, String proname, int sellprice, int purqty) {
 		super();
+		this.purseq = purseq; 
 		this.image = image;
 		this.proname = proname;
 		this.sellprice = sellprice;
@@ -71,15 +86,15 @@ public class PurchaseDao {
 	
 	
 	
-	public PurchaseDao(String custid, String proname, int spendpoints, int orderseq, String payment, int payprice,
+	public PurchaseDao(int orderseq, String custid, String proname, String payment,int payprice, int spendpoints, 
 			int accupoints, String orderdate) {
 		super();
+		this.orderseq = orderseq;
 		this.custid = custid;
 		this.proname = proname;
-		this.spendpoints = spendpoints;
-		this.orderseq = orderseq;
 		this.payment = payment;
 		this.payprice = payprice;
+		this.spendpoints = spendpoints;
 		this.accupoints = accupoints;
 		this.orderdate = orderdate;
 	}
@@ -92,9 +107,49 @@ public class PurchaseDao {
 
 
 	//카트 내역을 구매하기 창으로 불러오자. 
-	public ArrayList<PurchaseDto> selectList() {
+	public ArrayList<PurchaseDto> selectList(int ppurseq, String pcustid) {
 		ArrayList<PurchaseDto> dtoList = new ArrayList<PurchaseDto>(); 
-		String whereDefault = "SELECT pr.image, pr.proname, pr.sellprice, p.purqty FROM purchase p, product pr WHERE pr.proname = p.proname ";
+		String whereDefault = "SELECT p.purseq, pr.image, pr.proname, pr.sellprice, p.purqty FROM purchase p, product pr WHERE pr.proname = p.proname ";
+		String where = "AND p.purseq = "+ppurseq+" AND p.custid =  '"+pcustid+"'";
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement(); 
+			
+			ResultSet rs = stmt_mysql.executeQuery(whereDefault+where);
+			
+			
+			while(rs.next()) {
+				int purseq = rs.getInt(1);
+				String image = rs.getString(2); 
+				String proname = rs.getString(3);
+				int sellprice = rs.getInt(4);
+				int purqty = rs.getInt(5);
+				
+				
+				PurchaseDto purchaseDto =  new PurchaseDto(purseq, image, proname, sellprice, purqty);
+				dtoList.add(purchaseDto); 
+						
+			}
+			conn_mysql.close();
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return dtoList; 
+		
+		
+	}
+
+	
+	//asdlfjk;asdf
+	
+	
+	public ArrayList<PurchaseDto> getInsertOrder() {
+		ArrayList<PurchaseDto> dtoList = new ArrayList<PurchaseDto>(); 
+		String whereDefault = "SELECT purseq, custid,  proname FROM purchase ";
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -113,7 +168,7 @@ public class PurchaseDao {
 				
 				PurchaseDto purchaseDto =  new PurchaseDto(image, proname, sellprice, purqty);
 				dtoList.add(purchaseDto); 
-						
+				
 			}
 			conn_mysql.close();
 			
@@ -187,24 +242,26 @@ public class PurchaseDao {
 	public boolean ordersUpdate() {
 		PreparedStatement ps = null;
 		
+		
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement(); 
 			
-			String A = "insert into myorder (orderseq, custid, proname, payment, payprice, spendpoints, accupoints, orderdate";
-			String B = ") values (?,?,?,?,?,?,?,?)";
+			String A = "insert into purchase  (purseq, custid, proname, purqty, purdate, status";
+			String B = " ) values (?,?,?,?,?,?)";
 			
 				
+			
 			ps = conn_mysql.prepareStatement(A+B);
-			ps.setInt(1, orderseq);
+			ps.setInt(1, purseq);
 			ps.setString(2, custid);
 			ps.setString(3, proname);
-			ps.setString(4, payment);
-			ps.setInt(5, payprice);
-			ps.setInt(6, spendpoints);
-			ps.setInt(7, accupoints);
-			ps.setString(8, orderdate);
+			ps.setInt(4, purqty);
+			ps.setString(5, purdate);
+			ps.setString(6, status);
+		
 			ps.executeUpdate();
 			
 			conn_mysql.close();
@@ -220,16 +277,7 @@ public class PurchaseDao {
 	
 	
 	
-	
-	
-	//결제하기 눌렀을 경우 accupoints 데이터 값 update 해주자. 
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
