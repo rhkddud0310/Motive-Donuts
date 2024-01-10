@@ -43,10 +43,8 @@
 package com.javalec.menu;
 
 import java.awt.Component;
-import java.util.Objects;
 
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.JLabel;
 import javax.swing.JList;
 
 public class CustomComboBoxRenderer extends DefaultListCellRenderer {
@@ -55,20 +53,12 @@ public class CustomComboBoxRenderer extends DefaultListCellRenderer {
 	public Component getListCellRendererComponent(JList<?> list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
 		
-		JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-        // 커스텀 로직을 이용하여 내용을 변경
-        label.setText("주문할 매장을 선택해주시기 바랍니다." + Objects.toString(value, ""));
-
-        return label;
-		
-		
-//		if (value != null) {
-//			// 여기에 원하는 내용을 표시하는 로직을 추가
-//			setText("주문할 매장을 선택해주시기 바랍니다." + value.toString());
+		if (value != null) {
+			// 여기에 원하는 내용을 표시하는 로직을 추가
+			setText("주문할 매장을 선택해주시기 바랍니다." + value.toString());
 			
 		}
-//		return this;
+		return this;
 	}
 	
 	
