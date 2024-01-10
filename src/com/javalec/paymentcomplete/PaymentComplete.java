@@ -7,18 +7,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -32,13 +31,9 @@ import javax.swing.table.TableColumn;
 import com.javalec.account.Account;
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
-import com.javalec.dao.CartDao;
-import com.javalec.dao.PurchaseDao;
-import com.javalec.dto.PurchaseDto;
-
+import com.javalec.dao.PaymentCompleteDao;
+import com.javalec.dto.PaymentCompleteDto;
 import com.javalec.menu.Menu;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 
 public class PaymentComplete extends JFrame {
@@ -101,8 +96,8 @@ public class PaymentComplete extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowActivated(WindowEvent e) {
-				purchaseTableInit(); 
-				purchaseTableData(); 
+				receiptTableInit(); 
+				receiptTableData(); 
 			
 	
 				
@@ -156,6 +151,7 @@ public class PaymentComplete extends JFrame {
 	private JLabel getLblHomeScreen() {
 		if (lblHomeScreen == null) {
 			lblHomeScreen = new JLabel("New label");
+			lblHomeScreen.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			lblHomeScreen.setBounds(8, 10, 358, 665);
 			lblHomeScreen.setIcon(new ImageIcon(PaymentComplete.class.getResource("/com/javalec/image/아이폰 홈 화면.png")));
 		}
@@ -235,7 +231,7 @@ public class PaymentComplete extends JFrame {
 		if (lblHome1 == null) {
 			lblHome1 = new JLabel("Home");
 			lblHome1.setBounds(44, 645, 42, 15);
-			lblHome1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblHome1.setFont(new Font("CookieRun", Font.BOLD, 12));
 			lblHome1.setHorizontalAlignment(SwingConstants.CENTER);
 		}
 		return lblHome1;
@@ -245,7 +241,7 @@ public class PaymentComplete extends JFrame {
 			lblMenu1 = new JLabel("Menu");
 			lblMenu1.setBounds(124, 645, 42, 15);
 			lblMenu1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblMenu1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblMenu1.setFont(new Font("CookieRun", Font.BOLD, 12));
 		}
 		return lblMenu1;
 	}
@@ -254,7 +250,7 @@ public class PaymentComplete extends JFrame {
 			lblCart1 = new JLabel("Cart");
 			lblCart1.setBounds(204, 645, 42, 15);
 			lblCart1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblCart1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblCart1.setFont(new Font("CookieRun", Font.BOLD, 12));
 		}
 		return lblCart1;
 	}
@@ -263,7 +259,7 @@ public class PaymentComplete extends JFrame {
 			lblAccount1 = new JLabel("Account");
 			lblAccount1.setBounds(276, 645, 62, 15);
 			lblAccount1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblAccount1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblAccount1.setFont(new Font("CookieRun", Font.BOLD, 12));
 		}
 		return lblAccount1;
 	}
@@ -310,13 +306,14 @@ public class PaymentComplete extends JFrame {
 			lblNewLabel = new JLabel("결제가 완료되었습니다!");
 			lblNewLabel.setBounds(59, 114, 271, 34);
 			lblNewLabel.setForeground(new Color(0, 0, 0));
-			lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 25));
+			lblNewLabel.setFont(new Font("CookieRun", Font.BOLD, 25));
 		}
 		return lblNewLabel;
 	}
 	private JLabel getLblPaymentMethod() {
 		if (lblPaymentMethod == null) {
 			lblPaymentMethod = new JLabel("결제수단:");
+			lblPaymentMethod.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			lblPaymentMethod.setBounds(59, 448, 61, 16);
 			lblPaymentMethod.setForeground(new Color(0, 0, 0));
 		}
@@ -325,7 +322,7 @@ public class PaymentComplete extends JFrame {
 	private JLabel getLblMyPoints() {
 		if (lblMyPoints == null) {
 			lblMyPoints = new JLabel("마이포인트: ");
-			lblMyPoints.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+			lblMyPoints.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			lblMyPoints.setBounds(59, 485, 61, 16);
 			lblMyPoints.setForeground(new Color(0, 0, 0));
 		}
@@ -366,6 +363,7 @@ public class PaymentComplete extends JFrame {
 	private JLabel getLblNewLabel_2_1_1_1_1() {
 		if (lblNewLabel_2_1_1_1_1 == null) {
 			lblNewLabel_2_1_1_1_1 = new JLabel("Pts");
+			lblNewLabel_2_1_1_1_1.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			lblNewLabel_2_1_1_1_1.setBounds(274, 485, 35, 16);
 		}
 		return lblNewLabel_2_1_1_1_1;
@@ -385,6 +383,7 @@ public class PaymentComplete extends JFrame {
 	private JLabel getLblTotalPrice() {
 		if (lblTotalPrice == null) {
 			lblTotalPrice = new JLabel("결제금액:");
+			lblTotalPrice.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			lblTotalPrice.setForeground(Color.BLACK);
 			lblTotalPrice.setBounds(59, 409, 61, 16);
 		}
@@ -448,25 +447,87 @@ public class PaymentComplete extends JFrame {
 	}
 	
 
+
 	
-	//PURCHASE TABLE DATA 불러오기 
+	//PURCHASE TABLE DATA 초기화
 	
-	private void purchaseTableData() {
-		PurchaseDao PurchaseDao = new PurchaseDao();
-		ArrayList<PurchaseDto> dtoList = PurchaseDao.selectList();
+	private void receiptTableInit() {
+		// Table Column 명 정하기
+		outerTable.addColumn("");
+		outerTable.addColumn("");
+		outerTable.addColumn("");
+		outerTable.setColumnCount(3);
 
-		int listCount = dtoList.size();
 
-		for (int i = 0; i < listCount; i++) {
+// Table Column 크기 정하기
+		int colNo = 0;
+		TableColumn col = table_Purchase.getColumnModel().getColumn(colNo);
+		int width = 100;
+		col.setPreferredWidth(width);
+		
+		colNo = 1;
+		col = table_Purchase.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		colNo = 2;
+		col = table_Purchase.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
 
-			String[] temp = { dtoList.get(i).getImage(),
-							  dtoList.get(i).getProname(),
-							  Integer.toString(dtoList.get(i).getSellprice()),						  
-							  Integer.toString(dtoList.get(i).getPurqty()), };
-			outerTable.addRow(temp);
-		}
+		table_Purchase.setAutoResizeMode(table_Purchase.AUTO_RESIZE_OFF);
+
+		int i = outerTable.getRowCount();
+		for (int j = 0; j < i; j++) {
+			outerTable.removeRow(0);
+		}					
+}
+		
+		
+
+	//PURCHASE TABLE DATA 구매내역 데이터에서 불러오기 
+	
+	
+	private void receiptTableData() {
+		
+//		
+//		PaymentCompleteDao paymentCompleteDao = new PaymentCompleteDao();
+//		ArrayList<PaymentCompleteDto> dtoList = PaymentCompleteDao.selectList();
+//
+//		int listCount = dtoList.size();
+//
+//		for (int i = 0; i < listCount; i++) {
+//
+//			String[] temp = { Integer.toString(dtoList.get(i).getCartseqno()), dtoList.get(i).getModelnum(),
+//					Integer.toString(dtoList.get(i).getStosize()), Integer.toString(dtoList.get(i).getCartqty()),
+//					Integer.toString(dtoList.get(i).getStoprice()), dtoList.get(i).getColor() 
+//					
+//			
+//			};
+//			
+//			outerTable.addRow(temp);
+//			
+//			
+			
+			
+			
+		
 
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 } // End

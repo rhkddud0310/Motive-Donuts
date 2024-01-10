@@ -213,7 +213,7 @@ public class Cart extends JFrame {
 	private JLabel getLblHome1() {
 		if (lblHome1 == null) {
 			lblHome1 = new JLabel("Home");
-			lblHome1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblHome1.setFont(new Font("CookieRun", Font.BOLD, 12));
 			lblHome1.setHorizontalAlignment(SwingConstants.CENTER);
 			lblHome1.setBounds(44, 645, 42, 15);
 		}
@@ -223,7 +223,7 @@ public class Cart extends JFrame {
 		if (lblMenu1 == null) {
 			lblMenu1 = new JLabel("Menu");
 			lblMenu1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblMenu1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblMenu1.setFont(new Font("CookieRun", Font.BOLD, 12));
 			lblMenu1.setBounds(124, 645, 42, 15);
 		}
 		return lblMenu1;
@@ -232,7 +232,7 @@ public class Cart extends JFrame {
 		if (lblCart1 == null) {
 			lblCart1 = new JLabel("Cart");
 			lblCart1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblCart1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblCart1.setFont(new Font("CookieRun", Font.BOLD, 12));
 			lblCart1.setBounds(204, 645, 42, 15);
 		}
 		return lblCart1;
@@ -241,7 +241,7 @@ public class Cart extends JFrame {
 		if (lblAccount1 == null) {
 			lblAccount1 = new JLabel("Account");
 			lblAccount1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblAccount1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblAccount1.setFont(new Font("CookieRun", Font.BOLD, 12));
 			lblAccount1.setBounds(276, 645, 62, 15);
 		}
 		return lblAccount1;
@@ -285,9 +285,9 @@ public class Cart extends JFrame {
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("장바구니");
-			lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 24));
+			lblNewLabel.setFont(new Font("CookieRun", Font.PLAIN, 22));
 			lblNewLabel.setForeground(new Color(0, 0, 0));
-			lblNewLabel.setBounds(23, 85, 141, 34);
+			lblNewLabel.setBounds(39, 89, 141, 34);
 		}
 		return lblNewLabel;
 	}
@@ -329,6 +329,7 @@ public class Cart extends JFrame {
 	private JButton getBtnAddItem() {
 		if (btnAddItem == null) {
 			btnAddItem = new JButton("아이템 추가하기");
+			btnAddItem.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			btnAddItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					backToMenu(); 
@@ -340,7 +341,8 @@ public class Cart extends JFrame {
 	}
 	private JButton getBtnCheckout() {
 		if (btnCheckout == null) {
-			btnCheckout = new JButton("결제하기");
+			btnCheckout = new JButton("주문하기");
+			btnCheckout.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			btnCheckout.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					moveToPurchase();
@@ -353,6 +355,7 @@ public class Cart extends JFrame {
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("Select & Swipe to delete item!");
+			lblNewLabel_1.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			lblNewLabel_1.setBounds(37, 510, 236, 16);
 		}
 		return lblNewLabel_1;
