@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import com.javalec.account.Account;
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
+import com.javalec.sign.SignIn;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -70,11 +71,11 @@ public class Menu extends JFrame {
 		setUndecorated(true); // 타이틀 바 없애기
 		contentPane.add(getLblTimer());
 		Timer timer = new Timer(100, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateTime(); // 분마다 시간 업데이트
-            }
-        });
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateTime(); // 분마다 시간 업데이트
+			}
+		});
 		timer.start();
 		contentPane.add(getLblHome());
 		contentPane.add(getLblHome1());
@@ -87,7 +88,7 @@ public class Menu extends JFrame {
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
-	
+
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
 			lblIPhone = new JLabel("New label");
@@ -96,6 +97,7 @@ public class Menu extends JFrame {
 		}
 		return lblIPhone;
 	}
+
 	private JLabel getLblScreen() {
 		if (lblScreen == null) {
 			lblScreen = new JLabel("New label");
@@ -104,6 +106,7 @@ public class Menu extends JFrame {
 		}
 		return lblScreen;
 	}
+
 	private JLabel getLblTimer() {
 		if (lblTimer == null) {
 			lblTimer = new JLabel("12 : 00");
@@ -114,6 +117,7 @@ public class Menu extends JFrame {
 		}
 		return lblTimer;
 	}
+
 	private JLabel getLblHome() {
 		if (lblHome == null) {
 			lblHome = new JLabel("");
@@ -129,6 +133,7 @@ public class Menu extends JFrame {
 		}
 		return lblHome;
 	}
+
 	private JLabel getLblMenu() {
 		if (lblMenu == null) {
 			lblMenu = new JLabel("");
@@ -144,13 +149,14 @@ public class Menu extends JFrame {
 		}
 		return lblMenu;
 	}
+
 	private JLabel getLblCart() {
 		if (lblCart == null) {
 			lblCart = new JLabel("");
 			lblCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					cartScreen();
+					signInScreen();
 				}
 			});
 			lblCart.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Cart button.png")));
@@ -159,13 +165,14 @@ public class Menu extends JFrame {
 		}
 		return lblCart;
 	}
+
 	private JLabel getLblAccount() {
 		if (lblAccount == null) {
 			lblAccount = new JLabel("");
 			lblAccount.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					accountScreen();
+					signInScreen();
 				}
 			});
 			lblAccount.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Account button.png")));
@@ -174,6 +181,7 @@ public class Menu extends JFrame {
 		}
 		return lblAccount;
 	}
+
 	private JLabel getLblHome1() {
 		if (lblHome1 == null) {
 			lblHome1 = new JLabel("Home");
@@ -183,6 +191,7 @@ public class Menu extends JFrame {
 		}
 		return lblHome1;
 	}
+
 	private JLabel getLblMenu1() {
 		if (lblMenu1 == null) {
 			lblMenu1 = new JLabel("Menu");
@@ -192,6 +201,7 @@ public class Menu extends JFrame {
 		}
 		return lblMenu1;
 	}
+
 	private JLabel getLblCart1() {
 		if (lblCart1 == null) {
 			lblCart1 = new JLabel("Cart");
@@ -201,6 +211,7 @@ public class Menu extends JFrame {
 		}
 		return lblCart1;
 	}
+
 	private JLabel getLblAccount1() {
 		if (lblAccount1 == null) {
 			lblAccount1 = new JLabel("Account");
@@ -211,7 +222,7 @@ public class Menu extends JFrame {
 		return lblAccount1;
 	}
 	// --- Function ---
-	
+
 	// 실시간 시간 나오기
 	private void updateTime() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("h : mm");
@@ -219,33 +230,33 @@ public class Menu extends JFrame {
 		lblTimer.setFont(new Font("굴림", Font.BOLD, 16));
 		lblTimer.setText(currentTime);
 	}
+
 	// Home화면
-		private void homeScreen() {
-			this.setVisible(false); // 현재화면 끄고
-			Main window = new Main();
-			window.main(null); // 홈 화면 키기
-		}
-		
-		// Menu화면
-		private void menuScreen() {
-			this.setVisible(false);
-			Menu menu = new Menu();
-			menu.setVisible(true);
-		}
-		
-		// Cart화면
-		private void cartScreen() {
-			this.setVisible(false);
-			Cart cart = new Cart();
-			cart.setVisible(true);
-		}
-		
-		// Account화면
-		private void accountScreen() {
-			this.setVisible(false);
-			Account account = new Account();
-			account.setVisible(true);
-		}
-		
-		
+	private void homeScreen() {
+		this.setVisible(false); // 현재화면 끄고
+		Main window = new Main();
+		window.main(null); // 홈 화면 키기
+	}
+
+	// Menu화면
+	private void menuScreen() {
+		this.setVisible(false);
+		Menu menu = new Menu();
+		menu.setVisible(true);
+	}
+
+//		// Cart화면
+//		private void cartScreen() {
+//			this.setVisible(false);
+//			Cart cart = new Cart();
+//			cart.setVisible(true);
+//		}
+
+	// Account - SignIn화면
+	private void signInScreen() {
+		this.setVisible(false);
+		SignIn signIn = new SignIn();
+		signIn.setVisible(true);
+	}
+
 } // End

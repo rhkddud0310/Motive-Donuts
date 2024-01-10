@@ -16,9 +16,9 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-import com.javalec.account.Account;
 import com.javalec.cart.Cart;
 import com.javalec.menu.Menu;
+import com.javalec.sign.SignIn;
 
 public class Main {
 
@@ -151,7 +151,7 @@ public class Main {
 			lblCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					cartScreen();
+					signInScreen();
 				}
 			});
 			lblCart.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Cart button.png")));
@@ -166,7 +166,7 @@ public class Main {
 			lblAccount.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					accountScreen();
+					signInScreen();
 				}
 			});
 			lblAccount.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Account button.png")));
@@ -235,18 +235,18 @@ public class Main {
 		menu.setVisible(true);
 	}
 	
-	// Cart화면
-	private void cartScreen() {
-		this.frame.setVisible(false);
-		Cart cart = new Cart();
-		cart.setVisible(true);
-	}
+//	// Cart화면
+//	private void cartScreen() {
+//		this.frame.setVisible(false);
+//		Cart cart = new Cart();
+//		cart.setVisible(true);
+//	}
 	
-	// Account화면
-	private void accountScreen() {
+	// Account - SignIn화면
+	private void signInScreen() {
 		this.frame.setVisible(false);
-		Account account = new Account();
-		account.setVisible(true);
+		SignIn signIn = new SignIn();
+		signIn.setVisible(true);
 	}
 	
 	
