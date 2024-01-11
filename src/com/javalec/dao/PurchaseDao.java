@@ -141,46 +141,47 @@ public class PurchaseDao {
 		return dtoList; 
 		
 		
+		
 	}
 
-	
-	//asdlfjk;asdf
-	
-	
-	public ArrayList<PurchaseDto> getInsertOrder() {
-		ArrayList<PurchaseDto> dtoList = new ArrayList<PurchaseDto>(); 
-		String whereDefault = "SELECT purseq, custid,  proname FROM purchase ";
-		
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
-			Statement stmt_mysql = conn_mysql.createStatement(); 
-			
-			ResultSet rs = stmt_mysql.executeQuery(whereDefault);
-			
-			
-			while(rs.next()) {
-				String image = rs.getString(1); 
-				String proname = rs.getString(2);
-				int sellprice = rs.getInt(3);
-				int purqty = rs.getInt(4);
-				
-				
-				PurchaseDto purchaseDto =  new PurchaseDto(image, proname, sellprice, purqty);
-				dtoList.add(purchaseDto); 
-				
-			}
-			conn_mysql.close();
-			
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		return dtoList; 
-		
-		
-	}
+//	
+//	//asdlfjk;asdf
+//	
+//	
+//	public ArrayList<PurchaseDto> getInsertOrder() {
+//		ArrayList<PurchaseDto> dtoList = new ArrayList<PurchaseDto>(); 
+//		String whereDefault = "SELECT purseq, custid,  proname FROM purchase ";
+//		
+//		try {
+//			Class.forName("com.mysql.cj.jdbc.Driver");
+//			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+//			Statement stmt_mysql = conn_mysql.createStatement(); 
+//			
+//			ResultSet rs = stmt_mysql.executeQuery(whereDefault);
+//			
+//			
+//			while(rs.next()) {
+//				String image = rs.getString(1); 
+//				String proname = rs.getString(2);
+//				int sellprice = rs.getInt(3);
+//				int purqty = rs.getInt(4);
+//				
+//				
+//				PurchaseDto purchaseDto =  new PurchaseDto(image, proname, sellprice, purqty);
+//				dtoList.add(purchaseDto); 
+//				
+//			}
+//			conn_mysql.close();
+//			
+//			
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return dtoList; 
+//		
+//		
+//	}
 	
 	
 	
@@ -252,7 +253,7 @@ public class PurchaseDao {
 			String A = "insert into purchase  (purseq, custid, proname, purqty, purdate, status";
 			String B = " ) values (?,?,?,?,?,?)";
 			
-				
+		
 			
 			ps = conn_mysql.prepareStatement(A+B);
 			ps.setInt(1, purseq);

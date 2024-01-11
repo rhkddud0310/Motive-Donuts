@@ -109,6 +109,7 @@ public class Purchase extends JFrame {
 	//Table 
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
+	private JLabel lblusePoints;
 	
 
 	
@@ -190,6 +191,7 @@ public class Purchase extends JFrame {
 		contentPane.add(getLblNewLabel_2_1_1());
 		contentPane.add(getLblNewLabel_2_1_1_1());
 		contentPane.add(getLblNewLabel_2_1_1_1_1());
+		contentPane.add(getLblusePoints());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -436,6 +438,7 @@ public class Purchase extends JFrame {
 			tfTotalPrice.setBackground(new Color(244, 208, 208));
 			tfTotalPrice.setColumns(10);
 			tfTotalPrice.setBounds(200, 482, 102, 26);
+			
 		}
 		return tfTotalPrice;
 	}
@@ -458,7 +461,7 @@ public class Purchase extends JFrame {
 					// TextField에 숫자가 입력 되면 지운다
 					if (e.getKeyChar() >= '0' && e.getKeyChar() <= '9' ) {
 						}else {
-							JOptionPane.showMessageDialog(null, "이름칸에 글자만 입력하세요", "경고", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null,"숫자만 입력하세요", "경고", JOptionPane.ERROR_MESSAGE);
 							tfUsePoint.setText("");
 							
 						}
@@ -531,6 +534,7 @@ public class Purchase extends JFrame {
 	private JTable getTable_Purchase() {
 		if (table_Purchase == null) {
 			table_Purchase = new JTable();
+			table_Purchase.setFillsViewportHeight(true);
 			table_Purchase.setForeground(new Color(0, 0, 0));
 			table_Purchase.setBackground(new Color(244, 208, 208));
 			
@@ -601,6 +605,15 @@ public class Purchase extends JFrame {
 		}
 		return lblNewLabel_2_1_1_1_1;
 	}
+	private JLabel getLblusePoints() {
+		if (lblusePoints == null) {
+			lblusePoints = new JLabel("포인트 사용:");
+			lblusePoints.setForeground(Color.BLACK);
+			lblusePoints.setFont(new Font("CookieRun", Font.PLAIN, 12));
+			lblusePoints.setBounds(29, 400, 61, 16);
+		}
+		return lblusePoints;
+	}
 	
 	//FUNCTIONS
 	
@@ -638,7 +651,7 @@ public class Purchase extends JFrame {
 				
 				colNo = 3;
 				col = table_Purchase.getColumnModel().getColumn(colNo);
-				width = 100;
+				width = 36;
 				col.setPreferredWidth(width);
 
 				table_Purchase.setAutoResizeMode(table_Purchase.AUTO_RESIZE_OFF);
@@ -718,10 +731,10 @@ public class Purchase extends JFrame {
 	
 	//결제하기 눌렀을 경우 orders table 데이터 값으로 넣어주자. 
 	
-		private void ordersUpdate() {
+			private void ordersUpdate() {
 			boolean result = false ;
-			PurchaseDao PurchaseDao = new PurchaseDao();
-			ArrayList<PurchaseDto> dtoList = PurchaseDao.selectList(purseq, custid);
+			PurchaseDao purchaseDao = new PurchaseDao();
+			ArrayList<PurchaseDto> dtoList = purchaseDao.selectList(purseq, custid);
 
 			int listCount = dtoList.size();
 			
@@ -732,11 +745,11 @@ public class Purchase extends JFrame {
 		    }else {
 		    	payment = "kakao";
 		    }
+		    payprice= Integer.parseInt(tfTotalPrice.getText());
 	
 			for (int i = 0; i < listCount; i++) {
 
 				String proname = dtoList.get(i).getProname();
-				int payprice = dtoList.get(i).getSellprice();
 				int orderseq = dtoList.get(i).getPurseq();
 				
 				
@@ -744,29 +757,22 @@ public class Purchase extends JFrame {
 				result = myOrderDao.ordersUpdate();
 			
 			}
-			
-
-			
-			if(result ==true) {
+	
+				if(result ==true) {
 				JOptionPane.showMessageDialog(null, "결제가 완료되었습니다!"); 
 				
-			//결제후 결제완료페이지로 넘어가기   
+		//결제후 결제완료페이지로 넘어가기   
 				
 				this.setVisible(false);
 				PaymentComplete paymentcomplete = new PaymentComplete();
-				PaymentComplete.main(null);
+				paymentcomplete.main(null);
 				
-			//결제완료가 안됬을경우 	
+		//결제완료가 안됬을경우 	
 				
 			}else {
 				JOptionPane.showMessageDialog(null, "결제중 문제 발생");
 			}
-				
-
 		
-		
-		
-
 			
 		}
 }

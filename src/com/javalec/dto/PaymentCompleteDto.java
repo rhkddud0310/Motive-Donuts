@@ -9,12 +9,18 @@ public class PaymentCompleteDto {
 	
 	int orderseq; 
 	String custid; 
-	String proname; 
+
 	String payment; 
 	int payprice; 
 	int spendpoints; 
 	int accupoints; 
 	String orderdate;
+	
+	
+	String proname; 
+	int sellprice;
+	int purqty;
+	String purdate; 
 	
 	
 	
@@ -36,16 +42,77 @@ public class PaymentCompleteDto {
 	}
 	
 	
-	
-	
 
-	
-	
+	public PaymentCompleteDto(String payment) {
+		super();
+		this.payment = payment;
+	}
+
+
+
+
+	public PaymentCompleteDto(String proname, int sellprice, int purqty, String purdate) {
+		super();
+		this.proname = proname;
+		this.sellprice = sellprice;
+		this.purqty = purqty;
+		this.purdate = purdate;
+	}
+
+
+
+
 	//SETTERS&GETTERS
-	
+
+
+
+
+
 	public int getOrderseq() {
 		return orderseq;
 	}
+	public int getSellprice() {
+		return sellprice;
+	}
+
+
+
+
+	public void setSellprice(int sellprice) {
+		this.sellprice = sellprice;
+	}
+
+
+
+
+	public int getPurqty() {
+		return purqty;
+	}
+
+
+
+
+	public void setPurqty(int purqty) {
+		this.purqty = purqty;
+	}
+
+
+
+
+	public String getPurdate() {
+		return purdate;
+	}
+
+
+
+
+	public void setPurdate(String purdate) {
+		this.purdate = purdate;
+	}
+
+
+
+
 	public void setOrderseq(int orderseq) {
 		this.orderseq = orderseq;
 	}

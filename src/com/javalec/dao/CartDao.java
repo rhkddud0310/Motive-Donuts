@@ -18,6 +18,7 @@ public class CartDao {
 	private final String pw_mysql = ShareVar.dbPass;
 
 	
+	
 	String image; 
 	int sellprice;
 	int purseq; 

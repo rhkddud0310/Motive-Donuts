@@ -35,7 +35,6 @@ import com.javalec.dao.PaymentCompleteDao;
 import com.javalec.dto.PaymentCompleteDto;
 import com.javalec.menu.Menu;
 
-
 public class PaymentComplete extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -53,25 +52,43 @@ public class PaymentComplete extends JFrame {
 	private JLabel lblHome1;
 	private JLabel lblNewLabel;
 	private JLabel lblPaymentMethod;
-	private JLabel lblMyPoints;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JScrollPane scrollPane;
 	private JTable table_Purchase;
 	private JTextField tfMuy;
-	private JTextField tfMyPoints;
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
-	private JLabel lblNewLabel_2_1_1_1_1;
+
+	
+	int orderseq; 
+	String custid;
+	String payment;
+	int payprice;
+	int spendpoints;
+	int accupoints;
+	String orderdate;
+	
+	String proname; 
+	int sellprice;
+	int purqty;
+	String purdate; 
 	
 	
-	//Table 
 	
+	
+	
+	
+	
+
+	// Table
+
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	private JTextField tfPaymentMethod;
 	private JLabel lblTotalPrice;
 	private JTextField tfTotalPrice;
-	
-	
-
+	private JLabel lblUsedPoints;
+	private JTextField tfUsedPoints;
+	private JLabel lblGetPoints;
+	private JTextField tfGetPoints;
 
 	/**
 	 * Launch the application.
@@ -96,11 +113,13 @@ public class PaymentComplete extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowActivated(WindowEvent e) {
-				receiptTableInit(); 
-				receiptTableData(); 
-			
-	
-				
+				receiptTableInit();
+				receiptTableData();
+				totalPrice(); 
+				myPayment(); 
+				myGetSpentPoints(); 
+				receivedPoints(); 
+
 			}
 		});
 		contentPane = new JPanel();
@@ -111,16 +130,15 @@ public class PaymentComplete extends JFrame {
 		setContentPane(contentPane);
 		setUndecorated(true);
 		contentPane.setLayout(null);
-		contentPane.add(getLblMyPoints());
 		contentPane.add(getLblPaymentMethod());
 		contentPane.add(getLblNewLabel());
 		contentPane.add(getLblTimer());
 		Timer timer = new Timer(100, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateTime(); // 분마다 시간 업데이트
-            }
-        });
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateTime(); // 분마다 시간 업데이트
+			}
+		});
 		timer.start();
 		contentPane.add(getLblHome());
 		contentPane.add(getLblHome1());
@@ -131,15 +149,17 @@ public class PaymentComplete extends JFrame {
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
 		contentPane.add(getScrollPane());
-		contentPane.add(getTfMyPoints());
-		contentPane.add(getLblNewLabel_2_1_1_1_1());
 		contentPane.add(getTfPaymentMethod());
 		contentPane.add(getTfTotalPrice());
 		contentPane.add(getLblTotalPrice());
+		contentPane.add(getTfUsedPoints());
+		contentPane.add(getLblUsedPoints());
+		contentPane.add(getLblGetPoints());
+		contentPane.add(getTfGetPoints());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
 	}
-	
+
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
 			lblIPhone = new JLabel("New label");
@@ -148,6 +168,7 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblIPhone;
 	}
+
 	private JLabel getLblHomeScreen() {
 		if (lblHomeScreen == null) {
 			lblHomeScreen = new JLabel("New label");
@@ -157,6 +178,7 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblHomeScreen;
 	}
+
 	private JLabel getLblTimer() {
 		if (lblTimer == null) {
 			lblTimer = new JLabel("12 : 00");
@@ -167,6 +189,7 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblTimer;
 	}
+
 	private JLabel getLblHome() {
 		if (lblHome == null) {
 			lblHome = new JLabel("");
@@ -182,6 +205,7 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblHome;
 	}
+
 	private JLabel getLblMenu() {
 		if (lblMenu == null) {
 			lblMenu = new JLabel("");
@@ -197,6 +221,7 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblMenu;
 	}
+
 	private JLabel getLblCart() {
 		if (lblCart == null) {
 			lblCart = new JLabel("");
@@ -212,6 +237,7 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblCart;
 	}
+
 	private JLabel getLblAccount() {
 		if (lblAccount == null) {
 			lblAccount = new JLabel("");
@@ -227,6 +253,7 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblAccount;
 	}
+
 	private JLabel getLblHome1() {
 		if (lblHome1 == null) {
 			lblHome1 = new JLabel("Home");
@@ -236,6 +263,7 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblHome1;
 	}
+
 	private JLabel getLblMenu1() {
 		if (lblMenu1 == null) {
 			lblMenu1 = new JLabel("Menu");
@@ -245,6 +273,7 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblMenu1;
 	}
+
 	private JLabel getLblCart1() {
 		if (lblCart1 == null) {
 			lblCart1 = new JLabel("Cart");
@@ -254,6 +283,7 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblCart1;
 	}
+
 	private JLabel getLblAccount1() {
 		if (lblAccount1 == null) {
 			lblAccount1 = new JLabel("Account");
@@ -264,7 +294,7 @@ public class PaymentComplete extends JFrame {
 		return lblAccount1;
 	}
 	// --- Function ---
-	
+
 	// 실시간 시간 나오기
 	private void updateTime() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("h : mm");
@@ -272,35 +302,35 @@ public class PaymentComplete extends JFrame {
 		lblTimer.setFont(new Font("굴림", Font.BOLD, 16));
 		lblTimer.setText(currentTime);
 	}
+
 	// Home화면
-		private void homeScreen() {
-			this.setVisible(false); // 현재화면 끄고
-			Main window = new Main();
-			window.main(null); // 홈 화면 키기
-		}
-		
-		// Menu화면
-		private void menuScreen() {
-			this.setVisible(false);
-			Menu menu = new Menu();
-			menu.setVisible(true);
-		}
-		
-		// Cart화면
-		private void cartScreen() {
-			this.setVisible(false);
-			Cart cart = new Cart();
-			cart.setVisible(true);
-		}
-		
-		// Account화면
-		private void accountScreen() {
-			this.setVisible(false);
-			Account account = new Account();
-			account.setVisible(true);
-		}
-		
-		
+	private void homeScreen() {
+		this.setVisible(false); // 현재화면 끄고
+		Main window = new Main();
+		window.main(null); // 홈 화면 키기
+	}
+
+	// Menu화면
+	private void menuScreen() {
+		this.setVisible(false);
+		Menu menu = new Menu();
+		menu.setVisible(true);
+	}
+
+	// Cart화면
+	private void cartScreen() {
+		this.setVisible(false);
+		Cart cart = new Cart();
+		cart.setVisible(true);
+	}
+
+	// Account화면
+	private void accountScreen() {
+		this.setVisible(false);
+		Account account = new Account();
+		account.setVisible(true);
+	}
+
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("결제가 완료되었습니다!");
@@ -310,24 +340,17 @@ public class PaymentComplete extends JFrame {
 		}
 		return lblNewLabel;
 	}
+
 	private JLabel getLblPaymentMethod() {
 		if (lblPaymentMethod == null) {
 			lblPaymentMethod = new JLabel("결제수단:");
 			lblPaymentMethod.setFont(new Font("CookieRun", Font.PLAIN, 12));
-			lblPaymentMethod.setBounds(59, 448, 61, 16);
+			lblPaymentMethod.setBounds(37, 448, 61, 16);
 			lblPaymentMethod.setForeground(new Color(0, 0, 0));
 		}
 		return lblPaymentMethod;
 	}
-	private JLabel getLblMyPoints() {
-		if (lblMyPoints == null) {
-			lblMyPoints = new JLabel("마이포인트: ");
-			lblMyPoints.setFont(new Font("CookieRun", Font.PLAIN, 12));
-			lblMyPoints.setBounds(59, 485, 61, 16);
-			lblMyPoints.setForeground(new Color(0, 0, 0));
-		}
-		return lblMyPoints;
-	}
+
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
@@ -336,39 +359,21 @@ public class PaymentComplete extends JFrame {
 		}
 		return scrollPane;
 	}
+
 	private JTable getTable_Purchase() {
 		if (table_Purchase == null) {
 			table_Purchase = new JTable();
+			table_Purchase.setFillsViewportHeight(true);
 			table_Purchase.setForeground(new Color(0, 0, 0));
 			table_Purchase.setBackground(new Color(244, 208, 208));
-			
+
 			table_Purchase.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table_Purchase.setModel(outerTable);
-			
+
 		}
 		return table_Purchase;
 	}
-	
-	private JTextField getTfMyPoints() {
-		if (tfMyPoints == null) {
-			tfMyPoints = new JTextField();
-			tfMyPoints.setHorizontalAlignment(SwingConstants.TRAILING);
-			tfMyPoints.setEditable(false);
-			tfMyPoints.setColumns(10);
-			tfMyPoints.setBackground(new Color(244, 208, 208));
-			tfMyPoints.setBounds(132, 480, 130, 26);
-		}
-		return tfMyPoints;
-	}
-	private JLabel getLblNewLabel_2_1_1_1_1() {
-		if (lblNewLabel_2_1_1_1_1 == null) {
-			lblNewLabel_2_1_1_1_1 = new JLabel("Pts");
-			lblNewLabel_2_1_1_1_1.setFont(new Font("CookieRun", Font.PLAIN, 12));
-			lblNewLabel_2_1_1_1_1.setBounds(274, 485, 35, 16);
-		}
-		return lblNewLabel_2_1_1_1_1;
-	}
-	
+
 	private JTextField getTfPaymentMethod() {
 		if (tfPaymentMethod == null) {
 			tfPaymentMethod = new JTextField();
@@ -380,15 +385,17 @@ public class PaymentComplete extends JFrame {
 		}
 		return tfPaymentMethod;
 	}
+
 	private JLabel getLblTotalPrice() {
 		if (lblTotalPrice == null) {
 			lblTotalPrice = new JLabel("결제금액:");
 			lblTotalPrice.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			lblTotalPrice.setForeground(Color.BLACK);
-			lblTotalPrice.setBounds(59, 409, 61, 16);
+			lblTotalPrice.setBounds(36, 409, 61, 16);
 		}
 		return lblTotalPrice;
 	}
+
 	private JTextField getTfTotalPrice() {
 		if (tfTotalPrice == null) {
 			tfTotalPrice = new JTextField();
@@ -400,79 +407,72 @@ public class PaymentComplete extends JFrame {
 		}
 		return tfTotalPrice;
 	}
-	
-	//FUNCTIONS
-	
-	
-	// TABLE 초기화
-	private void purchaseTableInit() {
-		
-		
-		// Table Column 명 정하기
-				outerTable.addColumn("");
-				outerTable.addColumn("");
-				outerTable.addColumn("");
-				outerTable.addColumn("");
-				outerTable.setColumnCount(4);
-
-		
-		// Table Column 크기 정하기
-				int colNo = 0;
-				TableColumn col = table_Purchase.getColumnModel().getColumn(colNo);
-				int width = 100;
-				col.setPreferredWidth(width);
-				
-				colNo = 1;
-				col = table_Purchase.getColumnModel().getColumn(colNo);
-				width = 100;
-				col.setPreferredWidth(width);
-				
-				colNo = 2;
-				col = table_Purchase.getColumnModel().getColumn(colNo);
-				width = 100;
-				col.setPreferredWidth(width);
-				
-				colNo = 3;
-				col = table_Purchase.getColumnModel().getColumn(colNo);
-				width = 100;
-				col.setPreferredWidth(width);
-
-				table_Purchase.setAutoResizeMode(table_Purchase.AUTO_RESIZE_OFF);
-
-				int i = outerTable.getRowCount();
-				for (int j = 0; j < i; j++) {
-					outerTable.removeRow(0);
-				}		
-				
+	private JLabel getLblUsedPoints() {
+		if (lblUsedPoints == null) {
+			lblUsedPoints = new JLabel("사용한 포인트: ");
+			lblUsedPoints.setForeground(Color.BLACK);
+			lblUsedPoints.setFont(new Font("CookieRun", Font.PLAIN, 12));
+			lblUsedPoints.setBounds(36, 480, 84, 16);
+		}
+		return lblUsedPoints;
 	}
-	
+	private JTextField getTfUsedPoints() {
+		if (tfUsedPoints == null) {
+			tfUsedPoints = new JTextField();
+			tfUsedPoints.setHorizontalAlignment(SwingConstants.TRAILING);
+			tfUsedPoints.setEditable(false);
+			tfUsedPoints.setColumns(10);
+			tfUsedPoints.setBackground(new Color(244, 208, 208));
+			tfUsedPoints.setBounds(132, 475, 130, 26);
+		}
+		return tfUsedPoints;
+	}
+	private JLabel getLblGetPoints() {
+		if (lblGetPoints == null) {
+			lblGetPoints = new JLabel("받은 포인트: ");
+			lblGetPoints.setForeground(Color.BLACK);
+			lblGetPoints.setFont(new Font("CookieRun", Font.PLAIN, 12));
+			lblGetPoints.setBounds(37, 508, 84, 16);
+		}
+		return lblGetPoints;
+	}
+	private JTextField getTfGetPoints() {
+		if (tfGetPoints == null) {
+			tfGetPoints = new JTextField();
+			tfGetPoints.setHorizontalAlignment(SwingConstants.TRAILING);
+			tfGetPoints.setEditable(false);
+			tfGetPoints.setColumns(10);
+			tfGetPoints.setBackground(new Color(244, 208, 208));
+			tfGetPoints.setBounds(132, 503, 130, 26);
+		}
+		return tfGetPoints;
+	}
 
+	// FUNCTIONS
 
-	
-	//PURCHASE TABLE DATA 초기화
-	
+	// PURCHASE TABLE DATA 초기화
+
 	private void receiptTableInit() {
 		// Table Column 명 정하기
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.addColumn("");
+		outerTable.addColumn("Product");
+		outerTable.addColumn("Qty");
+		outerTable.addColumn("Price");
 		outerTable.setColumnCount(3);
-
 
 // Table Column 크기 정하기
 		int colNo = 0;
 		TableColumn col = table_Purchase.getColumnModel().getColumn(colNo);
-		int width = 100;
+		int width = 110;
 		col.setPreferredWidth(width);
-		
+
 		colNo = 1;
 		col = table_Purchase.getColumnModel().getColumn(colNo);
 		width = 100;
 		col.setPreferredWidth(width);
-		
+
 		colNo = 2;
 		col = table_Purchase.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 126;
 		col.setPreferredWidth(width);
 
 		table_Purchase.setAutoResizeMode(table_Purchase.AUTO_RESIZE_OFF);
@@ -480,39 +480,90 @@ public class PaymentComplete extends JFrame {
 		int i = outerTable.getRowCount();
 		for (int j = 0; j < i; j++) {
 			outerTable.removeRow(0);
-		}					
-}
-		
-		
+		}
+	}
 
-	//PURCHASE TABLE DATA 구매내역 데이터에서 불러오기 
-	
-	
+	// PURCHASE TABLE DATA 구매내역 데이터에서 불러오기
+
 	private void receiptTableData() {
-		
-//		
-//		PaymentCompleteDao paymentCompleteDao = new PaymentCompleteDao();
-//		ArrayList<PaymentCompleteDto> dtoList = PaymentCompleteDao.selectList();
-//
-//		int listCount = dtoList.size();
-//
-//		for (int i = 0; i < listCount; i++) {
-//
-//			String[] temp = { Integer.toString(dtoList.get(i).getCartseqno()), dtoList.get(i).getModelnum(),
-//					Integer.toString(dtoList.get(i).getStosize()), Integer.toString(dtoList.get(i).getCartqty()),
-//					Integer.toString(dtoList.get(i).getStoprice()), dtoList.get(i).getColor() 
-//					
-//			
-//			};
-//			
-//			outerTable.addRow(temp);
-//			
-//			
-			
-			
-			
-		
 
+		PaymentCompleteDao paymentCompleteDao = new PaymentCompleteDao(proname, sellprice, purqty, purdate);
+		ArrayList<PaymentCompleteDto> dtoList = paymentCompleteDao.selectList();
+
+		int listCount = dtoList.size();
+
+		for (int i = 0; i < listCount; i++) {
+
+			String[] temp = { dtoList.get(i).getProname(), 
+										   Integer.toString(dtoList.get(i).getSellprice()),
+										   Integer.toString(dtoList.get(i).getPurqty()),
+										   dtoList.get(i).getPurdate()};
+			
+			outerTable.addRow(temp);
+
+		}
+
+	}
+	
+	
+	//PURCHASE TABLE DATA 결제금액  불러오기 
+	
+	private void totalPrice() {
+		
+		int price = 0;
+
+		PaymentCompleteDao dao = new PaymentCompleteDao(price);
+		price = dao.totalPrice();
+		tfTotalPrice.setText(Integer.toString(price));
+	
+		
+	}
+	
+	
+
+	//PURCHASE TABLE DATA 결제수단  불러오기 
+	private void myPayment() {
+	
+		
+		String paymentmethod = "";
+
+		PaymentCompleteDao dao = new  PaymentCompleteDao(paymentmethod);
+		paymentmethod = dao.myPayment();
+		tfPaymentMethod.setText(paymentmethod);
+	
+		
+	}
+	
+
+	//PURCHASE TABLE DATA  사용한 포인트 불러오기 
+	private void myGetSpentPoints() {
+		
+		int points = 0;
+
+		PaymentCompleteDao dao = new PaymentCompleteDao(points);
+		points = dao.myGetSpentPoints();
+		tfUsedPoints.setText(Integer.toString(points));
+	
+		
+		
+	}
+	
+	
+	
+	//PURCHASE TABLE DATA  받은 포인트 불러오기 
+	
+	
+	private void receivedPoints() {
+
+		int receivedPoints = 0;
+
+		PaymentCompleteDao dao = new PaymentCompleteDao(receivedPoints);
+		receivedPoints = dao.receivedPoints();
+		tfGetPoints.setText(Integer.toString(receivedPoints));
+	
+		
+	
+		
 	}
 	
 	
@@ -528,6 +579,4 @@ public class PaymentComplete extends JFrame {
 	
 	
 	
-	
-
 } // End
