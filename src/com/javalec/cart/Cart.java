@@ -32,6 +32,7 @@ import com.javalec.dao.CartDao;
 import com.javalec.dto.CartDto;
 import com.javalec.menu.Menu;
 import com.javalec.purchase.Purchase;
+import java.awt.event.MouseMotionAdapter;
 
 
 public class Cart extends JFrame {
@@ -61,7 +62,7 @@ public class Cart extends JFrame {
 	//Table
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
-	private JButton btnDeleteItem;
+	private JLabel lblNewLabel_1;
 	
 	
 	
@@ -118,7 +119,7 @@ public class Cart extends JFrame {
 		contentPane.add(getScrollPane());
 		contentPane.add(getBtnAddItem());
 		contentPane.add(getBtnCheckout());
-		contentPane.add(getBtnDeleteItem());
+		contentPane.add(getLblNewLabel_1());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -212,7 +213,7 @@ public class Cart extends JFrame {
 	private JLabel getLblHome1() {
 		if (lblHome1 == null) {
 			lblHome1 = new JLabel("Home");
-			lblHome1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblHome1.setFont(new Font("CookieRun", Font.BOLD, 12));
 			lblHome1.setHorizontalAlignment(SwingConstants.CENTER);
 			lblHome1.setBounds(44, 645, 42, 15);
 		}
@@ -222,7 +223,7 @@ public class Cart extends JFrame {
 		if (lblMenu1 == null) {
 			lblMenu1 = new JLabel("Menu");
 			lblMenu1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblMenu1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblMenu1.setFont(new Font("CookieRun", Font.BOLD, 12));
 			lblMenu1.setBounds(124, 645, 42, 15);
 		}
 		return lblMenu1;
@@ -231,7 +232,7 @@ public class Cart extends JFrame {
 		if (lblCart1 == null) {
 			lblCart1 = new JLabel("Cart");
 			lblCart1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblCart1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblCart1.setFont(new Font("CookieRun", Font.BOLD, 12));
 			lblCart1.setBounds(204, 645, 42, 15);
 		}
 		return lblCart1;
@@ -240,7 +241,7 @@ public class Cart extends JFrame {
 		if (lblAccount1 == null) {
 			lblAccount1 = new JLabel("Account");
 			lblAccount1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblAccount1.setFont(new Font("굴림", Font.BOLD, 12));
+			lblAccount1.setFont(new Font("CookieRun", Font.BOLD, 12));
 			lblAccount1.setBounds(276, 645, 62, 15);
 		}
 		return lblAccount1;
@@ -284,9 +285,9 @@ public class Cart extends JFrame {
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("장바구니");
-			lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 24));
+			lblNewLabel.setFont(new Font("CookieRun", Font.PLAIN, 22));
 			lblNewLabel.setForeground(new Color(0, 0, 0));
-			lblNewLabel.setBounds(23, 85, 141, 34);
+			lblNewLabel.setBounds(39, 89, 141, 34);
 		}
 		return lblNewLabel;
 	}
@@ -303,10 +304,22 @@ public class Cart extends JFrame {
 	private JTable getCart_Table() {
 		if (cart_Table == null) {
 			cart_Table = new JTable();
+			cart_Table.setBackground(new Color(244, 208, 208));
+			cart_Table.setFillsViewportHeight(true);
+			cart_Table.addMouseMotionListener(new MouseMotionAdapter() {
+				@Override
+				public void mouseDragged(MouseEvent e) {
+					deleteItem();
+					cartTableInit(); 
+					cartTableData(); 
+
+				}
+			});
 			cart_Table.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					cartTableClick(); 
+				
 				}
 			});
 		
@@ -318,6 +331,7 @@ public class Cart extends JFrame {
 	private JButton getBtnAddItem() {
 		if (btnAddItem == null) {
 			btnAddItem = new JButton("아이템 추가하기");
+			btnAddItem.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			btnAddItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					backToMenu(); 
@@ -329,32 +343,24 @@ public class Cart extends JFrame {
 	}
 	private JButton getBtnCheckout() {
 		if (btnCheckout == null) {
-			btnCheckout = new JButton("결제하기");
+			btnCheckout = new JButton("주문하기");
+			btnCheckout.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			btnCheckout.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					moveToPurchase();
 				}
 			});
-			btnCheckout.setBounds(190, 518, 117, 29);
+			btnCheckout.setBounds(120, 538, 117, 29);
 		}
 		return btnCheckout;
 	}
-	private JButton getBtnDeleteItem() {
-		if (btnDeleteItem == null) {
-			btnDeleteItem = new JButton("아이템 삭제하기");
-			btnDeleteItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					deleteAction();
-					cartTableInit(); 
-					cartTableData(); 
-
-
-				
-				}
-			});
-			btnDeleteItem.setBounds(61, 518, 117, 29);
+	private JLabel getLblNewLabel_1() {
+		if (lblNewLabel_1 == null) {
+			lblNewLabel_1 = new JLabel("Select & Swipe to delete item!");
+			lblNewLabel_1.setFont(new Font("CookieRun", Font.PLAIN, 12));
+			lblNewLabel_1.setBounds(37, 510, 236, 16);
 		}
-		return btnDeleteItem;
+		return lblNewLabel_1;
 	}
 	
 	
@@ -380,17 +386,17 @@ public class Cart extends JFrame {
 		
 		colNo = 1;
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 90;
 		col.setPreferredWidth(width);
 		
 		colNo = 2;
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 70;
 		col.setPreferredWidth(width);
 		
 		colNo = 3;
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 47;
 		col.setPreferredWidth(width);
 
 		cart_Table.setAutoResizeMode(cart_Table.AUTO_RESIZE_OFF);
@@ -436,11 +442,9 @@ public class Cart extends JFrame {
 			custid = dto.getCustid();
 			proname = dto.getProname();
 	
-	
 	}
 	
 	
-
 	//CART TABLE 에서 "아이템 추가하기" 눌렸을 경우 MENU 페이지로 이동한다. 
 	
 	private void backToMenu() {
@@ -462,14 +466,13 @@ public class Cart extends JFrame {
 	}
 	
 	
+	//CART TABLE 에서 SWIPE 경우 PURCHASE table 에서 데이터에서 삭제 
 	
-	//CART TABLE 에서 아이템삭제 눌렀을 경우 PURCHASE table 에서 데이터에서 삭제 
-	
-	private void deleteAction() {
+	private void deleteItem() {
 
 
 		CartDao dao = new CartDao(purseq, custid, proname);
-		boolean result = dao.deleteAction();
+		boolean result = dao.deleteItem();
 
 		if (result == true) {
 			JOptionPane.showMessageDialog(null, "장바구니에서 삭제되었습니다.");
@@ -478,17 +481,13 @@ public class Cart extends JFrame {
 		}
 
 	}
-			
-		
-		
-
-		
-		
-		
-		
-		
-		
-		
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

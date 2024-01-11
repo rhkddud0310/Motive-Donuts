@@ -1,8 +1,46 @@
-package com.javalec.account;
+/*	---------------------------------------------------------------------------------------------
+
+		(1) Desc :	카테고리 별로 나열한 Menu Page에서 한 카테고리 선택 시
+					그에 해당하는 제품 나열하는 Page 구현하기.
+		
+		(2) Date
+			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1), 2)
+			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 3),
+			
+		(3) Author : Gwangyeong Kim
+		
+		(4) History
+			1) 이대근 팀장님께서 만드신 기본 IPhone 배경화면 Class 가져오기.
+			
+			2) Menu Page 전용 배경화면으로 변경하기.
+			
+			3) 마우스 이벤트를 사용하여 JFrame 아무 곳이나 클릭해서 창 이동하는 기능 추가하기.
+				1. 마우스 클릭하는 위치의 좌표값 불러오기.
+					① addMouseListener(new MouseAdapter() {}); / mousePressed(MouseEvent e) {}
+					② initialClick = e.getPoint();
+				2. Drag 하는 동안 Frame 이동하기.
+					① addMouseMotionListener(new MouseAdapter() {}); / mouseDragged(MouseEvent e) {}
+				
+	--------------------------------------------------------------------------------------------- */
+
+
+package com.javalec.menu;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import com.javalec.account.Account;
+import com.javalec.base.Main;
+import com.javalec.cart.Cart;
 
 import java.awt.Color;
-import java.awt.EventQueue;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -10,33 +48,15 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
 
-import com.javalec.base.Main;
-import com.javalec.cart.Cart;
-import com.javalec.menu.Menu;
-
-public class Account extends JFrame {
-	// --------------------------------------------------------------//
-	// Desc : 입력한 숫자로부터 4개를 증가하여 화면 가로로 구구단을 표시하기
-	// Date : 2023.12.06(Ver1.0)
-	// : 2023.12.07(Ver2.0)
-	// Author : Daegeun Lee
-	// History : 1. 값을 받기 위하여 스캐너를 입력 그리고 public int num = 0;을 Field에 생성
-	// : 2. 구구단의 코드를 for문으로 작성하여준다.
-	// : 3. "dan=num"으로 받아서 "dan<=num+3;"까지 출력하면 값이 나온다.
-	// --------------------------------------------------------------//
+public class OrderMenu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JLabel lblIPhone;
-	private JLabel lblHomeScreen;
+	private JLabel lblScreen;
 	private JLabel lblTimer;
 	private JLabel lblHome;
 	private JLabel lblMenu;
@@ -46,6 +66,8 @@ public class Account extends JFrame {
 	private JLabel lblCart1;
 	private JLabel lblMenu1;
 	private JLabel lblHome1;
+	
+	private Point initialClick;	// <-- *************************************************************
 
 	/**
 	 * Launch the application.
@@ -54,7 +76,7 @@ public class Account extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Account frame = new Account();
+					OrderMenu frame = new OrderMenu();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -66,7 +88,7 @@ public class Account extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Account() {
+	public OrderMenu() {
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 0, 0));
 		setBounds(600, 100, 375, 680);
@@ -74,14 +96,36 @@ public class Account extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		setUndecorated(true); // 타이틀 바 없애기
-		contentPane.add(getLblTimer());
-		Timer timer = new Timer(100, new ActionListener() {
+		// *********************************************************************************************************
+		setUndecorated(true); // Title Bar 없애기
+		// 마우스 이벤트를 사용하여 Frame 이동
+		addMouseListener(new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateTime(); // 분마다 시간 업데이트
+			public void mousePressed(MouseEvent e) {
+				initialClick = e.getPoint();
 			}
 		});
+		addMouseMotionListener(new MouseAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int thisX = getLocation().x;
+				int thisY = getLocation().y;
+				
+				// Drag 하는 동안 Frame 이동
+				int xMoved = thisX + e.getX() - initialClick.x;
+				int yMoved = thisY + e.getY() - initialClick.y;
+				
+				setLocation(xMoved, yMoved);
+			}
+		});
+		// *********************************************************************************************************
+		contentPane.add(getLblTimer());
+		Timer timer = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateTime(); // 분마다 시간 업데이트
+            }
+        });
 		timer.start();
 		contentPane.add(getLblHome());
 		contentPane.add(getLblHome1());
@@ -91,28 +135,26 @@ public class Account extends JFrame {
 		contentPane.add(getLblCart1());
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
-		contentPane.add(getLblHomeScreen());
+		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
-
+	
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
 			lblIPhone = new JLabel("New label");
-			lblIPhone.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/아이폰 테두리.png")));
+			lblIPhone.setIcon(new ImageIcon(OrderMenu.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 			lblIPhone.setBounds(0, 0, 374, 680);
 		}
 		return lblIPhone;
 	}
-
-	private JLabel getLblHomeScreen() {
-		if (lblHomeScreen == null) {
-			lblHomeScreen = new JLabel("New label");
-			lblHomeScreen.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/아이폰 홈 화면.png")));
-			lblHomeScreen.setBounds(8, 10, 358, 665);
+	private JLabel getLblScreen() {
+		if (lblScreen == null) {
+			lblScreen = new JLabel("New label");
+			lblScreen.setIcon(new ImageIcon(OrderMenu.class.getResource("/com/javalec/image/Menu Page 배경화면.png")));
+			lblScreen.setBounds(8, 10, 358, 665);
 		}
-		return lblHomeScreen;
+		return lblScreen;
 	}
-
 	private JLabel getLblTimer() {
 		if (lblTimer == null) {
 			lblTimer = new JLabel("12 : 00");
@@ -123,7 +165,6 @@ public class Account extends JFrame {
 		}
 		return lblTimer;
 	}
-
 	private JLabel getLblHome() {
 		if (lblHome == null) {
 			lblHome = new JLabel("");
@@ -139,7 +180,6 @@ public class Account extends JFrame {
 		}
 		return lblHome;
 	}
-
 	private JLabel getLblMenu() {
 		if (lblMenu == null) {
 			lblMenu = new JLabel("");
@@ -155,7 +195,6 @@ public class Account extends JFrame {
 		}
 		return lblMenu;
 	}
-
 	private JLabel getLblCart() {
 		if (lblCart == null) {
 			lblCart = new JLabel("");
@@ -171,7 +210,6 @@ public class Account extends JFrame {
 		}
 		return lblCart;
 	}
-
 	private JLabel getLblAccount() {
 		if (lblAccount == null) {
 			lblAccount = new JLabel("");
@@ -187,7 +225,6 @@ public class Account extends JFrame {
 		}
 		return lblAccount;
 	}
-
 	private JLabel getLblHome1() {
 		if (lblHome1 == null) {
 			lblHome1 = new JLabel("Home");
@@ -197,7 +234,6 @@ public class Account extends JFrame {
 		}
 		return lblHome1;
 	}
-
 	private JLabel getLblMenu1() {
 		if (lblMenu1 == null) {
 			lblMenu1 = new JLabel("Menu");
@@ -207,7 +243,6 @@ public class Account extends JFrame {
 		}
 		return lblMenu1;
 	}
-
 	private JLabel getLblCart1() {
 		if (lblCart1 == null) {
 			lblCart1 = new JLabel("Cart");
@@ -217,7 +252,6 @@ public class Account extends JFrame {
 		}
 		return lblCart1;
 	}
-
 	private JLabel getLblAccount1() {
 		if (lblAccount1 == null) {
 			lblAccount1 = new JLabel("Account");
@@ -228,7 +262,7 @@ public class Account extends JFrame {
 		return lblAccount1;
 	}
 	// --- Function ---
-
+	
 	// 실시간 시간 나오기
 	private void updateTime() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("h : mm");
@@ -236,33 +270,33 @@ public class Account extends JFrame {
 		lblTimer.setFont(new Font("굴림", Font.BOLD, 16));
 		lblTimer.setText(currentTime);
 	}
-
 	// Home화면
-	private void homeScreen() {
-		this.setVisible(false); // 현재화면 끄고
-		Main window = new Main();
-		window.main(null); // 홈 화면 키기
-	}
-
-	// Menu화면
-	private void menuScreen() {
-		this.setVisible(false);
-		Menu menu = new Menu();
-		menu.setVisible(true);
-	}
-
-	// Cart화면
-	private void cartScreen() {
-		this.setVisible(false);
-		Cart cart = new Cart();
-		cart.setVisible(true);
-	}
-
-	// Account화면
-	private void accountScreen() {
-		this.setVisible(false);
-		Account account = new Account();
-		account.setVisible(true);
-	}
-
+		private void homeScreen() {
+			this.setVisible(false); // 현재화면 끄고
+			Main window = new Main();
+			window.main(null); // 홈 화면 키기
+		}
+		
+		// Menu화면
+		private void menuScreen() {
+			this.setVisible(false);
+			Menu menu = new Menu();
+			menu.setVisible(true);
+		}
+		
+		// Cart화면
+		private void cartScreen() {
+			this.setVisible(false);
+			Cart cart = new Cart();
+			cart.setVisible(true);
+		}
+		
+		// Account화면
+		private void accountScreen() {
+			this.setVisible(false);
+			Account account = new Account();
+			account.setVisible(true);
+		}
+		
+		
 } // End
