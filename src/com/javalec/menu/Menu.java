@@ -86,7 +86,7 @@ public class Menu extends JFrame {
 	private JLabel lblCartCountNum;
 	
 	private Point initialClick;	// <-- *************************************************************
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -302,9 +302,9 @@ public class Menu extends JFrame {
 		return lblAccount1;
 	}
 	
+	// *******************************************************************************************
 	
-	
-	// --- Function ---
+	// --- Functions (1) ----
 	
 	// 실시간 시간 나오기
 	private void updateTime() {
@@ -313,35 +313,37 @@ public class Menu extends JFrame {
 		lblTimer.setFont(new Font("굴림", Font.BOLD, 16));
 		lblTimer.setText(currentTime);
 	}
-
+	
 	// Home화면
 	private void homeScreen() {
 		this.setVisible(false); // 현재화면 끄고
 		Main window = new Main();
 		window.main(null); // 홈 화면 키기
 	}
-
+	
 	// Menu화면
 	private void menuScreen() {
 		this.setVisible(false);
 		Menu menu = new Menu();
 		menu.setVisible(true);
 	}
-
+	
 	// Cart화면
 	private void cartScreen() {
 		this.setVisible(false);
 		Cart cart = new Cart();
 		cart.setVisible(true);
 	}
-
+	
 	// Account화면
 	private void accountScreen() {
 		this.setVisible(false);
 		Account account = new Account();
 		account.setVisible(true);
 	}
-
+	
+	// *******************************************************************************************
+	
 	private JLabel getLblMenuLogo() {
 		if (lblMenuLogo == null) {
 			lblMenuLogo = new JLabel("Menu");
@@ -403,8 +405,10 @@ public class Menu extends JFrame {
 		return lblCartCountNum;
 	}
 	
+	// *******************************************************************************************
 	
-	// --- Functions ----
+	// --- Functions (2) ----
+	
 	// 제품 검색 화면으로 이동하기.
 	private void searchScreen() {
 		this.setVisible(false);

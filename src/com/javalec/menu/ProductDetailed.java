@@ -4,7 +4,7 @@
 		
 		(2) Date
 			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1)
-			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 2),
+			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 2)
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -18,7 +18,6 @@
 				2. Drag 하는 동안 Frame 이동하기.
 					① addMouseMotionListener(new MouseAdapter() {}); / mouseDragged(MouseEvent e) {}
 
-				
 	--------------------------------------------------------------------------------------------- */
 
 
@@ -38,6 +37,7 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -63,7 +63,9 @@ public class ProductDetailed extends JFrame {
 	private JLabel lblCart1;
 	private JLabel lblMenu1;
 	private JLabel lblHome1;
-
+	
+	private Point initialClick;	// <-- *************************************************************
+	
 	/**
 	 * Launch the application.
 	 */
@@ -91,7 +93,30 @@ public class ProductDetailed extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		setUndecorated(true); // 타이틀 바 없애기
+		// *********************************************************************************************************
+		setUndecorated(true); // Title Bar 없애기
+		// 마우스 이벤트를 사용하여 Frame 이동
+		// 마우스 클릭하는 위치 좌표값 불러오기.
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				initialClick = e.getPoint();
+			}
+		});
+		addMouseMotionListener(new MouseAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int thisX = getLocation().x;
+				int thisY = getLocation().y;
+				
+				// Drag 하는 동안 Frame 이동
+				int xMoved = thisX + e.getX() - initialClick.x;
+				int yMoved = thisY + e.getY() - initialClick.y;
+				
+				setLocation(xMoved, yMoved);
+			}
+		});
+		// *********************************************************************************************************
 		contentPane.add(getLblTimer());
 		Timer timer = new Timer(100, new ActionListener() {
             @Override
@@ -234,7 +259,10 @@ public class ProductDetailed extends JFrame {
 		}
 		return lblAccount1;
 	}
-	// --- Function ---
+	
+	// *******************************************************************************************
+	
+	// --- Functions (1) ----
 	
 	// 실시간 시간 나오기
 	private void updateTime() {
@@ -244,32 +272,37 @@ public class ProductDetailed extends JFrame {
 		lblTimer.setText(currentTime);
 	}
 	// Home화면
-		private void homeScreen() {
-			this.setVisible(false); // 현재화면 끄고
-			Main window = new Main();
-			window.main(null); // 홈 화면 키기
-		}
-		
-		// Menu화면
-		private void menuScreen() {
-			this.setVisible(false);
-			Menu menu = new Menu();
-			menu.setVisible(true);
-		}
-		
-		// Cart화면
-		private void cartScreen() {
-			this.setVisible(false);
-			Cart cart = new Cart();
-			cart.setVisible(true);
-		}
-		
-		// Account화면
-		private void accountScreen() {
-			this.setVisible(false);
-			Account account = new Account();
-			account.setVisible(true);
-		}
-		
-		
+	private void homeScreen() {
+		this.setVisible(false); // 현재화면 끄고
+		Main window = new Main();
+		window.main(null); // 홈 화면 키기
+	}
+	
+	// Menu화면
+	private void menuScreen() {
+		this.setVisible(false);
+		Menu menu = new Menu();
+		menu.setVisible(true);
+	}
+	
+	// Cart화면
+	private void cartScreen() {
+		this.setVisible(false);
+		Cart cart = new Cart();
+		cart.setVisible(true);
+	}
+	
+	// Account화면
+	private void accountScreen() {
+		this.setVisible(false);
+		Account account = new Account();
+		account.setVisible(true);
+	}
+	
+	
+	
+	
+	
+	
+	
 } // End
