@@ -1,17 +1,18 @@
-package com.javalec.sign;
+package com.javalec.account;
 
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,17 +24,15 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.JCheckBox;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
-public class SignUp extends JFrame {
+import com.javalec.sign.SignIn;
+
+public class MyProfile extends JFrame {
 	// --------------------------------------------------------------//
-	// Desc : 로그인&회원가입
-	// Date : 2024.01.08(Ver1.0)
+	// Desc : 나의 정보
+	// Date : 2024.01.11(Ver1.0)
 	// Author : Daegeun Lee
-	// History : 1. ID&PW를 받아서 DB에 있는 데이터와 비교한뒤 true, false로 체크한다
-	//			 2. 정규식으로 예외처리한다
+	// History : 1. 나의 프로필 화면을 보여준다
 	// --------------------------------------------------------------//
 	
 	private static final long serialVersionUID = 1L;
@@ -42,7 +41,6 @@ public class SignUp extends JFrame {
 	private JLabel lblHomeScreen;
 	private JLabel lblTimer;
 	private JLabel lblId;
-	private JLabel lblPw;
 	private JLabel lblName;
 	private JLabel lblPhone;
 	private JLabel lblBirthday;
@@ -52,9 +50,6 @@ public class SignUp extends JFrame {
 	private JLabel lblAnswer2;
 	private JLabel lblProfile;
 	private JTextField tfId;
-	private JPasswordField pfPassword1;
-	private JLabel lblPwCheck;
-	private JPasswordField pfPassword2;
 	private JTextField tfName;
 	private JTextField tfPhone1;
 	private JTextField tfPhone2;
@@ -72,12 +67,9 @@ public class SignUp extends JFrame {
 	private JComboBox cbQuestion2;
 	private JTextField tfAnswer2;
 	private JLabel lblLine;
-	private JLabel lblCompare;
 	private JLabel lblLine_1;
 	private JLabel lblLine_1_1;
 	private JLabel lblImage;
-	private JCheckBox chkAgree;
-	private JLabel lblFile;
 	private JLabel lblCancel;
 
 	/**
@@ -87,7 +79,7 @@ public class SignUp extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SignUp frame = new SignUp();
+					MyProfile frame = new MyProfile();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -99,7 +91,7 @@ public class SignUp extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SignUp() {
+	public MyProfile() {
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 0, 0));
 		setBounds(600, 100, 375, 680);
@@ -117,7 +109,6 @@ public class SignUp extends JFrame {
         });
 		timer.start();
 		contentPane.add(getLblId());
-		contentPane.add(getLblPw());
 		contentPane.add(getLblName());
 		contentPane.add(getLblPhone());
 		contentPane.add(getLblBirthday());
@@ -127,9 +118,6 @@ public class SignUp extends JFrame {
 		contentPane.add(getLblAnswer2());
 		contentPane.add(getLblProfile());
 		contentPane.add(getTfId());
-		contentPane.add(getPfPassword1());
-		contentPane.add(getLblPwCheck());
-		contentPane.add(getPfPassword2());
 		contentPane.add(getTfName());
 		contentPane.add(getTfPhone1());
 		contentPane.add(getTfPhone2());
@@ -147,12 +135,9 @@ public class SignUp extends JFrame {
 		contentPane.add(getCbQuestion2());
 		contentPane.add(getTfAnswer2());
 		contentPane.add(getLblLine());
-		contentPane.add(getLblCompare());
 		contentPane.add(getLblLine_1());
 		contentPane.add(getLblLine_1_1());
 		contentPane.add(getLblImage());
-		contentPane.add(getChkAgree());
-		contentPane.add(getLblFile());
 		contentPane.add(getLblCancel());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
@@ -162,7 +147,7 @@ public class SignUp extends JFrame {
 		if (lblIPhone == null) {
 			lblIPhone = new JLabel("New label");
 			lblIPhone.setBounds(0, 0, 374, 680);
-			lblIPhone.setIcon(new ImageIcon(SignUp.class.getResource("/com/javalec/image/아이폰 테두리.png")));
+			lblIPhone.setIcon(new ImageIcon(MyProfile.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 		}
 		return lblIPhone;
 	}
@@ -170,7 +155,7 @@ public class SignUp extends JFrame {
 		if (lblHomeScreen == null) {
 			lblHomeScreen = new JLabel("New label");
 			lblHomeScreen.setBounds(8, 10, 358, 665);
-			lblHomeScreen.setIcon(new ImageIcon(SignUp.class.getResource("/com/javalec/image/SignUp.png")));
+			lblHomeScreen.setIcon(new ImageIcon(MyProfile.class.getResource("/com/javalec/image/SignUp.png")));
 		}
 		return lblHomeScreen;
 	}
@@ -190,18 +175,9 @@ public class SignUp extends JFrame {
 			lblId = new JLabel("ID   :");
 			lblId.setFont(new Font("CookieRun Regular", Font.PLAIN, 13));
 			lblId.setHorizontalAlignment(SwingConstants.TRAILING);
-			lblId.setBounds(20, 95, 57, 15);
+			lblId.setBounds(20, 175, 57, 15);
 		}
 		return lblId;
-	}
-	private JLabel getLblPw() {
-		if (lblPw == null) {
-			lblPw = new JLabel("PW   :");
-			lblPw.setFont(new Font("CookieRun Regular", Font.PLAIN, 13));
-			lblPw.setHorizontalAlignment(SwingConstants.TRAILING);
-			lblPw.setBounds(20, 135, 57, 15);
-		}
-		return lblPw;
 	}
 	private JLabel getLblName() {
 		if (lblName == null) {
@@ -278,37 +254,16 @@ public class SignUp extends JFrame {
 	private JTextField getTfId() {
 		if (tfId == null) {
 			tfId = new JTextField();
-			tfId.setBounds(91, 89, 96, 30);
+			tfId.setEditable(false);
+			tfId.setBounds(91, 169, 96, 30);
 			tfId.setColumns(10);
 		}
 		return tfId;
 	}
-	private JPasswordField getPfPassword1() {
-		if (pfPassword1 == null) {
-			pfPassword1 = new JPasswordField();
-			pfPassword1.setBounds(91, 129, 154, 30);
-		}
-		return pfPassword1;
-	}
-	private JLabel getLblPwCheck() {
-		if (lblPwCheck == null) {
-			lblPwCheck = new JLabel("Check  :");
-			lblPwCheck.setHorizontalAlignment(SwingConstants.TRAILING);
-			lblPwCheck.setFont(new Font("CookieRun Regular", Font.PLAIN, 13));
-			lblPwCheck.setBounds(20, 175, 57, 15);
-		}
-		return lblPwCheck;
-	}
-	private JPasswordField getPfPassword2() {
-		if (pfPassword2 == null) {
-			pfPassword2 = new JPasswordField();
-			pfPassword2.setBounds(91, 169, 154, 30);
-		}
-		return pfPassword2;
-	}
 	private JTextField getTfName() {
 		if (tfName == null) {
 			tfName = new JTextField();
+			tfName.setEditable(false);
 			tfName.setColumns(10);
 			tfName.setBounds(91, 209, 154, 30);
 		}
@@ -328,6 +283,7 @@ public class SignUp extends JFrame {
 	private JTextField getTfPhone2() {
 		if (tfPhone2 == null) {
 			tfPhone2 = new JTextField();
+			tfPhone2.setEditable(false);
 			tfPhone2.setHorizontalAlignment(SwingConstants.CENTER);
 			tfPhone2.setColumns(10);
 			tfPhone2.setBounds(149, 249, 38, 30);
@@ -337,6 +293,7 @@ public class SignUp extends JFrame {
 	private JTextField getTfPhone3() {
 		if (tfPhone3 == null) {
 			tfPhone3 = new JTextField();
+			tfPhone3.setEditable(false);
 			tfPhone3.setHorizontalAlignment(SwingConstants.CENTER);
 			tfPhone3.setColumns(10);
 			tfPhone3.setBounds(207, 249, 38, 30);
@@ -420,6 +377,7 @@ public class SignUp extends JFrame {
 	private JTextField getTfAnswer1() {
 		if (tfAnswer1 == null) {
 			tfAnswer1 = new JTextField();
+			tfAnswer1.setEditable(false);
 			tfAnswer1.setColumns(10);
 			tfAnswer1.setBounds(91, 362, 250, 30);
 		}
@@ -437,6 +395,7 @@ public class SignUp extends JFrame {
 	private JTextField getTfAnswer2() {
 		if (tfAnswer2 == null) {
 			tfAnswer2 = new JTextField();
+			tfAnswer2.setEditable(false);
 			tfAnswer2.setColumns(10);
 			tfAnswer2.setBounds(91, 428, 250, 30);
 		}
@@ -445,43 +404,15 @@ public class SignUp extends JFrame {
 	private JLabel getLblLine() {
 		if (lblLine == null) {
 			lblLine = new JLabel("");
-			lblLine.setIcon(new ImageIcon(SignUp.class.getResource("/com/javalec/image/Line1.png")));
+			lblLine.setIcon(new ImageIcon(MyProfile.class.getResource("/com/javalec/image/Line1.png")));
 			lblLine.setBounds(76, 200, 225, 3);
 		}
 		return lblLine;
 	}
-	private JLabel getLblCompare() {
-		if (lblCompare == null) {
-			lblCompare = new JLabel("");
-			
-			// 비밀번호 입력란에 DocumentListener 추가
-	        DocumentListener passwordListener = new DocumentListener() {
-	            @Override
-	            public void insertUpdate(DocumentEvent e) {
-	                comparePw();
-	            }
-
-	            @Override
-	            public void removeUpdate(DocumentEvent e) {
-	                comparePw();
-	            }
-
-	            @Override
-	            public void changedUpdate(DocumentEvent e) {
-	                comparePw();
-	            }
-	        };
-
-	        pfPassword1.getDocument().addDocumentListener(passwordListener);
-	        pfPassword2.getDocument().addDocumentListener(passwordListener);
-			lblCompare.setBounds(259, 175, 82, 23);
-		}
-		return lblCompare;
-	}
 	private JLabel getLblLine_1() {
 		if (lblLine_1 == null) {
 			lblLine_1 = new JLabel("");
-			lblLine_1.setIcon(new ImageIcon(SignUp.class.getResource("/com/javalec/image/Line1.png")));
+			lblLine_1.setIcon(new ImageIcon(MyProfile.class.getResource("/com/javalec/image/Line1.png")));
 			lblLine_1.setBounds(76, 321, 225, 3);
 		}
 		return lblLine_1;
@@ -489,7 +420,7 @@ public class SignUp extends JFrame {
 	private JLabel getLblLine_1_1() {
 		if (lblLine_1_1 == null) {
 			lblLine_1_1 = new JLabel("");
-			lblLine_1_1.setIcon(new ImageIcon(SignUp.class.getResource("/com/javalec/image/Line1.png")));
+			lblLine_1_1.setIcon(new ImageIcon(MyProfile.class.getResource("/com/javalec/image/Line1.png")));
 			lblLine_1_1.setBounds(76, 460, 225, 3);
 		}
 		return lblLine_1_1;
@@ -498,27 +429,11 @@ public class SignUp extends JFrame {
 		if (lblImage == null) {
 			lblImage = new JLabel("");
 			lblImage.setBackground(new Color(233, 233, 233));
-			lblImage.setIcon(new ImageIcon(SignUp.class.getResource("/com/javalec/image/Profile.png")));
+			lblImage.setIcon(new ImageIcon(MyProfile.class.getResource("/com/javalec/image/Profile.png")));
 			lblImage.setHorizontalAlignment(SwingConstants.CENTER);
 			lblImage.setBounds(87, 465, 108, 108);
 		}
 		return lblImage;
-	}
-	private JCheckBox getChkAgree() {
-		if (chkAgree == null) {
-			chkAgree = new JCheckBox("정보 제공에 동의하시겠습니까?");
-			chkAgree.setBackground(new Color(255, 255, 255));
-			chkAgree.setBounds(91, 566, 210, 23);
-		}
-		return chkAgree;
-	}
-	private JLabel getLblFile() {
-		if (lblFile == null) {
-			lblFile = new JLabel("");
-			lblFile.setIcon(new ImageIcon(SignUp.class.getResource("/com/javalec/image/경로.png")));
-			lblFile.setBounds(191, 501, 95, 39);
-		}
-		return lblFile;
 	}
 	private JLabel getLblCancel() {
 		if (lblCancel == null) {
@@ -542,22 +457,6 @@ public class SignUp extends JFrame {
 		String currentTime = dateFormat.format(new Date());
 		lblTimer.setFont(new Font("굴림", Font.BOLD, 16));
 		lblTimer.setText(currentTime);
-	}
-	
-	// 비밀번호 입력 받았을때 바로 비교해주기
-	private void comparePw() {
-	    String pw1 = new String(pfPassword1.getPassword());
-	    String pw2 = new String(pfPassword2.getPassword());
-
-	    if (pw1.isEmpty() || pw2.isEmpty()) {
-	        lblCompare.setText(""); // 둘 다 비어있을 때는 메시지를 비움
-	    } else if (pw1.equals(pw2)) {
-	        lblCompare.setText("일치");
-	        lblCompare.setForeground(Color.BLUE);
-	    } else {
-	        lblCompare.setText("불일치");
-	        lblCompare.setForeground(Color.RED);
-	    }
 	}
 	
 	// Account - SignIn화면
