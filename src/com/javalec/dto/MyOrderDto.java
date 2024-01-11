@@ -29,6 +29,26 @@ public class MyOrderDto {
 	
 	//CONSTRUCTOR
 	
+
+	
+	public MyOrderDto(int orderseq, String custid, String proname, String payment, int payprice, int spendpoints,
+			int accupoints) {
+		super();
+		this.orderseq = orderseq;
+		this.custid = custid;
+		this.proname = proname;
+		this.payment = payment;
+		this.payprice = payprice;
+		this.spendpoints = spendpoints;
+		this.accupoints = accupoints;
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	public MyOrderDto(int orderseq, String custid, String proname, String payment, int payprice, int spendpoints,
 			int accupoints, String orderdate) {
@@ -42,6 +62,7 @@ public class MyOrderDto {
 		this.accupoints = accupoints;
 		this.orderdate = orderdate;
 	}
+
 
 	//SETTERS & GETTERS
 

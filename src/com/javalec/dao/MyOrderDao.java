@@ -42,8 +42,7 @@ public class MyOrderDao {
 	    //CONSTRUCTOR
 	    
 	    
-	    public MyOrderDao(int orderseq, String custid, String proname, String payment, int payprice, int spendpoints,
-	    		int accupoints) {
+	    public MyOrderDao(int orderseq, String custid, String proname, String payment, int payprice, int spendpoints, int accupoints) {
 	    	super();
 	    	this.orderseq = orderseq;
 	    	this.custid = custid;
@@ -56,6 +55,21 @@ public class MyOrderDao {
 		
 	  
 
+	    public MyOrderDao(int orderseq, String custid, String proname, String payment, int payprice, int spendpoints,
+	    		int accupoints, String orderdate) {
+	    	super();
+	    	this.orderseq = orderseq;
+	    	this.custid = custid;
+	    	this.proname = proname;
+	    	this.payment = payment;
+	    	this.payprice = payprice;
+	    	this.spendpoints = spendpoints;
+	    	this.accupoints = accupoints;
+	    	this.orderdate = orderdate;
+	    }
+	    
+	    
+	    
 	    
 	    //METHOD
 	    
@@ -65,9 +79,7 @@ public class MyOrderDao {
 		
 	    public boolean ordersUpdate() {
 			PreparedStatement ps = null;
-			
-			
-			
+		
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -83,6 +95,7 @@ public class MyOrderDao {
 				System.out.println(payprice);
 				System.out.println(spendpoints);
 				System.out.println(accupoints);
+				
 					
 				ps = conn_mysql.prepareStatement(A+B);
 				ps.setInt(1, orderseq);
@@ -104,9 +117,10 @@ public class MyOrderDao {
 			
 			return true;	
 		}
-		
-		
-	
+
+
+
+	    
 	    
 	    
 	    

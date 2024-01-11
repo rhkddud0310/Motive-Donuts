@@ -304,6 +304,8 @@ public class Cart extends JFrame {
 	private JTable getCart_Table() {
 		if (cart_Table == null) {
 			cart_Table = new JTable();
+			cart_Table.setBackground(new Color(244, 208, 208));
+			cart_Table.setFillsViewportHeight(true);
 			cart_Table.addMouseMotionListener(new MouseMotionAdapter() {
 				@Override
 				public void mouseDragged(MouseEvent e) {
@@ -384,17 +386,17 @@ public class Cart extends JFrame {
 		
 		colNo = 1;
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 90;
 		col.setPreferredWidth(width);
 		
 		colNo = 2;
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 70;
 		col.setPreferredWidth(width);
 		
 		colNo = 3;
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 47;
 		col.setPreferredWidth(width);
 
 		cart_Table.setAutoResizeMode(cart_Table.AUTO_RESIZE_OFF);
