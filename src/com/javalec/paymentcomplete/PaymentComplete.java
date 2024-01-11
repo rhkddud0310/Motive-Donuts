@@ -455,8 +455,8 @@ public class PaymentComplete extends JFrame {
 	private void receiptTableInit() {
 		// Table Column 명 정하기
 		outerTable.addColumn("Product");
-		outerTable.addColumn("Qty");
 		outerTable.addColumn("Price");
+		outerTable.addColumn("Qty");
 		outerTable.setColumnCount(3);
 
 // Table Column 크기 정하기
@@ -467,12 +467,12 @@ public class PaymentComplete extends JFrame {
 
 		colNo = 1;
 		col = table_Purchase.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 120;
 		col.setPreferredWidth(width);
 
 		colNo = 2;
 		col = table_Purchase.getColumnModel().getColumn(colNo);
-		width = 126;
+		width = 106;
 		col.setPreferredWidth(width);
 
 		table_Purchase.setAutoResizeMode(table_Purchase.AUTO_RESIZE_OFF);
@@ -487,7 +487,7 @@ public class PaymentComplete extends JFrame {
 
 	private void receiptTableData() {
 
-		PaymentCompleteDao paymentCompleteDao = new PaymentCompleteDao(proname, sellprice, purqty, purdate);
+		PaymentCompleteDao paymentCompleteDao = new PaymentCompleteDao(proname, sellprice, purqty);
 		ArrayList<PaymentCompleteDto> dtoList = paymentCompleteDao.selectList();
 
 		int listCount = dtoList.size();
@@ -497,7 +497,7 @@ public class PaymentComplete extends JFrame {
 			String[] temp = { dtoList.get(i).getProname(), 
 										   Integer.toString(dtoList.get(i).getSellprice()),
 										   Integer.toString(dtoList.get(i).getPurqty()),
-										   dtoList.get(i).getPurdate()};
+										   };
 			
 			outerTable.addRow(temp);
 
