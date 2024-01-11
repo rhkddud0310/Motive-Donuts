@@ -4,7 +4,8 @@
 					그에 해당하는 제품 나열하는 Page 구현하기.
 		
 		(2) Date
-			1) 2024.01.10. (Ver 0.0.0.0)
+			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1), 2)
+			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 3),
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -12,6 +13,13 @@
 			1) 이대근 팀장님께서 만드신 기본 IPhone 배경화면 Class 가져오기.
 			
 			2) Menu Page 전용 배경화면으로 변경하기.
+			
+			3) 마우스 이벤트를 사용하여 JFrame 아무 곳이나 클릭해서 창 이동하는 기능 추가하기.
+				1. 마우스 클릭하는 위치의 좌표값 불러오기.
+					① addMouseListener(new MouseAdapter() {}); / mousePressed(MouseEvent e) {}
+					② initialClick = e.getPoint();
+				2. Drag 하는 동안 Frame 이동하기.
+					① addMouseMotionListener(new MouseAdapter() {}); / mouseDragged(MouseEvent e) {}
 				
 	--------------------------------------------------------------------------------------------- */
 
@@ -32,6 +40,7 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -57,6 +66,8 @@ public class OrderMenu extends JFrame {
 	private JLabel lblCart1;
 	private JLabel lblMenu1;
 	private JLabel lblHome1;
+	
+	private Point initialClick;	// <-- *************************************************************
 
 	/**
 	 * Launch the application.
@@ -85,7 +96,29 @@ public class OrderMenu extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		setUndecorated(true); // 타이틀 바 없애기
+		// *********************************************************************************************************
+		setUndecorated(true); // Title Bar 없애기
+		// 마우스 이벤트를 사용하여 Frame 이동
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				initialClick = e.getPoint();
+			}
+		});
+		addMouseMotionListener(new MouseAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int thisX = getLocation().x;
+				int thisY = getLocation().y;
+				
+				// Drag 하는 동안 Frame 이동
+				int xMoved = thisX + e.getX() - initialClick.x;
+				int yMoved = thisY + e.getY() - initialClick.y;
+				
+				setLocation(xMoved, yMoved);
+			}
+		});
+		// *********************************************************************************************************
 		contentPane.add(getLblTimer());
 		Timer timer = new Timer(100, new ActionListener() {
             @Override

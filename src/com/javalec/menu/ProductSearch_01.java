@@ -3,12 +3,20 @@
 		(1) Desc :	Menu Page에서 돋보기 선택 시 제품 검색 Page 구현하기.
 		
 		(2) Date
-			1) 2024.01.10. (Ver 0.0.0.0)
+			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1)
+			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 2),
 			
 		(3) Author : Gwangyeong Kim
 		
 		(4) History
 			1) 이대근 팀장님께서 만드신 기본 IPhone 배경화면 Class 가져오기.
+			
+			2) 마우스 이벤트를 사용하여 JFrame 아무 곳이나 클릭해서 창 이동하는 기능 추가하기.
+				1. 마우스 클릭하는 위치의 좌표값 불러오기.
+					① addMouseListener(new MouseAdapter() {}); / mousePressed(MouseEvent e) {}
+					② initialClick = e.getPoint();
+				2. Drag 하는 동안 Frame 이동하기.
+					① addMouseMotionListener(new MouseAdapter() {}); / mouseDragged(MouseEvent e) {}
 				
 	--------------------------------------------------------------------------------------------- */
 
