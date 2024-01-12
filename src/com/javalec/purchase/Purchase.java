@@ -3,17 +3,20 @@ package com.javalec.purchase;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -77,10 +80,8 @@ public class Purchase extends JFrame {
 	private JButton btnUsePoints;
 	private JLabel lblNewLabel_1_1_1;
 	private JTextField tfPointsGiven;
-	private JButton btnCheckout;
 	private JScrollPane scrollPane;
 	private JTable table_Purchase;
-	private JTextField tfMuy;
 	private JTextField tfMyPoints;
 	private JRadioButton rbtnCard3;
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
@@ -89,6 +90,7 @@ public class Purchase extends JFrame {
 	private JLabel lblNewLabel_2_1_1;
 	private JLabel lblNewLabel_2_1_1_1;
 	private JLabel lblNewLabel_2_1_1_1_1;
+	private DecimalFormat df = new DecimalFormat("###,###,###,###");
 	
 	//Set up a separate variable to use within this class. 
 	int orderseq; 
@@ -110,6 +112,7 @@ public class Purchase extends JFrame {
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	private JLabel lblusePoints;
+	private JLabel lblCheckoutButton;
 	
 
 	
@@ -134,6 +137,7 @@ public class Purchase extends JFrame {
 	 * Create the frame.
 	 */
 	public Purchase() {
+		setBackground(new Color(244, 208, 208));
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowActivated(WindowEvent e) {
@@ -144,7 +148,7 @@ public class Purchase extends JFrame {
 				
 			}
 		});
-		contentPane = new JPanel();
+		contentPane = 	new JPanel();
 		contentPane.setBackground(new Color(0, 0, 0));
 		setBounds(600, 100, 375, 680);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -182,7 +186,6 @@ public class Purchase extends JFrame {
 		contentPane.add(getBtnUsePoints());
 		contentPane.add(getTfPointsGiven());
 		contentPane.add(getLblNewLabel_1_1_1());
-		contentPane.add(getBtnCheckout());
 		contentPane.add(getScrollPane());
 		contentPane.add(getTfMyPoints());
 		contentPane.add(getRbtnCard3());
@@ -192,6 +195,7 @@ public class Purchase extends JFrame {
 		contentPane.add(getLblNewLabel_2_1_1_1());
 		contentPane.add(getLblNewLabel_2_1_1_1_1());
 		contentPane.add(getLblusePoints());
+		contentPane.add(getLblCheckoutButton());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -508,37 +512,29 @@ public class Purchase extends JFrame {
 		}
 		return tfPointsGiven;
 	}
-	private JButton getBtnCheckout() {
-		if (btnCheckout == null) {
-			btnCheckout = new JButton("결제하기");
-			btnCheckout.setFont(new Font("CookieRun", Font.PLAIN, 13));
-			btnCheckout.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {				
-					ordersUpdate();
-					
-				
-				}
-			});
-			btnCheckout.setBounds(120, 548, 117, 29);
-		}
-		return btnCheckout;
-	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
 			scrollPane.setBounds(17, 115, 340, 178);
 			scrollPane.setViewportView(getTable_Purchase());
+			
+		
 		}
 		return scrollPane;
 	}
 	private JTable getTable_Purchase() {
 		if (table_Purchase == null) {
-			table_Purchase = new JTable();
+			table_Purchase = new JTable() {
+				public Class getColumnClass(int column) { 				    //*************************IMAGE SETUP
+			        return (column == 0) ? Icon.class : Object.class; 	//*************************IMAGE SETUP
+				}
+			};
 			table_Purchase.setFillsViewportHeight(true);
 			table_Purchase.setForeground(new Color(0, 0, 0));
 			table_Purchase.setBackground(new Color(244, 208, 208));
 			
 			table_Purchase.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			table_Purchase.setRowHeight(100); 	
 			table_Purchase.setModel(outerTable);
 			
 		}
@@ -558,7 +554,7 @@ public class Purchase extends JFrame {
 	}
 	private JRadioButton getRbtnCard3() {
 		if (rbtnCard3 == null) {
-			rbtnCard3 = new JRadioButton("카카오페이");
+			rbtnCard3 = new JRadioButton("현장결제");
 			rbtnCard3.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			buttonGroup_1.add(rbtnCard3);
 			rbtnCard3.setBounds(200, 329, 88, 23);
@@ -615,11 +611,32 @@ public class Purchase extends JFrame {
 		return lblusePoints;
 	}
 	
-	//FUNCTIONS
-	
-	
-	
 
+	
+	private JLabel getLblCheckoutButton() {
+		if (lblCheckoutButton == null) {
+			lblCheckoutButton = new JLabel("");
+			lblCheckoutButton.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					ordersUpdate(); 
+				}
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					lblCheckoutButton.setIcon(new ImageIcon(Purchase.class.getResource("/com/javalec/image/checkoutclicked.png")));
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					lblCheckoutButton.setIcon(new ImageIcon(Purchase.class.getResource("/com/javalec/image/checkoutnotclicked.png")));
+				}
+			});
+			lblCheckoutButton.setIcon(new ImageIcon(Purchase.class.getResource("/com/javalec/image/checkoutnotclicked.png")));
+			lblCheckoutButton.setBounds(111, 548, 151, 40);
+		}
+		return lblCheckoutButton;
+	}
+	//---------FUNCTIONS-----------
+	
 	
 	//PURCHASE TABLE 초기화
 	private void purchaseTableInit() {
@@ -641,17 +658,17 @@ public class Purchase extends JFrame {
 				
 				colNo = 1;
 				col = table_Purchase.getColumnModel().getColumn(colNo);
-				width = 100;
+				width = 80;
 				col.setPreferredWidth(width);
 				
 				colNo = 2;
 				col = table_Purchase.getColumnModel().getColumn(colNo);
-				width = 100;
+				width = 70;
 				col.setPreferredWidth(width);
 				
 				colNo = 3;
 				col = table_Purchase.getColumnModel().getColumn(colNo);
-				width = 36;
+				width = 70;
 				col.setPreferredWidth(width);
 
 				table_Purchase.setAutoResizeMode(table_Purchase.AUTO_RESIZE_OFF);
@@ -664,6 +681,7 @@ public class Purchase extends JFrame {
 	
 
 	
+	
 	//PURCHASE TABLE DATA 불러오기 
 	
 	private void purchaseTableData() {
@@ -675,8 +693,15 @@ public class Purchase extends JFrame {
 		int listCount = dtoList.size();
 
 		for (int i = 0; i < listCount; i++) {
+			
+			ImageIcon icon = new ImageIcon("./"+dtoList.get(i).getImagename());
+			Image img = icon.getImage();
+			Image changeImg = img.getScaledInstance(100,100, Image.SCALE_SMOOTH);
+			ImageIcon changeIcon = new ImageIcon(changeImg);
+			
+		
 
-			String[] temp = { dtoList.get(i).getImage(),
+			Object[] temp = { changeIcon,
 							  dtoList.get(i).getProname(),
 							  Integer.toString(dtoList.get(i).getSellprice()),						  
 							  Integer.toString(dtoList.get(i).getPurqty()), };

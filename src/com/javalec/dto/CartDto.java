@@ -5,7 +5,7 @@ public class CartDto {
 	//Field
 	
 	
-	String image; 
+
 	int purseq; 
 	String custid; 
 	String proname; 
@@ -14,14 +14,27 @@ public class CartDto {
 	String category;
 	int sellprice; 
 	int point;
+	String imagename; 
 	
 	
 	
 	//Constructor
 	
-	public CartDto(String image, String proname, int sellprice, int purqty) {
+	public String getImagename() {
+		return imagename;
+	}
+
+
+
+	public void setImagename(String imagename) {
+		this.imagename = imagename;
+	}
+
+
+
+	public CartDto( String imagename, String proname, int sellprice, int purqty) {
 		super();
-		this.image = image;
+		this.imagename = imagename; 
 		this.proname = proname;
 		this.sellprice = sellprice;
 		this.purqty = purqty;
@@ -29,10 +42,10 @@ public class CartDto {
 
 	
 	
-	public CartDto(String image, int purseq, String custid, String proname, int purqty, String purdate,
+	public CartDto(int purseq, String custid, String proname, int purqty, String purdate,
 			String category, int sellprice, int point) {
 		super();
-		this.image = image;
+		
 		this.purseq = purseq;
 		this.custid = custid;
 		this.proname = proname;
@@ -76,15 +89,6 @@ public class CartDto {
 
 
 
-	public String getImage() {
-		return image;
-	}
-
-
-
-	public void setImage(String image) {
-		this.image = image;
-	}
 
 
 
