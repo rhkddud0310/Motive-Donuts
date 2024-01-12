@@ -3,14 +3,17 @@ package com.javalec.cart;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,7 +35,6 @@ import com.javalec.dao.CartDao;
 import com.javalec.dto.CartDto;
 import com.javalec.menu.Menu;
 import com.javalec.purchase.Purchase;
-import java.awt.event.MouseMotionAdapter;
 
 
 public class Cart extends JFrame {
@@ -53,8 +55,6 @@ public class Cart extends JFrame {
 	private JLabel lblNewLabel;
 	private JScrollPane scrollPane;
 	private JTable cart_Table;
-	private JButton btnAddItem;
-	private JButton btnCheckout;
 	private int purseq;
 	private String custid;
 	private String proname;
@@ -63,6 +63,8 @@ public class Cart extends JFrame {
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	private JLabel lblNewLabel_1;
+	private JLabel lblOrderButton;
+	private JLabel lblItemAdd;
 	
 	
 	
@@ -117,9 +119,9 @@ public class Cart extends JFrame {
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
 		contentPane.add(getScrollPane());
-		contentPane.add(getBtnAddItem());
-		contentPane.add(getBtnCheckout());
 		contentPane.add(getLblNewLabel_1());
+		contentPane.add(getLblOrderButton());
+		contentPane.add(getLblItemAdd());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -294,7 +296,7 @@ public class Cart extends JFrame {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(33, 131, 311, 375);
+			scrollPane.setBounds(33, 131, 311, 352);
 			scrollPane.setViewportView(getCart_Table());
 			cartTableInit(); 
 			cartTableData(); 
@@ -303,7 +305,11 @@ public class Cart extends JFrame {
 	}
 	private JTable getCart_Table() {
 		if (cart_Table == null) {
-			cart_Table = new JTable();
+			cart_Table = new JTable() {
+				public Class getColumnClass(int column) { 				    //*************************IMAGE SETUP
+			        return (column == 0) ? Icon.class : Object.class; 	//*************************IMAGE SETUP
+			        }		
+			};
 			cart_Table.setBackground(new Color(244, 208, 208));
 			cart_Table.setFillsViewportHeight(true);
 			cart_Table.addMouseMotionListener(new MouseMotionAdapter() {
@@ -324,43 +330,63 @@ public class Cart extends JFrame {
 			});
 		
 			cart_Table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			cart_Table.setRowHeight(100); 	
 			cart_Table.setModel(outerTable);
 		}
 		return cart_Table;
-	}
-	private JButton getBtnAddItem() {
-		if (btnAddItem == null) {
-			btnAddItem = new JButton("아이템 추가하기");
-			btnAddItem.setFont(new Font("CookieRun", Font.PLAIN, 12));
-			btnAddItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					backToMenu(); 
-				}
-			});
-			btnAddItem.setBounds(227, 93, 117, 29);
-		}
-		return btnAddItem;
-	}
-	private JButton getBtnCheckout() {
-		if (btnCheckout == null) {
-			btnCheckout = new JButton("주문하기");
-			btnCheckout.setFont(new Font("CookieRun", Font.PLAIN, 12));
-			btnCheckout.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					moveToPurchase();
-				}
-			});
-			btnCheckout.setBounds(120, 538, 117, 29);
-		}
-		return btnCheckout;
 	}
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("Select & Swipe to delete item!");
 			lblNewLabel_1.setFont(new Font("CookieRun", Font.PLAIN, 12));
-			lblNewLabel_1.setBounds(37, 510, 236, 16);
+			lblNewLabel_1.setBounds(36, 495, 236, 16);
 		}
 		return lblNewLabel_1;
+	}
+	private JLabel getLblOrderButton() {
+		if (lblOrderButton == null) {
+			lblOrderButton = new JLabel("");
+			lblOrderButton.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					moveToPurchase();		
+				}
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					lblOrderButton.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/Orderclicked.png")));					
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					lblOrderButton.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/Ordernotclicked.png")));			
+				}
+			});
+			lblOrderButton.setIcon(new ImageIcon(Cart.class.getResource("/com/javalec/image/Ordernotclicked.png")));
+			lblOrderButton.setBounds(120, 529, 152, 46);
+		}
+		return lblOrderButton;
+	}
+	
+	private JLabel getLblItemAdd() {
+		if (lblItemAdd == null) {
+			lblItemAdd = new JLabel("");
+			lblItemAdd.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					backToMenu();
+				}
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					lblItemAdd.setIcon(new ImageIcon(Cart.class.getResource("/com/javalec/image/Additemclicked.png")));
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					lblItemAdd.setIcon(new ImageIcon(Cart.class.getResource("/com/javalec/image/Additemnotclicked.png")));
+				}
+			});
+			lblItemAdd.setIcon(new ImageIcon(Cart.class.getResource("/com/javalec/image/Additemnotclicked.png")));
+			lblItemAdd.setBounds(241, 99, 103, 34);
+		}
+		return lblItemAdd;
 	}
 	
 	
@@ -418,11 +444,22 @@ public class Cart extends JFrame {
 
 		for (int i = 0; i < listCount; i++) {
 
-			String[] temp = { dtoList.get(i).getImage(),
-							  dtoList.get(i).getProname(),
-							  Integer.toString(dtoList.get(i).getSellprice()),						  
-							  Integer.toString(dtoList.get(i).getPurqty()), };
+			ImageIcon icon = new ImageIcon("./"+dtoList.get(i).getImagename());
+			Image img = icon.getImage();
+			Image changeImg = img.getScaledInstance(100,100, Image.SCALE_SMOOTH);
+			ImageIcon changeIcon = new ImageIcon(changeImg);
+			
+			
+			
+			Object[] temp = { changeIcon,
+					dtoList.get(i).getProname(),
+					Integer.toString(dtoList.get(i).getSellprice()),						  
+					Integer.toString(dtoList.get(i).getPurqty()),};
+			
 			outerTable.addRow(temp);
+			
+
+			
 		}
 
 	}
@@ -481,7 +518,6 @@ public class Cart extends JFrame {
 		}
 
 	}
-	
 	
 	
 	

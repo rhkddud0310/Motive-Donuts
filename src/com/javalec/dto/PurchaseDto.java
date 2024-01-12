@@ -6,7 +6,7 @@ public class PurchaseDto {
 	
    //Field 
 	
-	String image; 
+	
 	int purseq; 
 	String custid; 
 	String proname; 
@@ -15,6 +15,7 @@ public class PurchaseDto {
 	String category;
 	int sellprice; 
 	int point;
+	String imagename; 
 	
 	int orderseq; 
 	String payment; 
@@ -44,9 +45,9 @@ public class PurchaseDto {
 
 
 
-	public PurchaseDto(String image, String proname, int sellprice, int purqty) {
+	public PurchaseDto(String imagename, String proname, int sellprice, int purqty) {
 		super();
-		this.image = image;
+		this.imagename = imagename;
 		this.proname = proname;
 		this.sellprice = sellprice;
 		this.purqty = purqty;
@@ -61,10 +62,10 @@ public class PurchaseDto {
 
 
 
-	public PurchaseDto(String image, int purseq, String custid, String proname, int purqty, String purdate,
+	public PurchaseDto(String imagename, int purseq, String custid, String proname, int purqty, String purdate,
 			String category, int sellprice, int point) {
 		super();
-		this.image = image;
+		this.imagename = imagename;
 		this.purseq = purseq;
 		this.custid = custid;
 		this.proname = proname;
@@ -77,10 +78,10 @@ public class PurchaseDto {
 
 
 	
-	public PurchaseDto(int purseq, String image, String proname, int sellprice, int purqty) {
+	public PurchaseDto(int purseq, String imagename, String proname, int sellprice, int purqty) {
 		super();
 		this.purseq = purseq; 
-		this.image = image;
+		this.imagename = imagename;
 		this.proname = proname;
 		this.sellprice = sellprice;
 		this.purqty = purqty;
@@ -102,8 +103,8 @@ public class PurchaseDto {
 
 	
 
-	public String getImage() {
-		return image;
+	public String getImagename() {
+		return imagename;
 	}
 
 
@@ -192,8 +193,8 @@ public class PurchaseDto {
 
 
 
-	public void setImage(String image) {
-		this.image = image;
+	public void setImage(String imagename) {
+		this.imagename = imagename;
 	}
 
 
