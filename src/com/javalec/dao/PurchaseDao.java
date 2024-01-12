@@ -1,6 +1,8 @@
 package com.javalec.dao;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,7 +22,7 @@ public class PurchaseDao {
 	private final String pw_mysql = ShareVar.dbPass;
 	
 	
-	String image; 
+	FileInputStream image; 
 	int sellprice;
 	int purseq; 
 	String custid; 
@@ -63,7 +65,7 @@ public class PurchaseDao {
 	//Constructor
 	
 	
-	public PurchaseDao(int purseq, String image, String proname, int sellprice, int purqty) {
+	public PurchaseDao(int purseq, FileInputStream image, String proname, int sellprice, int purqty) {
 		super();
 		this.purseq = purseq; 
 		this.image = image;
@@ -109,7 +111,7 @@ public class PurchaseDao {
 	//카트 내역을 구매하기 창으로 불러오자. 
 	public ArrayList<PurchaseDto> selectList(int ppurseq, String pcustid) {
 		ArrayList<PurchaseDto> dtoList = new ArrayList<PurchaseDto>(); 
-		String whereDefault = "SELECT p.purseq, pr.image, pr.proname, pr.sellprice, p.purqty FROM purchase p, product pr WHERE pr.proname = p.proname ";
+		String whereDefault = "SELECT p.purseq, pr.image, pr.imagename, pr.proname, pr.sellprice, p.purqty FROM purchase p, product pr WHERE pr.proname = p.proname ";
 		String where = "AND p.purseq = "+ppurseq+" AND p.custid =  '"+pcustid+"'";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -121,13 +123,24 @@ public class PurchaseDao {
 			
 			while(rs.next()) {
 				int purseq = rs.getInt(1);
-				String image = rs.getString(2); 
-				String proname = rs.getString(3);
-				int sellprice = rs.getInt(4);
-				int purqty = rs.getInt(5);
+				String imagename = rs.getString(3);
+				String proname = rs.getString(4);
+				int sellprice = rs.getInt(5);
+				int purqty = rs.getInt(6);
+				
+			// File  그림 파일을 하나만들어준다.
+				
+				File file = new File(imagename);
+				FileOutputStream output = new FileOutputStream(file);
+				InputStream image = rs.getBinaryStream(2);
+				byte[] buffer = new byte[1024];
+				while(image.read(buffer) > 0 ) {
+					output.write(buffer);
+				}
+		
 				
 				
-				PurchaseDto purchaseDto =  new PurchaseDto(purseq, image, proname, sellprice, purqty);
+				PurchaseDto purchaseDto =  new PurchaseDto(purseq, imagename, proname, sellprice, purqty);
 				dtoList.add(purchaseDto); 
 						
 			}
