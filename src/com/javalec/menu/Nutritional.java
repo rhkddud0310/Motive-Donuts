@@ -1,4 +1,4 @@
-/*	---------------------------------------------------------------------------------------------
+/*	---------------------------------------------------------------------------------------------------------------
 
 		(1) Desc :	제품 상세 Page에서 제품 영양 정보 Button 선택 시
 					제품에 대한 영양 정보 Page 구현하기.
@@ -6,6 +6,7 @@
 		(2) Date
 			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1)
 			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 2)
+			3) 2024.01.12. (Ver 0.0.0.2) => (4)History - 
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -18,7 +19,7 @@
 				2. Drag 하는 동안 Frame 이동하기.
 					① addMouseMotionListener(new MouseAdapter() {}); / mouseDragged(MouseEvent e) {}
 
-	--------------------------------------------------------------------------------------------- */
+	--------------------------------------------------------------------------------------------------------------- */
 
 
 package com.javalec.menu;
@@ -93,7 +94,7 @@ public class Nutritional extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		// *********************************************************************************************************
+		// *************************************************************************************************************
 		setUndecorated(true); // Title Bar 없애기
 		// 마우스 이벤트를 사용하여 Frame 이동
 		// 마우스 클릭하는 위치 좌표값 불러오기.
@@ -116,7 +117,7 @@ public class Nutritional extends JFrame {
 				setLocation(xMoved, yMoved);
 			}
 		});
-		// *********************************************************************************************************
+		// *************************************************************************************************************
 		contentPane.add(getLblTimer());
 		Timer timer = new Timer(100, new ActionListener() {
             @Override
@@ -169,7 +170,9 @@ public class Nutritional extends JFrame {
 			lblHome.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					homeScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						homeScreen();
+					}
 				}
 			});
 			lblHome.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Home button.png")));
@@ -184,7 +187,9 @@ public class Nutritional extends JFrame {
 			lblMenu.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					menuScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						menuScreen();
+					}
 				}
 			});
 			lblMenu.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Menu button.png")));
@@ -199,7 +204,10 @@ public class Nutritional extends JFrame {
 			lblCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					cartScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						cartScreen();
+//						signInScreen();
+					}
 				}
 			});
 			lblCart.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Cart button.png")));
@@ -214,7 +222,10 @@ public class Nutritional extends JFrame {
 			lblAccount.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					accountScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						accountScreen();
+//						signInScreen();
+					}
 				}
 			});
 			lblAccount.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Account button.png")));
@@ -260,7 +271,7 @@ public class Nutritional extends JFrame {
 		return lblAccount1;
 	}
 	
-	// *******************************************************************************************
+	// *******************************************************************************************************************
 	
 	// --- Functions (1) ----
 	
@@ -299,10 +310,6 @@ public class Nutritional extends JFrame {
 		account.setVisible(true);
 	}
 	
-	
-	
-	
-	
-	
+	// *******************************************************************************************************************
 	
 } // End

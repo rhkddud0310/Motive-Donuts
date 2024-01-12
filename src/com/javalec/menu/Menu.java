@@ -1,10 +1,11 @@
-/*	---------------------------------------------------------------------------------------------
+/*	---------------------------------------------------------------------------------------------------------------
 
 		(1) Desc :	Menu를 카테고리 별로 나열하는 Page 구현하기.
 		
 		(2) Date
 			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1), 2), 3), 4)
-			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 5),
+			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 5)
+			3) 2024.01.12. (Ver 0.0.0.2) => (4)History - 
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -29,11 +30,12 @@
 				2. Drag 하는 동안 Frame 이동하기.
 					① addMouseMotionListener(new MouseAdapter() {}); / mouseDragged(MouseEvent e) {}
 
-	--------------------------------------------------------------------------------------------- */
+	--------------------------------------------------------------------------------------------------------------- */
 
 package com.javalec.menu;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Point;
@@ -44,6 +46,7 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -60,9 +63,23 @@ import com.javalec.cart.Cart;
 import com.javalec.dao.CartDao;
 import com.javalec.dto.CartDto;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JTabbedPane;
+import javax.swing.border.EtchedBorder;
+import javax.swing.JProgressBar;
+import javax.swing.JButton;
+import javax.swing.JToolBar;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import javax.swing.JTextField;
+import javax.swing.JScrollPane;
 
 public class Menu extends JFrame {
 
@@ -86,6 +103,17 @@ public class Menu extends JFrame {
 	private JLabel lblCartCountNum;
 	
 	private Point initialClick;	// <-- *************************************************************
+	
+	private JLabel lblSuperCategory1;
+	private JLabel lblSuperCategory2;
+	private JLabel lblBaseCategory1;
+	private JLabel lblBaseCategory2;
+	private JLabel lblBaseCategory3;
+	private JScrollPane scrollPane;
+	
+//	private JPanel mainPanel;
+//	private JScrollPane scrollPane;
+//	private JPanel panel;
 	
 	/**
 	 * Launch the application.
@@ -120,7 +148,7 @@ public class Menu extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		// *********************************************************************************************************
+		// *************************************************************************************************************
 		setUndecorated(true); // Title Bar 없애기
 		// 마우스 이벤트를 사용하여 Frame 이동
 		// 마우스 클릭하는 위치 좌표값 불러오기.
@@ -143,7 +171,7 @@ public class Menu extends JFrame {
 				setLocation(xMoved, yMoved);
 			}
 		});
-		// *********************************************************************************************************
+		// *************************************************************************************************************
 		contentPane.add(getLblTimer());
 		Timer timer = new Timer(100, new ActionListener() {
 			@Override
@@ -161,10 +189,17 @@ public class Menu extends JFrame {
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
 		contentPane.add(getLblMenuLogo());
+		contentPane.add(getLblSuperCategory1());
+		contentPane.add(getLblSuperCategory2());
+		contentPane.add(getLblBaseCategory1());
+		contentPane.add(getLblBaseCategory2());
+		contentPane.add(getLblBaseCategory3());
 		contentPane.add(getLblproSearch());
 		contentPane.add(getCbSelectStore());
 		contentPane.add(getLblCartCount());
 		contentPane.add(getLblCartCountNum());
+		contentPane.add(getScrollPane());
+//		contentPane.add(getScrollPane());
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -204,7 +239,9 @@ public class Menu extends JFrame {
 			lblHome.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					homeScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						homeScreen();
+					}
 				}
 			});
 			lblHome.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Home button.png")));
@@ -220,7 +257,9 @@ public class Menu extends JFrame {
 			lblMenu.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					menuScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						menuScreen();
+					}
 				}
 			});
 			lblMenu.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Menu button.png")));
@@ -236,7 +275,10 @@ public class Menu extends JFrame {
 			lblCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-//					signInScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						cartScreen();
+//						signInScreen();
+					}
 				}
 			});
 			lblCart.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Cart button.png")));
@@ -252,7 +294,10 @@ public class Menu extends JFrame {
 			lblAccount.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-//					signInScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						accountScreen();
+//						signInScreen();
+					}
 				}
 			});
 			lblAccount.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Account button.png")));
@@ -302,7 +347,7 @@ public class Menu extends JFrame {
 		return lblAccount1;
 	}
 	
-	// *******************************************************************************************
+	// *******************************************************************************************************************
 	
 	// --- Functions (1) ----
 	
@@ -342,7 +387,7 @@ public class Menu extends JFrame {
 		account.setVisible(true);
 	}
 	
-	// *******************************************************************************************
+	// *******************************************************************************************************************
 	
 	private JLabel getLblMenuLogo() {
 		if (lblMenuLogo == null) {
@@ -359,11 +404,17 @@ public class Menu extends JFrame {
 			lblproSearch.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					searchScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						searchScreen();
+					}
 				}
 			});
 			lblproSearch.setHorizontalAlignment(SwingConstants.CENTER);
 			lblproSearch.setIcon(new ImageIcon(Menu.class.getResource("/com/javalec/image/돋보기_검색.png")));
+			// ************************************************************************************************************************
+			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
+			lblproSearch.setToolTipText("<html><font face='맑은 고딕' size='5'><b>제품 검색 페이지로 이동합니다.</b></font></html>");
+			// ************************************************************************************************************************
 			lblproSearch.setBounds(305, 150, 35, 35);
 		}
 		return lblproSearch;
@@ -405,7 +456,7 @@ public class Menu extends JFrame {
 		return lblCartCountNum;
 	}
 	
-	// *******************************************************************************************
+	// *******************************************************************************************************************
 	
 	// --- Functions (2) ----
 	
@@ -415,7 +466,6 @@ public class Menu extends JFrame {
 		ProductSearch_01 proSearch = new ProductSearch_01();
 		proSearch.setVisible(true);
 	}
-	
 	
 	// 장바구니 수량 확인하기.
 	private void cartQty() {
@@ -427,10 +477,119 @@ public class Menu extends JFrame {
 		lblCartCountNum.setText(Integer.toString(listCount));
 	}
 	
+	private JLabel getLblSuperCategory1() {
+		if (lblSuperCategory1 == null) {
+			lblSuperCategory1 = new JLabel("전체 메뉴");
+			lblSuperCategory1.setHorizontalAlignment(SwingConstants.CENTER);
+			lblSuperCategory1.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+			lblSuperCategory1.setBounds(40, 150, 75, 35);
+		}
+		return lblSuperCategory1;
+	}
+	private JLabel getLblSuperCategory2() {
+		if (lblSuperCategory2 == null) {
+			lblSuperCategory2 = new JLabel("나만의 메뉴");
+			lblSuperCategory2.setHorizontalAlignment(SwingConstants.CENTER);
+			lblSuperCategory2.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+			lblSuperCategory2.setBounds(130, 150, 90, 35);
+		}
+		return lblSuperCategory2;
+	}
+	private JLabel getLblBaseCategory1() {
+		if (lblBaseCategory1 == null) {
+			lblBaseCategory1 = new JLabel("푸드");
+			lblBaseCategory1.setForeground(new Color(0, 0, 128));
+			lblBaseCategory1.setHorizontalAlignment(SwingConstants.CENTER);
+			lblBaseCategory1.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+			lblBaseCategory1.setBounds(35, 192, 50, 28);
+		}
+		return lblBaseCategory1;
+	}
+	private JLabel getLblBaseCategory2() {
+		if (lblBaseCategory2 == null) {
+			lblBaseCategory2 = new JLabel("음료");
+			lblBaseCategory2.setHorizontalAlignment(SwingConstants.CENTER);
+			lblBaseCategory2.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+			lblBaseCategory2.setBounds(95, 192, 50, 28);
+		}
+		return lblBaseCategory2;
+	}
+	private JLabel getLblBaseCategory3() {
+		if (lblBaseCategory3 == null) {
+			lblBaseCategory3 = new JLabel("Set");
+			lblBaseCategory3.setHorizontalAlignment(SwingConstants.CENTER);
+			lblBaseCategory3.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+			lblBaseCategory3.setBounds(155, 192, 50, 28);
+		}
+		return lblBaseCategory3;
+	}
 	
+	// *******************************************************************************************************************
+
+//	private JScrollPane getScrollPane() {
+//		if (scrollPane == null) {
+//			scrollPane = new JScrollPane(getPanel());
+//			scrollPane.setBounds(8, 230, 355, 300);
+//			scrollPane.setViewportView(getPanel());
+//		}
+//		return scrollPane;
+//	}
+//	private JPanel getPanel() {
+//		if (panel == null) {
+//			panel = new JPanel();
+//			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//		}
+//		return panel;
+//	}
 	
+//	// 하위 카테고리를 JPanle로 생성 및 상하로 정렬하기.
+//	private JPanel getMainPanel() {
+//		if (mainPanel == null) {
+//			mainPanel = new JPanel(new BorderLayout());
+//			mainPanel.add(getScrollPane(), BorderLayout.CENTER);
+//		}
+//		return mainPanel;
+//	}
+//	
+//	private JScrollPane getScrollPane() {
+//		if (scrollPane == null) {
+//			scrollPane = new JScrollPane(getPanel());
+//			scrollPane.setPreferredSize(getPreferredSize());
+//		}
+//		return scrollPane;
+//	}
+//	
+//	private JPanel getPanel() {
+//		if (panel == null) {
+//			panel = new JPanel();
+//			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//			// panel에 필요한 컴포넌트를 추가하거나 데이터를 로드하는 코드를 여기에 추가하세요.
+//			
+//			// 여러 개의 JPanel을 생성하고 상하로 추가
+//			for (int i = 0; i < 5; i++) {
+//				JPanel childPanel = createChildPanel(); // 새로운 JPanel을 생성하는 메소드
+//				panel.add(childPanel);
+//			}
+//			
+//		}
+//		return panel;
+//	}
+//	
+//	
+//	// --- Functions (3) ----
+//	
+//	private JPanel createChildPanel() {
+//		JPanel childPanel = new JPanel();
+//		// childPanel에 필요한 컴포넌트를 추가하거나 데이터를 로드하는 코드를 여기에 추가하세요.
+//		
+//		return childPanel;
+//	}
 	
-	
-	
-	
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(8, 227, 355, 305);
+		}
+		return scrollPane;
+	}
 } // End

@@ -1,10 +1,11 @@
-/*	---------------------------------------------------------------------------------------------
+/*	---------------------------------------------------------------------------------------------------------------
 
 		(1) Desc :	Menu Page에서 돋보기 선택 시 제품 검색 Page 구현하기.
 		
 		(2) Date
 			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1)
 			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 2)
+			3) 2024.01.12. (Ver 0.0.0.2) => (4)History - 
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -18,7 +19,7 @@
 				2. Drag 하는 동안 Frame 이동하기.
 					① addMouseMotionListener(new MouseAdapter() {}); / mouseDragged(MouseEvent e) {}
 
-	--------------------------------------------------------------------------------------------- */
+	--------------------------------------------------------------------------------------------------------------- */
 
 
 package com.javalec.menu;
@@ -47,6 +48,10 @@ import java.util.Date;
 
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JButton;
 
 public class ProductSearch_01 extends JFrame {
 
@@ -65,6 +70,14 @@ public class ProductSearch_01 extends JFrame {
 	private JLabel lblHome1;
 	
 	private Point initialClick;	// <-- *************************************************************
+	private JLabel lblProSearch;
+	private JTextField tfProSearch;
+	private JLabel lblCancel;
+	private JLabel lblRecentSearchTerms;
+	private JScrollPane scrollPane;
+	private JTable innerTable;
+	private JButton btnDeleteSelection;
+	private JButton btnDeleteTheWhole;
 	
 	/**
 	 * Launch the application.
@@ -93,7 +106,7 @@ public class ProductSearch_01 extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		// *********************************************************************************************************
+		// *************************************************************************************************************
 		setUndecorated(true); // Title Bar 없애기
 		// 마우스 이벤트를 사용하여 Frame 이동
 		// 마우스 클릭하는 위치 좌표값 불러오기.
@@ -116,7 +129,7 @@ public class ProductSearch_01 extends JFrame {
 				setLocation(xMoved, yMoved);
 			}
 		});
-		// *********************************************************************************************************
+		// *************************************************************************************************************
 		contentPane.add(getLblTimer());
 		Timer timer = new Timer(100, new ActionListener() {
             @Override
@@ -133,6 +146,13 @@ public class ProductSearch_01 extends JFrame {
 		contentPane.add(getLblCart1());
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
+		contentPane.add(getTfProSearch());
+		contentPane.add(getLblProSearch());
+		contentPane.add(getLblCancel());
+		contentPane.add(getLblRecentSearchTerms());
+		contentPane.add(getScrollPane());
+		contentPane.add(getBtnDeleteSelection());
+		contentPane.add(getBtnDeleteTheWhole());
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -148,7 +168,7 @@ public class ProductSearch_01 extends JFrame {
 	private JLabel getLblScreen() {
 		if (lblScreen == null) {
 			lblScreen = new JLabel("New label");
-			lblScreen.setIcon(new ImageIcon(ProductSearch_01.class.getResource("/com/javalec/image/아이폰 홈 화면.png")));
+			lblScreen.setIcon(new ImageIcon(ProductSearch_01.class.getResource("/com/javalec/image/OrderMenu Page 배경화면.png")));
 			lblScreen.setBounds(8, 10, 358, 665);
 		}
 		return lblScreen;
@@ -169,7 +189,9 @@ public class ProductSearch_01 extends JFrame {
 			lblHome.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					homeScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						homeScreen();
+					}
 				}
 			});
 			lblHome.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Home button.png")));
@@ -184,7 +206,9 @@ public class ProductSearch_01 extends JFrame {
 			lblMenu.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					menuScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						menuScreen();
+					}
 				}
 			});
 			lblMenu.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Menu button.png")));
@@ -199,7 +223,10 @@ public class ProductSearch_01 extends JFrame {
 			lblCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					cartScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						cartScreen();
+//						signInScreen();
+					}
 				}
 			});
 			lblCart.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Cart button.png")));
@@ -214,7 +241,10 @@ public class ProductSearch_01 extends JFrame {
 			lblAccount.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					accountScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						accountScreen();
+//						signInScreen();
+					}
 				}
 			});
 			lblAccount.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Account button.png")));
@@ -260,7 +290,7 @@ public class ProductSearch_01 extends JFrame {
 		return lblAccount1;
 	}
 	
-	// *******************************************************************************************
+	// *******************************************************************************************************************
 	
 	// --- Functions (1) ----
 	
@@ -298,11 +328,81 @@ public class ProductSearch_01 extends JFrame {
 		Account account = new Account();
 		account.setVisible(true);
 	}
-	
-	
-	
-	
-	
-	
-	
+	private JLabel getLblProSearch() {
+		if (lblProSearch == null) {
+			lblProSearch = new JLabel("");
+			lblProSearch.setIcon(new ImageIcon(ProductSearch_01.class.getResource("/com/javalec/image/돋보기_검색.png")));
+			lblProSearch.setHorizontalAlignment(SwingConstants.CENTER);
+			lblProSearch.setBounds(27, 140, 30, 30);
+		}
+		return lblProSearch;
+	}
+	private JTextField getTfProSearch() {
+		if (tfProSearch == null) {
+			tfProSearch = new JTextField();
+			tfProSearch.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+			tfProSearch.setBounds(65, 135, 220, 40);
+			tfProSearch.setColumns(10);
+		}
+		return tfProSearch;
+	}
+	private JLabel getLblCancel() {
+		if (lblCancel == null) {
+			lblCancel = new JLabel("취소");
+			lblCancel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						menuScreen();
+					}
+				}
+			});
+			lblCancel.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+			lblCancel.setHorizontalAlignment(SwingConstants.CENTER);
+			// ************************************************************************************************************************
+			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
+			lblCancel.setToolTipText("<html><font face='맑은 고딕' size='5'><b>Menu 페이지로 이동합니다.</b></font></html>");
+			// ************************************************************************************************************************
+			lblCancel.setBounds(280, 135, 68, 40);
+		}
+		return lblCancel;
+	}
+	private JLabel getLblRecentSearchTerms() {
+		if (lblRecentSearchTerms == null) {
+			lblRecentSearchTerms = new JLabel("최근 검색어");
+			lblRecentSearchTerms.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+			lblRecentSearchTerms.setBounds(36, 190, 75, 15);
+		}
+		return lblRecentSearchTerms;
+	}
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(36, 210, 295, 270);
+			scrollPane.setViewportView(getInnerTable());
+		}
+		return scrollPane;
+	}
+	private JTable getInnerTable() {
+		if (innerTable == null) {
+			innerTable = new JTable();
+		}
+		return innerTable;
+	}
+	private JButton getBtnDeleteSelection() {
+		if (btnDeleteSelection == null) {
+			btnDeleteSelection = new JButton("선택 삭제");
+			btnDeleteSelection.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+			btnDeleteSelection.setBounds(36, 490, 100, 30);
+		}
+		return btnDeleteSelection;
+	}
+	private JButton getBtnDeleteTheWhole() {
+		if (btnDeleteTheWhole == null) {
+			btnDeleteTheWhole = new JButton("전체 삭제");
+			btnDeleteTheWhole.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+			btnDeleteTheWhole.setBounds(230, 490, 100, 30);
+		}
+		return btnDeleteTheWhole;
+	}
 } // End
