@@ -61,6 +61,19 @@ public class PaymentCompleteDao {
 		
 		
 	
+		public PaymentCompleteDao(String proname, int sellprice, int purqty) {
+			super();
+			this.proname = proname;
+			this.sellprice = sellprice;
+			this.purqty = purqty;
+		}
+
+
+
+
+
+
+
 		public PaymentCompleteDao(int payprice) {
 			super();
 			this.payprice = payprice;
@@ -86,7 +99,7 @@ public class PaymentCompleteDao {
 
 		public ArrayList<PaymentCompleteDto> selectList() {
 			ArrayList<PaymentCompleteDto> dtoList = new ArrayList<PaymentCompleteDto>(); 
-			String where = "SELECT p.proname, p.purqty, pr.sellprice, p.purdate FROM product pr, purchase p WHERE pr.proname = p.proname AND p.purdate = '2023-12-12' ";
+			String where = "SELECT p.proname, pr.sellprice, p.purqty, p.purdate FROM product pr, purchase p WHERE pr.proname = p.proname AND p.purdate = '2023-12-12' ";
 
 			try {
  				Class.forName("com.mysql.cj.jdbc.Driver");

@@ -334,7 +334,7 @@ public class PaymentComplete extends JFrame {
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("결제가 완료되었습니다!");
-			lblNewLabel.setBounds(59, 114, 271, 34);
+			lblNewLabel.setBounds(59, 119, 271, 34);
 			lblNewLabel.setForeground(new Color(0, 0, 0));
 			lblNewLabel.setFont(new Font("CookieRun", Font.BOLD, 25));
 		}
@@ -345,7 +345,7 @@ public class PaymentComplete extends JFrame {
 		if (lblPaymentMethod == null) {
 			lblPaymentMethod = new JLabel("결제수단:");
 			lblPaymentMethod.setFont(new Font("CookieRun", Font.PLAIN, 12));
-			lblPaymentMethod.setBounds(37, 448, 61, 16);
+			lblPaymentMethod.setBounds(72, 449, 61, 16);
 			lblPaymentMethod.setForeground(new Color(0, 0, 0));
 		}
 		return lblPaymentMethod;
@@ -354,7 +354,7 @@ public class PaymentComplete extends JFrame {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(17, 177, 340, 178);
+			scrollPane.setBounds(17, 177, 340, 208);
 			scrollPane.setViewportView(getTable_Purchase());
 		}
 		return scrollPane;
@@ -366,7 +366,8 @@ public class PaymentComplete extends JFrame {
 			table_Purchase.setFillsViewportHeight(true);
 			table_Purchase.setForeground(new Color(0, 0, 0));
 			table_Purchase.setBackground(new Color(244, 208, 208));
-
+			
+			table_Purchase.setRowHeight(40);
 			table_Purchase.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table_Purchase.setModel(outerTable);
 
@@ -381,7 +382,7 @@ public class PaymentComplete extends JFrame {
 			tfPaymentMethod.setEditable(false);
 			tfPaymentMethod.setColumns(10);
 			tfPaymentMethod.setBackground(new Color(244, 208, 208));
-			tfPaymentMethod.setBounds(132, 443, 130, 26);
+			tfPaymentMethod.setBounds(167, 444, 130, 26);
 		}
 		return tfPaymentMethod;
 	}
@@ -391,7 +392,7 @@ public class PaymentComplete extends JFrame {
 			lblTotalPrice = new JLabel("결제금액:");
 			lblTotalPrice.setFont(new Font("CookieRun", Font.PLAIN, 12));
 			lblTotalPrice.setForeground(Color.BLACK);
-			lblTotalPrice.setBounds(36, 409, 61, 16);
+			lblTotalPrice.setBounds(71, 411, 61, 16);
 		}
 		return lblTotalPrice;
 	}
@@ -403,7 +404,7 @@ public class PaymentComplete extends JFrame {
 			tfTotalPrice.setEditable(false);
 			tfTotalPrice.setColumns(10);
 			tfTotalPrice.setBackground(new Color(244, 208, 208));
-			tfTotalPrice.setBounds(132, 404, 130, 26);
+			tfTotalPrice.setBounds(167, 406, 130, 26);
 		}
 		return tfTotalPrice;
 	}
@@ -412,7 +413,7 @@ public class PaymentComplete extends JFrame {
 			lblUsedPoints = new JLabel("사용한 포인트: ");
 			lblUsedPoints.setForeground(Color.BLACK);
 			lblUsedPoints.setFont(new Font("CookieRun", Font.PLAIN, 12));
-			lblUsedPoints.setBounds(36, 480, 84, 16);
+			lblUsedPoints.setBounds(72, 482, 84, 16);
 		}
 		return lblUsedPoints;
 	}
@@ -423,7 +424,7 @@ public class PaymentComplete extends JFrame {
 			tfUsedPoints.setEditable(false);
 			tfUsedPoints.setColumns(10);
 			tfUsedPoints.setBackground(new Color(244, 208, 208));
-			tfUsedPoints.setBounds(132, 475, 130, 26);
+			tfUsedPoints.setBounds(166, 477, 130, 26);
 		}
 		return tfUsedPoints;
 	}
@@ -432,7 +433,7 @@ public class PaymentComplete extends JFrame {
 			lblGetPoints = new JLabel("받은 포인트: ");
 			lblGetPoints.setForeground(Color.BLACK);
 			lblGetPoints.setFont(new Font("CookieRun", Font.PLAIN, 12));
-			lblGetPoints.setBounds(37, 508, 84, 16);
+			lblGetPoints.setBounds(72, 510, 84, 16);
 		}
 		return lblGetPoints;
 	}
@@ -443,7 +444,7 @@ public class PaymentComplete extends JFrame {
 			tfGetPoints.setEditable(false);
 			tfGetPoints.setColumns(10);
 			tfGetPoints.setBackground(new Color(244, 208, 208));
-			tfGetPoints.setBounds(132, 503, 130, 26);
+			tfGetPoints.setBounds(167, 505, 130, 26);
 		}
 		return tfGetPoints;
 	}
@@ -455,9 +456,10 @@ public class PaymentComplete extends JFrame {
 	private void receiptTableInit() {
 		// Table Column 명 정하기
 		outerTable.addColumn("Product");
-		outerTable.addColumn("Qty");
 		outerTable.addColumn("Price");
+		outerTable.addColumn("Qty");
 		outerTable.setColumnCount(3);
+		
 
 // Table Column 크기 정하기
 		int colNo = 0;
@@ -467,12 +469,12 @@ public class PaymentComplete extends JFrame {
 
 		colNo = 1;
 		col = table_Purchase.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 120;
 		col.setPreferredWidth(width);
 
 		colNo = 2;
 		col = table_Purchase.getColumnModel().getColumn(colNo);
-		width = 126;
+		width = 106;
 		col.setPreferredWidth(width);
 
 		table_Purchase.setAutoResizeMode(table_Purchase.AUTO_RESIZE_OFF);
@@ -487,7 +489,7 @@ public class PaymentComplete extends JFrame {
 
 	private void receiptTableData() {
 
-		PaymentCompleteDao paymentCompleteDao = new PaymentCompleteDao(proname, sellprice, purqty, purdate);
+		PaymentCompleteDao paymentCompleteDao = new PaymentCompleteDao(proname, sellprice, purqty);
 		ArrayList<PaymentCompleteDto> dtoList = paymentCompleteDao.selectList();
 
 		int listCount = dtoList.size();
@@ -497,7 +499,7 @@ public class PaymentComplete extends JFrame {
 			String[] temp = { dtoList.get(i).getProname(), 
 										   Integer.toString(dtoList.get(i).getSellprice()),
 										   Integer.toString(dtoList.get(i).getPurqty()),
-										   dtoList.get(i).getPurdate()};
+										   };
 			
 			outerTable.addRow(temp);
 
@@ -565,10 +567,9 @@ public class PaymentComplete extends JFrame {
 	
 		
 	}
-	
-	
-	
-	
+
+
+
 	
 	
 	

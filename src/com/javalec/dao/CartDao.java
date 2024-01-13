@@ -1,5 +1,9 @@
 package com.javalec.dao;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,7 +23,7 @@ public class CartDao {
 
 	
 	
-	String image; 
+	FileInputStream image; 
 	int sellprice;
 	int purseq; 
 	String custid; 
@@ -40,7 +44,7 @@ public class CartDao {
 	//Constructor
 	
 	
-	public CartDao(String image, String proname, int sellprice, int purqty) {
+	public CartDao(FileInputStream image, String proname, int sellprice, int purqty) {
 		super();
 		this.image = image;
 		this.proname = proname;
@@ -89,7 +93,7 @@ public class CartDao {
 
 	public ArrayList<CartDto> selectList() {
 		ArrayList<CartDto> dtoList = new ArrayList<CartDto>(); 
-		String whereDefault = "SELECT pr.image, pr.proname, pr.sellprice, p.purqty FROM purchase p, product pr WHERE pr.proname = p.proname ";
+		String whereDefault = "SELECT pr.image, pr.imagename, pr.proname, pr.sellprice, p.purqty FROM purchase p, product pr WHERE pr.proname = p.proname ";
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -99,14 +103,25 @@ public class CartDao {
 			ResultSet rs = stmt_mysql.executeQuery(whereDefault);
 			
 			
+			
+			
 			while(rs.next()) {
-				String image = rs.getString(1); 
-				String proname = rs.getString(2);
-				int sellprice = rs.getInt(3);
-				int purqty = rs.getInt(4);
+				String imagename = rs.getString(2);
+				String proname = rs.getString(3);
+				int sellprice = rs.getInt(4);
+				int purqty = rs.getInt(5);
 				
+				// File  그림 파일을 하나만들어준다.
 				
-				CartDto cartDto =  new CartDto(image, proname, sellprice, purqty);
+				File file = new File(imagename);
+				FileOutputStream output = new FileOutputStream(file);
+				InputStream image = rs.getBinaryStream(1);
+				byte[] buffer = new byte[1024];
+				while(image.read(buffer) > 0 ) {
+					output.write(buffer);
+				}
+		
+				CartDto cartDto =  new CartDto(imagename, proname, sellprice, purqty);
 				dtoList.add(cartDto); 
 						
 			}
