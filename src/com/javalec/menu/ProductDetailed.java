@@ -5,7 +5,7 @@
 		(2) Date
 			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1)
 			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 2)
-			3) 2024.01.12. (Ver 0.0.0.2) => (4)History - 
+			3) 2024.01.13. (Ver 0.0.0.2) => (4)History - 
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -48,6 +48,10 @@ import java.util.Date;
 
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import java.awt.GridLayout;
+import java.awt.CardLayout;
+import javax.swing.JSplitPane;
+import javax.swing.JButton;
 
 public class ProductDetailed extends JFrame {
 
@@ -66,6 +70,20 @@ public class ProductDetailed extends JFrame {
 	private JLabel lblHome1;
 	
 	private Point initialClick;	// <-- *************************************************************
+	
+	private JLabel lblBack;
+	private JLabel lblProductName;
+	private JLabel lblProductEnglishName;
+	private JLabel lblProductPrice;
+	private JLabel lblProductImage;
+	private JButton btnNutrional;
+	private JPanel panelOfAlergy;
+	private JLabel lblNewLabel;
+	private JLabel lblNewLabel_1;
+	private JPanel panelOfAction;
+	private JLabel lblProDetailedLogo;
+	private JLabel lblNewLabel_2;
+	private JLabel lblNewLabel_3;
 	
 	/**
 	 * Launch the application.
@@ -134,13 +152,22 @@ public class ProductDetailed extends JFrame {
 		contentPane.add(getLblCart1());
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
+		contentPane.add(getLblBack());
+		contentPane.add(getLblProDetailedLogo());
+		contentPane.add(getLblProductImage());
+		contentPane.add(getLblProductName());
+		contentPane.add(getLblProductEnglishName());
+		contentPane.add(getLblProductPrice());
+		contentPane.add(getBtnNutrional());
+		contentPane.add(getPanelOfAlergy());
+		contentPane.add(getPanelOfAction());
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
 	
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
-			lblIPhone = new JLabel("New label");
+			lblIPhone = new JLabel("");
 			lblIPhone.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 			lblIPhone.setBounds(0, 0, 374, 680);
 		}
@@ -148,8 +175,8 @@ public class ProductDetailed extends JFrame {
 	}
 	private JLabel getLblScreen() {
 		if (lblScreen == null) {
-			lblScreen = new JLabel("New label");
-			lblScreen.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/아이폰 홈 화면.png")));
+			lblScreen = new JLabel("");
+			lblScreen.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/ProductSearch Page 배경화면.png")));
 			lblScreen.setBounds(8, 10, 358, 665);
 		}
 		return lblScreen;
@@ -312,4 +339,149 @@ public class ProductDetailed extends JFrame {
 	
 	// *******************************************************************************************************************
 	
+	private JLabel getLblBack() {
+		if (lblBack == null) {
+			lblBack = new JLabel("");
+			lblBack.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						searchScreen();
+					}
+					if(e.getButton()==3) {	// 마우스 우측 버튼 더블 클릭
+						menuScreen();
+					}
+				}
+			});
+			lblBack.setHorizontalAlignment(SwingConstants.CENTER);
+			lblBack.setIcon(new ImageIcon(ProductSearch_02.class.getResource("/com/javalec/image/왼쪽_꼬리선 없는 화살표_2개.gif")));
+			// ************************************************************************************************************************
+			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
+			lblBack.setToolTipText("<html><font face='맑은 고딕' size='5'>"
+									+ "<b>마우스 좌측버튼 클릭 시 제품 검색 페이지로 이동합니다."
+									+ "<br>마우스 우측버튼 클릭 시 Menu 페이지로 이동합니다.</b>"
+									+ "</font></html>");
+			// ************************************************************************************************************************
+			lblBack.setBounds(25, 55, 30, 30);
+		}
+		return lblBack;
+	}
+	
+	// *******************************************************************************************************************
+	
+	// --- Functions (2) ----
+	
+	// 제품 검색 화면으로 이동하기.
+	private void searchScreen() {
+		this.setVisible(false);
+		ProductSearch_01 proSearch = new ProductSearch_01();
+		proSearch.setVisible(true);
+	}
+	private JLabel getLblProductName() {
+		if (lblProductName == null) {
+			lblProductName = new JLabel("카야 버터 도넛");
+			lblProductName.setFont(new Font("맑은 고딕", Font.BOLD, 25));
+			lblProductName.setBounds(34, 270, 295, 30);
+		}
+		return lblProductName;
+	}
+	private JLabel getLblProductEnglishName() {
+		if (lblProductEnglishName == null) {
+			lblProductEnglishName = new JLabel("Kaya Butter Doughnut");
+			lblProductEnglishName.setForeground(new Color(0, 0, 128));
+			lblProductEnglishName.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+			lblProductEnglishName.setBounds(36, 300, 295, 25);
+		}
+		return lblProductEnglishName;
+	}
+	private JLabel getLblProductPrice() {
+		if (lblProductPrice == null) {
+			lblProductPrice = new JLabel("3,900 원");
+			lblProductPrice.setFont(new Font("맑은 고딕", Font.BOLD, 22));
+			lblProductPrice.setBounds(36, 330, 150, 30);
+		}
+		return lblProductPrice;
+	}
+	private JLabel getLblProductImage() {
+		if (lblProductImage == null) {
+			lblProductImage = new JLabel("");
+			lblProductImage.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/FirstDonut.png")));
+			lblProductImage.setHorizontalAlignment(SwingConstants.CENTER);
+			lblProductImage.setBounds(110, 125, 150, 150);
+		}
+		return lblProductImage;
+	}
+	private JButton getBtnNutrional() {
+		if (btnNutrional == null) {
+			btnNutrional = new JButton("제품 영양 정보");
+			btnNutrional.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+			btnNutrional.setHorizontalAlignment(SwingConstants.LEADING);
+			btnNutrional.setBounds(36, 390, 327, 57);
+		}
+		return btnNutrional;
+	}
+	private JPanel getPanelOfAlergy() {
+		if (panelOfAlergy == null) {
+			panelOfAlergy = new JPanel();
+			panelOfAlergy.setBackground(new Color(255, 255, 196));
+			panelOfAlergy.setBounds(36, 450, 327, 75);
+			panelOfAlergy.setLayout(null);
+			panelOfAlergy.add(getLblNewLabel());
+			panelOfAlergy.add(getLblNewLabel_1());
+		}
+		return panelOfAlergy;
+	}
+	private JLabel getLblNewLabel() {
+		if (lblNewLabel == null) {
+			lblNewLabel = new JLabel("알레르기 유발 요인");
+			lblNewLabel.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+			lblNewLabel.setBounds(12, 10, 200, 30);
+		}
+		return lblNewLabel;
+	}
+	private JLabel getLblNewLabel_1() {
+		if (lblNewLabel_1 == null) {
+			lblNewLabel_1 = new JLabel("밀, 우유, 대두, 계란 함유");
+			lblNewLabel_1.setForeground(new Color(60, 68, 119));
+			lblNewLabel_1.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+			lblNewLabel_1.setBounds(14, 40, 250, 20);
+		}
+		return lblNewLabel_1;
+	}
+	private JPanel getPanelOfAction() {
+		if (panelOfAction == null) {
+			panelOfAction = new JPanel();
+			panelOfAction.setBounds(8, 546, 355, 57);
+			panelOfAction.setLayout(null);
+			panelOfAction.add(getLblNewLabel_2());
+			panelOfAction.add(getLblNewLabel_3());
+		}
+		return panelOfAction;
+	}
+	private JLabel getLblProDetailedLogo() {
+		if (lblProDetailedLogo == null) {
+			lblProDetailedLogo = new JLabel("제품 정보");
+			lblProDetailedLogo.setFont(new Font("CookieRun Regular", Font.BOLD, 32));
+			lblProDetailedLogo.setBounds(65, 70, 130, 45);
+		}
+		return lblProDetailedLogo;
+	}
+	private JLabel getLblNewLabel_2() {
+		if (lblNewLabel_2 == null) {
+			lblNewLabel_2 = new JLabel("");
+			lblNewLabel_2.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/Ordernotclicked.png")));
+			lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_2.setBounds(185, 10, 131, 40);
+		}
+		return lblNewLabel_2;
+	}
+	private JLabel getLblNewLabel_3() {
+		if (lblNewLabel_3 == null) {
+			lblNewLabel_3 = new JLabel("");
+			lblNewLabel_3.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/CartMoveNotClick.png")));
+			lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNewLabel_3.setBounds(35, 10, 131, 40);
+		}
+		return lblNewLabel_3;
+	}
 } // End

@@ -6,7 +6,7 @@
 		(2) Date
 			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1)
 			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 2)
-			3) 2024.01.12. (Ver 0.0.0.2) => (4)History - 
+			3) 2024.01.13. (Ver 0.0.0.2) => (4)History - 
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -66,6 +66,10 @@ public class Nutritional extends JFrame {
 	private JLabel lblHome1;
 	
 	private Point initialClick;	// <-- *************************************************************
+	
+	private JLabel lblBack;
+	private JLabel lblNutritionalLogo;
+	private JPanel panel;
 	
 	/**
 	 * Launch the application.
@@ -134,13 +138,15 @@ public class Nutritional extends JFrame {
 		contentPane.add(getLblCart1());
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
+		contentPane.add(getLblBack());
+		contentPane.add(getPanel());
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
 	
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
-			lblIPhone = new JLabel("New label");
+			lblIPhone = new JLabel("");
 			lblIPhone.setIcon(new ImageIcon(Nutritional.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 			lblIPhone.setBounds(0, 0, 374, 680);
 		}
@@ -148,7 +154,7 @@ public class Nutritional extends JFrame {
 	}
 	private JLabel getLblScreen() {
 		if (lblScreen == null) {
-			lblScreen = new JLabel("New label");
+			lblScreen = new JLabel("");
 			lblScreen.setIcon(new ImageIcon(Nutritional.class.getResource("/com/javalec/image/아이폰 홈 화면.png")));
 			lblScreen.setBounds(8, 10, 358, 665);
 		}
@@ -312,4 +318,55 @@ public class Nutritional extends JFrame {
 	
 	// *******************************************************************************************************************
 	
+	private JLabel getLblBack() {
+		if (lblBack == null) {
+			lblBack = new JLabel("");
+			lblBack.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						productDetailedScreen();
+					}
+				}
+			});
+			lblBack.setHorizontalAlignment(SwingConstants.CENTER);
+			lblBack.setIcon(new ImageIcon(ProductSearch_02.class.getResource("/com/javalec/image/왼쪽_꼬리선 없는 화살표_2개.gif")));
+			// ************************************************************************************************************************
+			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
+			lblBack.setToolTipText("<html><font face='맑은 고딕' size='5'><b>이전 페이지로 이동합니다.</b></font></html>");
+			// ************************************************************************************************************************
+			lblBack.setBounds(25, 55, 30, 30);
+		}
+		return lblBack;
+	}
+	private JLabel getLblNutritionalLogo() {
+		if (lblNutritionalLogo == null) {
+			lblNutritionalLogo = new JLabel("제품 영양 정보");
+			lblNutritionalLogo.setBounds(12, 10, 196, 44);
+			lblNutritionalLogo.setForeground(new Color(0, 0, 0));
+			lblNutritionalLogo.setFont(new Font("CookieRun Regular", Font.BOLD, 32));
+		}
+		return lblNutritionalLogo;
+	}
+	
+	// *******************************************************************************************************************
+	
+	// --- Functions (2) ----
+	
+	// 제품 정보 화면으로 이동하기.
+	private void productDetailedScreen() {
+		this.setVisible(false);
+		ProductDetailed productDetailed = new ProductDetailed();
+		productDetailed.setVisible(true);
+	}
+	private JPanel getPanel() {
+		if (panel == null) {
+			panel = new JPanel();
+			panel.setBackground(new Color(255, 210, 255));
+			panel.setBounds(65, 88, 220, 65);
+			panel.setLayout(null);
+			panel.add(getLblNutritionalLogo());
+		}
+		return panel;
+	}
 } // End
