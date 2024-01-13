@@ -26,7 +26,8 @@ import com.javalec.menu.Menu;
 public class Account extends JFrame {
 	// --------------------------------------------------------------//
 	// Desc : MyPage - 프로필 사진과 나의 정보, 보유 포인트, 구매내역 보기
-	// Date : 2024.01.11(Ver1.0)
+	// Date : 2024.01.11(Ver1.0.0) - 기본 뼈대 구성
+	//			   2024.01.13(Ver1.0.1) - DB에서 값 가져오기
 	// Author : Daegeun Lee
 	// History : 1. 
 	// --------------------------------------------------------------//
@@ -53,6 +54,7 @@ public class Account extends JFrame {
 	private JLabel lblMyPoint;
 	private JLabel lblMyOrder;
 	private JLabel lblPoints;
+	private JLabel lblName;
 
 	/**
 	 * Launch the application.
@@ -107,6 +109,7 @@ public class Account extends JFrame {
 		contentPane.add(getLblMyPoint());
 		contentPane.add(getLblMyOrder());
 		contentPane.add(getLblPoints());
+		contentPane.add(getLblName());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -250,7 +253,7 @@ public class Account extends JFrame {
 			lblImage.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/Profile.png")));
 			lblImage.setHorizontalAlignment(SwingConstants.CENTER);
 			lblImage.setBackground(new Color(233, 233, 233));
-			lblImage.setBounds(137, 120, 108, 108);
+			lblImage.setBounds(137, 85, 108, 108);
 		}
 		return lblImage;
 	}
@@ -350,6 +353,12 @@ public class Account extends JFrame {
 	private JLabel getLblMyprofile() {
 		if (lblMyprofile == null) {
 			lblMyprofile = new JLabel("나의 정보");
+			lblMyprofile.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					myProfile();
+				}
+			});
 			lblMyprofile.setFont(new Font("CookieRun Regular", Font.BOLD, 18));
 			lblMyprofile.setBounds(125, 276, 102, 37);
 		}
@@ -366,6 +375,12 @@ public class Account extends JFrame {
 	private JLabel getLblMyOrder() {
 		if (lblMyOrder == null) {
 			lblMyOrder = new JLabel("구매 내역");
+			lblMyOrder.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					myOrders();
+				}
+			});
 			lblMyOrder.setFont(new Font("CookieRun Regular", Font.BOLD, 18));
 			lblMyOrder.setBounds(124, 503, 103, 37);
 		}
@@ -380,6 +395,16 @@ public class Account extends JFrame {
 		}
 		return lblPoints;
 	}
+	private JLabel getLblName() {
+		if (lblName == null) {
+			lblName = new JLabel("조조 님");
+			lblName.setFont(new Font("CookieRun Regular", Font.BOLD, 20));
+			lblName.setHorizontalAlignment(SwingConstants.CENTER);
+			lblName.setBounds(120, 192, 141, 27);
+		}
+		return lblName;
+	}
+
 	// --- Function ---
 
 	// 실시간 시간 나오기
@@ -417,5 +442,19 @@ public class Account extends JFrame {
 		Account account = new Account();
 		account.setVisible(true);
 	}
-
+	
+	// MyProfile화면
+	private void myProfile() {
+		this.setVisible(false);
+		MyProfile myProfile = new MyProfile();
+		myProfile.setVisible(true);
+	}
+	
+	// MyOrders화면
+	private void myOrders() {
+		this.setVisible(false);
+		MyOrderList myOrderList = new MyOrderList();
+		myOrderList.setVisible(true);
+	}
+	
 } // End
