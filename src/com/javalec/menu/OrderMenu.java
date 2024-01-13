@@ -30,6 +30,10 @@
 				1. addWindowListener(new WindowAdapter() {});
 				2. windowOpened(WindowEvent e) {}
 				3. cartQty();
+				
+			6) 화면 뒤로가기 기능 추가하기.
+			
+			7) 제품 List 구현을 위해 JScrollPane 및 JTable 추가하기.
 
 	--------------------------------------------------------------------------------------------------------------- */
 
@@ -85,7 +89,7 @@ public class OrderMenu extends JFrame {
 	private JLabel lblMenu1;
 	private JLabel lblHome1;
 	private JLabel lblCategoryLogo;
-	private JLabel lblproSearch;
+	private JLabel lblProSearch;
 	private JComboBox cbSelectStore;
 	private JLabel lblCartCount;
 	private JLabel lblCartCountNum;
@@ -164,7 +168,7 @@ public class OrderMenu extends JFrame {
 		contentPane.add(getLblAccount1());
 		contentPane.add(getLblCategoryLogo());
 		contentPane.add(getLblBack());
-		contentPane.add(getLblproSearch());
+		contentPane.add(getLblProSearch());
 		contentPane.add(getCbSelectStore());
 		contentPane.add(getLblCartCount());
 		contentPane.add(getLblCartCountNum());
@@ -175,7 +179,7 @@ public class OrderMenu extends JFrame {
 	
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
-			lblIPhone = new JLabel("New label");
+			lblIPhone = new JLabel("");
 			lblIPhone.setIcon(new ImageIcon(OrderMenu.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 			lblIPhone.setBounds(0, 0, 374, 680);
 		}
@@ -183,7 +187,7 @@ public class OrderMenu extends JFrame {
 	}
 	private JLabel getLblScreen() {
 		if (lblScreen == null) {
-			lblScreen = new JLabel("New label");
+			lblScreen = new JLabel("");
 			lblScreen.setIcon(new ImageIcon(OrderMenu.class.getResource("/com/javalec/image/OrderMenu Page 배경화면.png")));
 			lblScreen.setBounds(8, 10, 358, 665);
 		}
@@ -205,7 +209,9 @@ public class OrderMenu extends JFrame {
 			lblHome.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					homeScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						homeScreen();
+					}
 				}
 			});
 			lblHome.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Home button.png")));
@@ -220,7 +226,9 @@ public class OrderMenu extends JFrame {
 			lblMenu.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					menuScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						menuScreen();
+					}
 				}
 			});
 			lblMenu.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Menu button.png")));
@@ -235,8 +243,10 @@ public class OrderMenu extends JFrame {
 			lblCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					cartScreen();
-//					signInScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						cartScreen();
+//						signInScreen();
+					}
 				}
 			});
 			lblCart.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Cart button.png")));
@@ -251,8 +261,10 @@ public class OrderMenu extends JFrame {
 			lblAccount.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					accountScreen();
-//					signInScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						accountScreen();
+//						signInScreen();
+					}
 				}
 			});
 			lblAccount.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Account button.png")));
@@ -343,29 +355,31 @@ public class OrderMenu extends JFrame {
 		if (lblCategoryLogo == null) {
 			lblCategoryLogo = new JLabel("도넛");
 			lblCategoryLogo.setFont(new Font("CookieRun Regular", Font.BOLD, 32));
-			lblCategoryLogo.setBounds(70, 65, 110, 45);
+			lblCategoryLogo.setBounds(65, 65, 150, 45);
 		}
 		return lblCategoryLogo;
 	}
 
-	private JLabel getLblproSearch() {
-		if (lblproSearch == null) {
-			lblproSearch = new JLabel("");
-			lblproSearch.addMouseListener(new MouseAdapter() {
+	private JLabel getLblProSearch() {
+		if (lblProSearch == null) {
+			lblProSearch = new JLabel("");
+			lblProSearch.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					searchScreen();
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						searchScreen();
+					}
 				}
 			});
-			lblproSearch.setHorizontalAlignment(SwingConstants.CENTER);
-			lblproSearch.setIcon(new ImageIcon(OrderMenu.class.getResource("/com/javalec/image/돋보기_검색_2.png")));
+			lblProSearch.setHorizontalAlignment(SwingConstants.CENTER);
+			lblProSearch.setIcon(new ImageIcon(OrderMenu.class.getResource("/com/javalec/image/돋보기_검색_2.png")));
 			// ************************************************************************************************************************
 			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
-			lblproSearch.setToolTipText("<html><font face='맑은 고딕' size='5'><b>제품 검색 페이지로 이동합니다.</b></font></html>");
+			lblProSearch.setToolTipText("<html><font face='맑은 고딕' size='5'><b>제품 검색 페이지로 이동합니다.</b></font></html>");
 			// ************************************************************************************************************************
-			lblproSearch.setBounds(305, 130, 35, 35);
+			lblProSearch.setBounds(305, 130, 35, 35);
 		}
-		return lblproSearch;
+		return lblProSearch;
 	}
 
 	private JComboBox getCbSelectStore() {
@@ -431,8 +445,20 @@ public class OrderMenu extends JFrame {
 	private JLabel getLblBack() {
 		if (lblBack == null) {
 			lblBack = new JLabel("");
+			lblBack.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						menuScreen();
+					}
+				}
+			});
 			lblBack.setHorizontalAlignment(SwingConstants.CENTER);
 			lblBack.setIcon(new ImageIcon(OrderMenu.class.getResource("/com/javalec/image/왼쪽_꼬리선 없는 화살표_2개.gif")));
+			// ************************************************************************************************************************
+			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
+			lblBack.setToolTipText("<html><font face='맑은 고딕' size='5'><b>이전 페이지로 이동합니다.</b></font></html>");
+			// ************************************************************************************************************************
 			lblBack.setBounds(25, 55, 30, 30);
 		}
 		return lblBack;

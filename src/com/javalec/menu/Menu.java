@@ -5,7 +5,8 @@
 		(2) Date
 			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1), 2), 3), 4)
 			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 5)
-			3) 2024.01.12. (Ver 0.0.0.2) => (4)History - 
+			3) 2024.01.12. (Ver 0.0.0.2) => (4)History - 6)
+			4) 2024.01.13. (ver 0.0.0.3) => (4)History - 7)
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -29,6 +30,10 @@
 					② initialClick = e.getPoint();
 				2. Drag 하는 동안 Frame 이동하기.
 					① addMouseMotionListener(new MouseAdapter() {}); / mouseDragged(MouseEvent e) {}
+					
+			6) 화면 상단부 Category 배너 부분 구현을 위해 JLabel 추가하기.
+			
+			7) Category List 구현을 위해 JScrollPane 및 JTable 추가하기.
 
 	--------------------------------------------------------------------------------------------------------------- */
 
@@ -70,16 +75,21 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.JProgressBar;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
 import javax.swing.GroupLayout;
+import javax.swing.Icon;
 import javax.swing.GroupLayout.Alignment;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class Menu extends JFrame {
 
@@ -97,7 +107,7 @@ public class Menu extends JFrame {
 	private JLabel lblMenu1;
 	private JLabel lblHome1;
 	private JLabel lblMenuLogo;
-	private JLabel lblproSearch;
+	private JLabel lblProSearch;
 	private JComboBox cbSelectStore;
 	private JLabel lblCartCount;
 	private JLabel lblCartCountNum;
@@ -110,10 +120,22 @@ public class Menu extends JFrame {
 	private JLabel lblBaseCategory2;
 	private JLabel lblBaseCategory3;
 	private JScrollPane scrollPane;
+	private JTable innerTable;
 	
 //	private JPanel mainPanel;
 //	private JScrollPane scrollPane;
 //	private JPanel panel;
+	
+	// ******************************************************************************************************************
+	// -- Table
+	private final DefaultTableModel outerTable = new DefaultTableModel() {
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			// Cell 편집 비활성화
+			return false;
+		}
+	};
+	// ******************************************************************************************************************
 	
 	/**
 	 * Launch the application.
@@ -138,7 +160,8 @@ public class Menu extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-//				cartQty();
+				tableInit();
+//				searchAction();
 			}
 		});
 		contentPane = new JPanel();
@@ -194,19 +217,18 @@ public class Menu extends JFrame {
 		contentPane.add(getLblBaseCategory1());
 		contentPane.add(getLblBaseCategory2());
 		contentPane.add(getLblBaseCategory3());
-		contentPane.add(getLblproSearch());
+		contentPane.add(getLblProSearch());
 		contentPane.add(getCbSelectStore());
 		contentPane.add(getLblCartCount());
 		contentPane.add(getLblCartCountNum());
 		contentPane.add(getScrollPane());
-//		contentPane.add(getScrollPane());
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
 
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
-			lblIPhone = new JLabel("New label");
+			lblIPhone = new JLabel("");
 			lblIPhone.setIcon(new ImageIcon(Menu.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 			lblIPhone.setBounds(0, 0, 374, 680);
 		}
@@ -215,7 +237,7 @@ public class Menu extends JFrame {
 
 	private JLabel getLblScreen() {
 		if (lblScreen == null) {
-			lblScreen = new JLabel("New label");
+			lblScreen = new JLabel("");
 			lblScreen.setIcon(new ImageIcon(Menu.class.getResource("/com/javalec/image/Menu Page 배경화면.png")));
 			lblScreen.setBounds(8, 10, 358, 665);
 		}
@@ -398,10 +420,10 @@ public class Menu extends JFrame {
 		return lblMenuLogo;
 	}
 
-	private JLabel getLblproSearch() {
-		if (lblproSearch == null) {
-			lblproSearch = new JLabel("");
-			lblproSearch.addMouseListener(new MouseAdapter() {
+	private JLabel getLblProSearch() {
+		if (lblProSearch == null) {
+			lblProSearch = new JLabel("");
+			lblProSearch.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
@@ -409,15 +431,15 @@ public class Menu extends JFrame {
 					}
 				}
 			});
-			lblproSearch.setHorizontalAlignment(SwingConstants.CENTER);
-			lblproSearch.setIcon(new ImageIcon(Menu.class.getResource("/com/javalec/image/돋보기_검색.png")));
+			lblProSearch.setHorizontalAlignment(SwingConstants.CENTER);
+			lblProSearch.setIcon(new ImageIcon(Menu.class.getResource("/com/javalec/image/돋보기_검색.png")));
 			// ************************************************************************************************************************
 			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
-			lblproSearch.setToolTipText("<html><font face='맑은 고딕' size='5'><b>제품 검색 페이지로 이동합니다.</b></font></html>");
+			lblProSearch.setToolTipText("<html><font face='맑은 고딕' size='5'><b>제품 검색 페이지로 이동합니다.</b></font></html>");
 			// ************************************************************************************************************************
-			lblproSearch.setBounds(305, 150, 35, 35);
+			lblProSearch.setBounds(305, 150, 35, 35);
 		}
-		return lblproSearch;
+		return lblProSearch;
 	}
 
 	private JComboBox getCbSelectStore() {
@@ -450,8 +472,7 @@ public class Menu extends JFrame {
 			lblCartCountNum.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 			lblCartCountNum.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCartCountNum.setBounds(309, 557, 30, 21);
-//			lblCartCountNum.setText();
-			
+//			cartQty();
 		}
 		return lblCartCountNum;
 	}
@@ -476,6 +497,8 @@ public class Menu extends JFrame {
 		
 		lblCartCountNum.setText(Integer.toString(listCount));
 	}
+	
+	// *******************************************************************************************************************
 	
 	private JLabel getLblSuperCategory1() {
 		if (lblSuperCategory1 == null) {
@@ -589,7 +612,81 @@ public class Menu extends JFrame {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
 			scrollPane.setBounds(8, 227, 355, 305);
+			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
 	}
+	private JTable getInnerTable() {
+		if (innerTable == null) {
+			innerTable = new JTable() { 								// <--*********************************
+				public Class getColumnClass(int column) { 				// <--*********************************
+					return (column == 0) ? Icon.class : Object.class; 	// <--*********************************
+				}
+			};
+			innerTable.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			innerTable.setRowHeight(100); 		// <--***************************************************
+			innerTable.setModel(outerTable); 	// <--***************************************************
+			innerTable.getTableHeader().setReorderingAllowed(false);	// Column 간 이동 금지
+		}
+		return innerTable;
+	}
+	
+	// *******************************************************************************************************************
+	
+	// --- Functions(3) ----
+	
+	// Table 초기화 하기.
+	private void tableInit() {
+		// Table Column명 정하기.
+		outerTable.addColumn("제품 사진");
+		outerTable.addColumn("제품명");
+		outerTable.addColumn("제품명(영문)");
+		outerTable.addColumn("제품 가격");
+		outerTable.setColumnCount(4);
+		
+		
+		// Table Column 크기 정하기.
+		// 제품 사진
+		int colNo = 0;
+		TableColumn col = innerTable.getColumnModel().getColumn(colNo);
+		int width = 100;
+		col.setPreferredWidth(width);
+		
+		// 제품명
+		colNo = 1;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		// 제품명(영문)
+		colNo = 2;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 150;
+		col.setPreferredWidth(width);
+		
+		// 제품 가격
+		colNo = 3;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		innerTable.setAutoResizeMode(innerTable.AUTO_RESIZE_OFF);
+		
+		
+		// Table 내용 지우기
+		int i = outerTable.getRowCount();
+		for(int j = 0; j < i; j++) {
+			outerTable.removeRow(0);
+		}
+		
+	}
+	
+	
+	// DB에서 Data 불러오기(검색).
+	private void searchAction() {
+		
+	}
+	
+	
 } // End

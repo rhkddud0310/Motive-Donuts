@@ -5,7 +5,7 @@
 		(2) Date
 			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1)
 			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 2)
-			3) 2024.01.12. (Ver 0.0.0.2) => (4)History - 
+			3) 2024.01.13. (Ver 0.0.0.2) => (4)History - 
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -48,6 +48,9 @@ import java.util.Date;
 
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class ProductSearch_02 extends JFrame {
 
@@ -66,6 +69,14 @@ public class ProductSearch_02 extends JFrame {
 	private JLabel lblHome1;
 	
 	private Point initialClick;	// <-- *************************************************************
+	private JLabel lblProSearchWord;
+	private JLabel lblBack;
+	private JLabel lblCategory1;
+	private JLabel lblCategory2;
+	private JLabel lblCategory3;
+	private JLabel lblCategory4;
+	private JScrollPane scrollPane;
+	private JTable innerTable;
 	
 	/**
 	 * Launch the application.
@@ -134,13 +145,20 @@ public class ProductSearch_02 extends JFrame {
 		contentPane.add(getLblCart1());
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
+		contentPane.add(getLblBack());
+		contentPane.add(getLblProSearchWord());
+		contentPane.add(getLblCategory1());
+		contentPane.add(getLblCategory2());
+		contentPane.add(getLblCategory3());
+		contentPane.add(getLblCategory4());
+		contentPane.add(getScrollPane());
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
 	
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
-			lblIPhone = new JLabel("New label");
+			lblIPhone = new JLabel("");
 			lblIPhone.setIcon(new ImageIcon(ProductSearch_02.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 			lblIPhone.setBounds(0, 0, 374, 680);
 		}
@@ -148,8 +166,8 @@ public class ProductSearch_02 extends JFrame {
 	}
 	private JLabel getLblScreen() {
 		if (lblScreen == null) {
-			lblScreen = new JLabel("New label");
-			lblScreen.setIcon(new ImageIcon(ProductSearch_02.class.getResource("/com/javalec/image/아이폰 홈 화면.png")));
+			lblScreen = new JLabel("");
+			lblScreen.setIcon(new ImageIcon(ProductSearch_02.class.getResource("/com/javalec/image/ProductSearch Result Page 배경화면.png")));
 			lblScreen.setBounds(8, 10, 358, 665);
 		}
 		return lblScreen;
@@ -312,4 +330,101 @@ public class ProductSearch_02 extends JFrame {
 	
 	// *******************************************************************************************************************
 	
+	private JLabel getLblProSearchWord() {
+		if (lblProSearchWord == null) {
+			lblProSearchWord = new JLabel("도넛");
+			lblProSearchWord.setForeground(new Color(0, 0, 0));
+			lblProSearchWord.setFont(new Font("CookieRun Regular", Font.BOLD, 25));
+			lblProSearchWord.setBackground(new Color(255, 255, 255));
+			lblProSearchWord.setHorizontalAlignment(SwingConstants.CENTER);
+			lblProSearchWord.setBounds(54, 125, 250, 40);
+		}
+		return lblProSearchWord;
+	}
+	private JLabel getLblBack() {
+		if (lblBack == null) {
+			lblBack = new JLabel("");
+			lblBack.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						searchScreen();
+					}
+				}
+			});
+			lblBack.setHorizontalAlignment(SwingConstants.CENTER);
+			lblBack.setIcon(new ImageIcon(ProductSearch_02.class.getResource("/com/javalec/image/왼쪽_꼬리선 없는 화살표_2개.gif")));
+			// ************************************************************************************************************************
+			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
+			lblBack.setToolTipText("<html><font face='맑은 고딕' size='5'><b>이전 페이지로 이동합니다.</b></font></html>");
+			// ************************************************************************************************************************
+			lblBack.setBounds(25, 55, 30, 30);
+		}
+		return lblBack;
+	}
+	
+	// *******************************************************************************************************************
+	
+	// --- Functions (2) ----
+	
+	// 제품 검색 화면으로 이동하기.
+	private void searchScreen() {
+		this.setVisible(false);
+		ProductSearch_01 proSearch = new ProductSearch_01();
+		proSearch.setVisible(true);
+	}
+	
+	// *******************************************************************************************************************
+	
+	private JLabel getLblCategory1() {
+		if (lblCategory1 == null) {
+			lblCategory1 = new JLabel("전체");
+			lblCategory1.setHorizontalAlignment(SwingConstants.CENTER);
+			lblCategory1.setForeground(new Color(0, 0, 128));
+			lblCategory1.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+			lblCategory1.setBounds(40, 172, 40, 30);
+		}
+		return lblCategory1;
+	}
+	private JLabel getLblCategory2() {
+		if (lblCategory2 == null) {
+			lblCategory2 = new JLabel("푸드");
+			lblCategory2.setHorizontalAlignment(SwingConstants.CENTER);
+			lblCategory2.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+			lblCategory2.setBounds(100, 172, 40, 30);
+		}
+		return lblCategory2;
+	}
+	private JLabel getLblCategory3() {
+		if (lblCategory3 == null) {
+			lblCategory3 = new JLabel("음료");
+			lblCategory3.setHorizontalAlignment(SwingConstants.CENTER);
+			lblCategory3.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+			lblCategory3.setBounds(160, 172, 40, 30);
+		}
+		return lblCategory3;
+	}
+	private JLabel getLblCategory4() {
+		if (lblCategory4 == null) {
+			lblCategory4 = new JLabel("Set");
+			lblCategory4.setHorizontalAlignment(SwingConstants.CENTER);
+			lblCategory4.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+			lblCategory4.setBounds(220, 172, 40, 30);
+		}
+		return lblCategory4;
+	}
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(8, 202, 355, 379);
+			scrollPane.setViewportView(getInnerTable());
+		}
+		return scrollPane;
+	}
+	private JTable getInnerTable() {
+		if (innerTable == null) {
+			innerTable = new JTable();
+		}
+		return innerTable;
+	}
 } // End
