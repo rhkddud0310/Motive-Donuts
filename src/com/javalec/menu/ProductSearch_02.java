@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.javalec.account.Account;
+import com.javalec.base.AfterMain;
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
 
@@ -303,8 +304,7 @@ public class ProductSearch_02 extends JFrame {
 	// Home화면
 	private void homeScreen() {
 		this.setVisible(false); // 현재화면 끄고
-		Main window = new Main();
-		window.main(null); // 홈 화면 키기
+		AfterMain.main(null); // 홈 화면 키기
 	}
 	
 	// Menu화면
