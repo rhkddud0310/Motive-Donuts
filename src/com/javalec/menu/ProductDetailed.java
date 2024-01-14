@@ -56,6 +56,7 @@ import com.javalec.dao.MenuDao;
 import com.javalec.dto.CartAppendingDto;
 import com.javalec.dto.MenuDetailedViewDto;
 import com.javalec.dto.types.PurchaseStatus;
+import com.javalec.purchase.Purchase;
 
 public class ProductDetailed extends JFrame {
 
@@ -369,6 +370,12 @@ public class ProductDetailed extends JFrame {
 		nextScreen.setVisible(true);
 	}
 	
+	private void goToPurchaseWithSingleProduct() {
+		Purchase nextScreen = new Purchase(product);
+		nextScreen.setVisible(true);
+		this.setVisible(false);
+	}
+	
 	// *******************************************************************************************************************
 	
 	// --- Functions (2) ----
@@ -487,6 +494,14 @@ public class ProductDetailed extends JFrame {
 	private JLabel getLblNewLabel_2() {
 		if (lblNewLabel_2 == null) {
 			lblNewLabel_2 = new JLabel("");
+			lblNewLabel_2.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						goToPurchaseWithSingleProduct();
+					}
+				}
+			});
 			lblNewLabel_2.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/Ordernotclicked.png")));
 			lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 			lblNewLabel_2.setBounds(185, 10, 131, 40);

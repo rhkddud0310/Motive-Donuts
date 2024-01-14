@@ -1,6 +1,7 @@
 package com.javalec.dto;
 
 import java.io.FileInputStream;
+import java.time.LocalDateTime;
 
 public class PurchaseDto {
 	
@@ -24,7 +25,7 @@ public class PurchaseDto {
 	String orderdate;
 	int spendpoints;
 	
-
+	byte[] imageFile;
 	
 	//Constructor
 	
@@ -102,6 +103,20 @@ public class PurchaseDto {
 	
 
 	
+
+	public PurchaseDto(MenuDetailedViewDto product, String custId, int purqty) {
+		this.purseq = 0;
+		this.custid = custId;
+		this.proname = product.proName();
+		this.purqty = purqty;
+		this.purdate = LocalDateTime.now().toString();
+		this.category = product.categoryName();
+		this.sellprice = product.sellPrice();
+		this.point = 0;
+		this.imageFile = product.imageFile();
+	}
+
+
 
 	public String getImagename() {
 		return imagename;
@@ -281,8 +296,13 @@ public class PurchaseDto {
 		this.sellprice = sellprice;
 	}
 
+	public byte[] imageFile() {
+		return imageFile;
+	}
 
-
+	public void imageFile(byte[] imageFile) {
+		this.imageFile = imageFile;
+	}
 
 
 
