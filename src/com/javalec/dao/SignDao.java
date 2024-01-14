@@ -152,7 +152,7 @@ public class SignDao {
 			conn_mysql.close();
 
 		} catch (Exception e) {
-//				e.printStackTrace();
+				e.printStackTrace();
 			return false;
 		}
 		return true;
