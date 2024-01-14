@@ -31,8 +31,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.javalec.account.Account;
+import com.javalec.base.AfterMain;
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
+import com.javalec.common.ShareVar;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -70,6 +72,9 @@ public class Nutritional extends JFrame {
 	private JLabel lblBack;
 	private JLabel lblNutritionalLogo;
 	private JPanel panel;
+	
+	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
+	private String custid = ShareVar.loginID;
 	
 	/**
 	 * Launch the application.
@@ -291,8 +296,7 @@ public class Nutritional extends JFrame {
 	// Home화면
 	private void homeScreen() {
 		this.setVisible(false); // 현재화면 끄고
-		Main window = new Main();
-		window.main(null); // 홈 화면 키기
+		AfterMain.main(null); // 홈 화면 키기
 	}
 	
 	// Menu화면

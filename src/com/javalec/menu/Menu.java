@@ -67,6 +67,7 @@ import com.javalec.account.Account;
 import com.javalec.base.AfterMain;
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
+import com.javalec.common.ShareVar;
 import com.javalec.dao.CartDao;
 import com.javalec.dao.MenuDao;
 import com.javalec.dto.CartDto;
@@ -126,9 +127,8 @@ public class Menu extends JFrame {
 	private JScrollPane scrollPane;
 	private JTable innerTable;
 	
-//	private JPanel mainPanel;
-//	private JScrollPane scrollPane;
-//	private JPanel panel;
+	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
+	private String custid = ShareVar.loginID;
 	
 	// ******************************************************************************************************************
 	// -- Table

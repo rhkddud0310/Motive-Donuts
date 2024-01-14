@@ -34,6 +34,7 @@ import com.javalec.account.Account;
 import com.javalec.base.AfterMain;
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
+import com.javalec.common.ShareVar;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -85,6 +86,9 @@ public class ProductDetailed extends JFrame {
 	private JLabel lblProDetailedLogo;
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_3;
+	
+	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
+	private String custid = ShareVar.loginID;
 	
 	/**
 	 * Launch the application.
