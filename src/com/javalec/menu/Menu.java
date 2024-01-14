@@ -520,7 +520,7 @@ public class Menu extends JFrame {
 	}
 	private JLabel getLblBaseCategory1() {
 		if (lblBaseCategory1 == null) {
-			lblBaseCategory1 = new JLabel("푸드");
+			lblBaseCategory1 = new JLabel("도넛");
 			lblBaseCategory1.setForeground(new Color(0, 0, 128));
 			lblBaseCategory1.setHorizontalAlignment(SwingConstants.CENTER);
 			lblBaseCategory1.setFont(new Font("맑은 고딕", Font.BOLD, 13));

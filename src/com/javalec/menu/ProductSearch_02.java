@@ -388,7 +388,7 @@ public class ProductSearch_02 extends JFrame {
 	}
 	private JLabel getLblCategory2() {
 		if (lblCategory2 == null) {
-			lblCategory2 = new JLabel("푸드");
+			lblCategory2 = new JLabel("도넛");
 			lblCategory2.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCategory2.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
 			lblCategory2.setBounds(100, 172, 40, 30);
