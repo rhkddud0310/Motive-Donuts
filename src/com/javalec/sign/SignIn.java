@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
+import com.javalec.base.AfterMain;
 import com.javalec.base.Main;
 import com.javalec.common.ShareVar;
 import com.javalec.dao.SignDao;
@@ -321,8 +322,8 @@ public class SignIn extends JFrame {
 				// 로그인 성공시
 				ShareVar.loginID = id;
 				this.setVisible(false);
-				Main main = new Main();
-				main.main(null);
+				AfterMain afterMain = new AfterMain();
+				afterMain.main(null);
 			} else {
 				// 로그인 실패 시
 				JOptionPane.showMessageDialog(null, "정보가 잘못 입력되었습니다. 다시 입력하여 주세요.");
