@@ -51,8 +51,11 @@ import com.javalec.base.AfterMain;
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
 import com.javalec.common.ShareVar;
+import com.javalec.dao.CartDao;
 import com.javalec.dao.MenuDao;
+import com.javalec.dto.CartAppendingDto;
 import com.javalec.dto.MenuDetailedViewDto;
+import com.javalec.dto.types.PurchaseStatus;
 
 public class ProductDetailed extends JFrame {
 
@@ -493,6 +496,23 @@ public class ProductDetailed extends JFrame {
 	private JLabel getLblNewLabel_3() {
 		if (lblNewLabel_3 == null) {
 			lblNewLabel_3 = new JLabel("");
+			lblNewLabel_3.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						CartDao dao = new CartDao();
+						CartAppendingDto dto = new CartAppendingDto(
+								custid,
+								product.proName(),
+								null,
+								PurchaseStatus.ON_CART
+						);
+						
+						dao.addToCart(dto);
+						cartScreen();
+					}
+				}
+			});
 			lblNewLabel_3.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/CartMoveNotClick.png")));
 			lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 			lblNewLabel_3.setBounds(35, 10, 131, 40);

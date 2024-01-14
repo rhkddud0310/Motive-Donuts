@@ -470,7 +470,8 @@ public class Cart extends JFrame {
 	private void cartTableClick() {
 	
 			int i = cart_Table.getSelectedRow();
-			String tkSequence = (String) cart_Table.getValueAt(i, 1);
+//			String tkSequence = (String) cart_Table.getValueAt(i, 1);
+			String tkSequence = (String) cart_Table.getValueAt(i, 0);
 
 			CartDao dao = new CartDao(tkSequence);
 			CartDto dto = dao.cartTableClick();

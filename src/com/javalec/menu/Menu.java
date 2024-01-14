@@ -494,7 +494,7 @@ public class Menu extends JFrame {
 	// 제품 검색 화면으로 이동하기.
 	private void searchScreen() {
 		this.setVisible(false);
-		ProductSearch_01 proSearch = new ProductSearch_01();
+		ProductSearch_02 proSearch = new ProductSearch_02();
 		proSearch.setVisible(true);
 	}
 	

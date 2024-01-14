@@ -8,11 +8,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.javalec.common.ShareVar;
 import com.javalec.dto.CartDto;
+import com.javalec.dto.CartAppendingDto;
 
 //Field
 
@@ -211,58 +214,104 @@ public class CartDao {
 		
 		return true; 		
 	}
-
-
 	
+	public int addToCart(CartAppendingDto dto) {
+		int seq = currentSequence();
+		boolean exists = existsByProductId(dto.proname());
+		String sqlInserting = """
+				INSERT INTO purchase (
+					purseq,
+					custid,
+					proname,
+					purqty,
+					purdate,
+					status
+				) VALUES (
+					?,
+					?,
+					?,
+					?,
+					?,
+					?
+				)
+				""";
+		String sqlUpdating = """
+				UPDATE 	purchase
+				SET
+					purqty = purqty + 1
+				WHERE
+					custid = ?
+					AND proname = ?
+				""";
+		
+		try (
+				Connection conn = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				PreparedStatement stmt = conn.prepareStatement(!exists ? sqlInserting : sqlUpdating);
+		) {
+			Timestamp timestamp = Timestamp.from(dto.purdate());
+			if (!exists) {
+				stmt.setInt(1, currentSequence() + 1);
+				stmt.setString(2, dto.custid());
+				stmt.setString(3, dto.proname());
+				stmt.setInt(4, 1);
+				stmt.setObject(5, timestamp);
+				stmt.setInt(6, dto.status().statusCode());
+			} else {
+				stmt.setString(1, dto.custid());
+				stmt.setString(2, dto.proname());
+			}
+			
+			return stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
 	
+	private int currentSequence() {
+		String seqSql = "SELECT IFNULL(MAX(pch.purseq), 0) purseq FROM motivedonuts.purchase pch";
+		int currentSeq = 0;
+		try (
+				Connection conn = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				Statement stmt = conn.createStatement(); 
+		) {
+			try (ResultSet rs = stmt.executeQuery(seqSql)) {
+				if (rs.next()) {
+					currentSeq = rs.getInt("purseq");
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return currentSeq;
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	private boolean existsByProductId(String productId) {
+		String sql = """
+				SELECT EXISTS (
+					SELECT 1 FROM purchase WHERE proname = ?
+				) as ex
+				""";
+		int count = 0;
+		
+		try (
+				Connection conn = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				PreparedStatement stmt = conn.prepareStatement(sql);
+		) {
+			stmt.setString(1, productId);
+			
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					count = rs.getInt("ex");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+ 		
+		return count != 0;
+	}
 }
-		
-		
-		
-		
-	
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
