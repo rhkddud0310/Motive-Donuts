@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.javalec.common.ShareVar;
+import com.javalec.dto.MenuDetailedViewDto;
 import com.javalec.dto.MenuListViewDto;
 
 public class MenuDao {
@@ -38,11 +40,13 @@ public class MenuDao {
 
 		List<MenuListViewDto> listByCategory = dao.selectAllByCategory("도넛");
 		List<MenuListViewDto> listByKeyword = dao.searchAllByCategoryOrName("스트로", "전체");
+		Optional<MenuDetailedViewDto> detailMenu = dao.selectById("딸기 딜라이트 요거트 블렌디드");
 		
 		System.out.printf("""
 				List by Category "도넛": %s
 				List by Keyword "스트로": %s
-				""", listByCategory, listByKeyword);
+				Detail Menu "딸기 딜라이트 요거트 블렌디드": %s
+				""", listByCategory, listByKeyword, detailMenu);
 	}
 	
 	// *******************************************************************************************************************
@@ -135,6 +139,71 @@ public class MenuDao {
 			return list;
 		} catch (Exception e) {
 			return Collections.emptyList();
+		}
+	}
+	
+	public Optional<MenuDetailedViewDto> selectById(String productId) {
+		String sql = """
+				SELECT
+					p.proname,
+					p.engproname,
+					p.sellprice,
+					p.detail,
+					p.nutritional,
+					p.ingredient,
+					p.image as imageFile,
+					p.imagename,
+					c.item as categoryName
+				FROM product p
+					INNER JOIN 	sell s
+					ON 			p.proname = s.proname
+					INNER JOIN 	category c
+					ON 			s.cateitem = c.item
+				WHERE p.proname = ?
+				""";
+		
+		try (
+				// DB에 접속할 때마다 커넥션을 매번 만들어서 -> 매번 close 했단 사실.
+				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				PreparedStatement ps = conn_mysql.prepareStatement(sql);
+		) {
+			ps.setString(1, productId);
+			
+			try (ResultSet rs = ps.executeQuery()) {
+				if (!rs.next()) {
+					return Optional.empty();
+				}
+				
+				String proname = rs.getString("proname");
+				String engproname = rs.getString("engproname");
+				Integer sellprice = rs.getInt("sellprice");
+				if (rs.wasNull()) {
+					sellprice = null;
+				}
+				String detail = rs.getString("detail");
+				String nutritional = rs.getString("nutritional");
+				String ingredient = rs.getString("ingredient");
+				String imagename = rs.getString("imagename");
+				byte[] imageFile = rs.getBytes("imageFile");
+				String categoryName = rs.getString("categoryName");
+				
+				MenuDetailedViewDto result = new MenuDetailedViewDto(
+						proname,
+						engproname,
+						sellprice,
+						detail,
+						nutritional,
+						ingredient,
+						imageFile,
+						imagename,
+						categoryName
+				);
+				
+				return Optional.of(result);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Optional.empty();
 		}
 	}
 	

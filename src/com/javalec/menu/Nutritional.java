@@ -360,7 +360,7 @@ public class Nutritional extends JFrame {
 	// 제품 정보 화면으로 이동하기.
 	private void productDetailedScreen() {
 		this.setVisible(false);
-		ProductDetailed productDetailed = new ProductDetailed();
+		ProductDetailed productDetailed = new ProductDetailed("딸기 딜라이트 요거트 블렌디드");
 		productDetailed.setVisible(true);
 	}
 	private JPanel getPanel() {

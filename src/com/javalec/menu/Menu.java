@@ -568,65 +568,6 @@ public class Menu extends JFrame {
 	}
 	
 	// *******************************************************************************************************************
-
-//	private JScrollPane getScrollPane() {
-//		if (scrollPane == null) {
-//			scrollPane = new JScrollPane(getPanel());
-//			scrollPane.setBounds(8, 230, 355, 300);
-//			scrollPane.setViewportView(getPanel());
-//		}
-//		return scrollPane;
-//	}
-//	private JPanel getPanel() {
-//		if (panel == null) {
-//			panel = new JPanel();
-//			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//		}
-//		return panel;
-//	}
-	
-//	// 하위 카테고리를 JPanle로 생성 및 상하로 정렬하기.
-//	private JPanel getMainPanel() {
-//		if (mainPanel == null) {
-//			mainPanel = new JPanel(new BorderLayout());
-//			mainPanel.add(getScrollPane(), BorderLayout.CENTER);
-//		}
-//		return mainPanel;
-//	}
-//	
-//	private JScrollPane getScrollPane() {
-//		if (scrollPane == null) {
-//			scrollPane = new JScrollPane(getPanel());
-//			scrollPane.setPreferredSize(getPreferredSize());
-//		}
-//		return scrollPane;
-//	}
-//	
-//	private JPanel getPanel() {
-//		if (panel == null) {
-//			panel = new JPanel();
-//			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//			// panel에 필요한 컴포넌트를 추가하거나 데이터를 로드하는 코드를 여기에 추가하세요.
-//			
-//			// 여러 개의 JPanel을 생성하고 상하로 추가
-//			for (int i = 0; i < 5; i++) {
-//				JPanel childPanel = createChildPanel(); // 새로운 JPanel을 생성하는 메소드
-//				panel.add(childPanel);
-//			}
-//			
-//		}
-//		return panel;
-//	}
-//	
-//	
-//	// --- Functions (3) ----
-//	
-//	private JPanel createChildPanel() {
-//		JPanel childPanel = new JPanel();
-//		// childPanel에 필요한 컴포넌트를 추가하거나 데이터를 로드하는 코드를 여기에 추가하세요.
-//		
-//		return childPanel;
-//	}
 	
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
