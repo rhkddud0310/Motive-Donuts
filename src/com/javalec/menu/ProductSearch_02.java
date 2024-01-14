@@ -29,28 +29,41 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import com.javalec.account.Account;
 import com.javalec.base.AfterMain;
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
 import com.javalec.common.ShareVar;
+import com.javalec.dao.MenuDao;
+import com.javalec.dto.MenuListViewDto;
 
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -71,8 +84,11 @@ public class ProductSearch_02 extends JFrame {
 	private JLabel lblHome1;
 	
 	private Point initialClick;	// <-- *************************************************************
-	private JLabel lblProSearchWord;
-	private JLabel lblBack;
+	
+	private JLabel lblProSearchLogo;
+	private JLabel lblProSearch;
+	private JTextField tfProSearch;
+	private JLabel lblCancel;
 	private JLabel lblCategory1;
 	private JLabel lblCategory2;
 	private JLabel lblCategory3;
@@ -82,6 +98,21 @@ public class ProductSearch_02 extends JFrame {
 	
 	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
 	private String custid = ShareVar.loginID;
+	
+	private String currentKeyword = "";
+	private int currentCategoryNumber = 1;
+	private String currentCategoryName = "전체";
+	
+	// ******************************************************************************************************************
+	// -- Table
+	private final DefaultTableModel outerTable = new DefaultTableModel() {
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			// Cell 편집 비활성화
+			return false;
+		}
+	};
+	// ******************************************************************************************************************
 	
 	/**
 	 * Launch the application.
@@ -150,8 +181,10 @@ public class ProductSearch_02 extends JFrame {
 		contentPane.add(getLblCart1());
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
-		contentPane.add(getLblBack());
-		contentPane.add(getLblProSearchWord());
+		contentPane.add(getLblProSearchLogo());
+		contentPane.add(getTfProSearch());
+		contentPane.add(getLblProSearch());
+		contentPane.add(getLblCancel());
 		contentPane.add(getLblCategory1());
 		contentPane.add(getLblCategory2());
 		contentPane.add(getLblCategory3());
@@ -334,37 +367,64 @@ public class ProductSearch_02 extends JFrame {
 	
 	// *******************************************************************************************************************
 	
-	private JLabel getLblProSearchWord() {
-		if (lblProSearchWord == null) {
-			lblProSearchWord = new JLabel("도넛");
-			lblProSearchWord.setForeground(new Color(0, 0, 0));
-			lblProSearchWord.setFont(new Font("CookieRun Regular", Font.BOLD, 25));
-			lblProSearchWord.setBackground(new Color(255, 255, 255));
-			lblProSearchWord.setHorizontalAlignment(SwingConstants.CENTER);
-			lblProSearchWord.setBounds(54, 125, 250, 40);
+	private JLabel getLblProSearchLogo() {
+		if (lblProSearchLogo == null) {
+			lblProSearchLogo = new JLabel("제품 검색");
+			lblProSearchLogo.setFont(new Font("CookieRun Regular", Font.BOLD, 32));
+			lblProSearchLogo.setBounds(30, 68, 130, 45);
 		}
-		return lblProSearchWord;
+		return lblProSearchLogo;
 	}
-	private JLabel getLblBack() {
-		if (lblBack == null) {
-			lblBack = new JLabel("");
-			lblBack.addMouseListener(new MouseAdapter() {
+	
+	private JLabel getLblProSearch() {
+		if (lblProSearch == null) {
+			lblProSearch = new JLabel("");
+			lblProSearch.setIcon(new ImageIcon(ProductSearch_01.class.getResource("/com/javalec/image/돋보기_검색.png")));
+			lblProSearch.setHorizontalAlignment(SwingConstants.CENTER);
+			lblProSearch.setBounds(27, 135, 30, 30);
+		}
+		return lblProSearch;
+	}
+	private JTextField getTfProSearch() {
+		if (tfProSearch == null) {
+			tfProSearch = new JTextField();
+			tfProSearch.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+			tfProSearch.addKeyListener(new KeyAdapter() {
 				@Override
-				public void mouseClicked(MouseEvent e) {
-					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
-						searchScreen();
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					 	currentKeyword = tfProSearch.getText();
+					 	
+					 	changeCategoryFontWeightBySelect(currentCategoryNumber);
+						drawMenuListByCategoryName(currentKeyword, currentCategoryName);
 					}
 				}
 			});
-			lblBack.setHorizontalAlignment(SwingConstants.CENTER);
-			lblBack.setIcon(new ImageIcon(ProductSearch_02.class.getResource("/com/javalec/image/왼쪽_꼬리선 없는 화살표_2개.gif")));
+			tfProSearch.setBounds(65, 130, 220, 40);
+			tfProSearch.setColumns(10);
+		}
+		return tfProSearch;
+	}
+	private JLabel getLblCancel() {
+		if (lblCancel == null) {
+			lblCancel = new JLabel("취소");
+			lblCancel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
+						menuScreen();
+					}
+				}
+			});
+			lblCancel.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+			lblCancel.setHorizontalAlignment(SwingConstants.CENTER);
 			// ************************************************************************************************************************
 			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
-			lblBack.setToolTipText("<html><font face='맑은 고딕' size='5'><b>이전 페이지로 이동합니다.</b></font></html>");
+			lblCancel.setToolTipText("<html><font face='맑은 고딕' size='5'><b>Menu 페이지로 이동합니다.</b></font></html>");
 			// ************************************************************************************************************************
-			lblBack.setBounds(25, 55, 30, 30);
+			lblCancel.setBounds(295, 130, 50, 40);
 		}
-		return lblBack;
+		return lblCancel;
 	}
 	
 	// *******************************************************************************************************************
@@ -383,6 +443,17 @@ public class ProductSearch_02 extends JFrame {
 	private JLabel getLblCategory1() {
 		if (lblCategory1 == null) {
 			lblCategory1 = new JLabel("전체");
+			lblCategory1.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						currentCategoryNumber = 1;
+						currentCategoryName = "전체";
+					 	changeCategoryFontWeightBySelect(currentCategoryNumber);
+						drawMenuListByCategoryName(currentKeyword, currentCategoryName);
+					}
+				}
+			});
 			lblCategory1.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCategory1.setForeground(new Color(0, 0, 128));
 			lblCategory1.setFont(new Font("맑은 고딕", Font.BOLD, 13));
@@ -393,6 +464,17 @@ public class ProductSearch_02 extends JFrame {
 	private JLabel getLblCategory2() {
 		if (lblCategory2 == null) {
 			lblCategory2 = new JLabel("도넛");
+			lblCategory2.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						currentCategoryNumber = 2;
+						currentCategoryName = "도넛";
+					 	changeCategoryFontWeightBySelect(currentCategoryNumber);
+						drawMenuListByCategoryName(currentKeyword, currentCategoryName);
+					}
+				}
+			});
 			lblCategory2.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCategory2.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
 			lblCategory2.setBounds(100, 172, 40, 30);
@@ -402,6 +484,17 @@ public class ProductSearch_02 extends JFrame {
 	private JLabel getLblCategory3() {
 		if (lblCategory3 == null) {
 			lblCategory3 = new JLabel("음료");
+			lblCategory3.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						currentCategoryNumber = 3;
+						currentCategoryName = "음료";
+					 	changeCategoryFontWeightBySelect(currentCategoryNumber);
+						drawMenuListByCategoryName(currentKeyword, currentCategoryName);
+					}
+				}
+			});
 			lblCategory3.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCategory3.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
 			lblCategory3.setBounds(160, 172, 40, 30);
@@ -411,6 +504,17 @@ public class ProductSearch_02 extends JFrame {
 	private JLabel getLblCategory4() {
 		if (lblCategory4 == null) {
 			lblCategory4 = new JLabel("Set");
+			lblCategory4.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						currentCategoryNumber = 4;
+						currentCategoryName = "셋트";
+					 	changeCategoryFontWeightBySelect(currentCategoryNumber);
+						drawMenuListByCategoryName(currentKeyword, currentCategoryName);
+					}
+				}
+			});
 			lblCategory4.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCategory4.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
 			lblCategory4.setBounds(220, 172, 40, 30);
@@ -427,8 +531,134 @@ public class ProductSearch_02 extends JFrame {
 	}
 	private JTable getInnerTable() {
 		if (innerTable == null) {
-			innerTable = new JTable();
+			innerTable = new JTable() { 								// <--*********************************
+				public Class getColumnClass(int column) { 				// <--*********************************
+					return (column == 0) ? Icon.class : Object.class; 	// <--*********************************
+				}
+			};
+			innerTable.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			innerTable.setRowHeight(100); 		// <--***************************************************
+			innerTable.setModel(outerTable); 	// <--***************************************************
+			innerTable.getTableHeader().setReorderingAllowed(false);	// Column 간 이동 금지
 		}
 		return innerTable;
+	}
+	
+	// *******************************************************************************************************************
+	
+	// --- Functions(3) ----
+	
+	// Table 초기화 하기.
+	private void tableInit() {
+		// Table Column명 정하기.
+		outerTable.addColumn("제품 사진");
+		outerTable.addColumn("제품명");
+		outerTable.addColumn("제품명(영문)");
+		outerTable.addColumn("제품 가격");
+		outerTable.setColumnCount(4);
+		
+		
+		// Table Column 크기 정하기.
+		// 제품 사진
+		int colNo = 0;
+		TableColumn col = innerTable.getColumnModel().getColumn(colNo);
+		int width = 100;
+		col.setPreferredWidth(width);
+		
+		// 제품명
+		colNo = 1;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		// 제품명(영문)
+		colNo = 2;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 150;
+		col.setPreferredWidth(width);
+		
+		// 제품 가격
+		colNo = 3;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		innerTable.setAutoResizeMode(innerTable.AUTO_RESIZE_OFF);
+		
+		
+		// Table 내용 지우기
+		int i = outerTable.getRowCount();
+		for(int j = 0; j < i; j++) {
+			outerTable.removeRow(0);
+		}
+		
+	}
+	
+	// DB에서 Data 불러오기(검색).
+	private void drawMenuListByCategoryName(String keyword, String categoryName) {
+		tableInit();
+		appendMenuItemsByCategory(keyword, categoryName);
+	}
+	
+	private void appendMenuItemsByCategory(String keyword, String categoryName) {
+		NumberFormat numberFormat = NumberFormat.getInstance();
+		MenuDao dao = new MenuDao();
+		List<MenuListViewDto> list = dao.searchAllByCategoryOrName(keyword, categoryName);
+		
+		for (MenuListViewDto item : list) {
+			// Image Size 조절
+			ImageIcon format = new ImageIcon(item.imageFile(), item.imageName());
+			Image img = format.getImage();
+			Image img2 = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+			ImageIcon icon = new ImageIcon(img2);
+			
+			String productName = item.proName();
+			String productNameEng = item.engProName();
+			String sellPriceWithComma = numberFormat.format(item.sellPrice());
+			
+			Object[] row = {
+					icon,
+					productName,
+					productNameEng,
+					String.format("%s원", sellPriceWithComma)
+			};
+			
+			outerTable.addRow(row);
+		}
+	}
+	
+	private void changeCategoryFontWeightBySelect(int selNum) {
+		if (selNum == 1) {
+			lblCategory1.setForeground(new Color(0, 0, 128));
+			lblCategory1.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+		} else {
+			lblCategory1.setForeground(new Color(0, 0, 0));
+			lblCategory1.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		}
+		
+		if (selNum == 2) {
+			lblCategory2.setForeground(new Color(0, 0, 128));
+			lblCategory2.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+		} else {
+			lblCategory2.setForeground(new Color(0, 0, 0));
+			lblCategory2.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		}
+		
+		if (selNum == 3) {
+			lblCategory3.setForeground(new Color(0, 0, 128));
+			lblCategory3.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+		} else {
+			lblCategory3.setForeground(new Color(0, 0, 0));
+			lblCategory3.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		}
+		
+		if (selNum == 4) {
+			lblCategory4.setForeground(new Color(0, 0, 128));
+			lblCategory4.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+		} else {
+			lblCategory4.setForeground(new Color(0, 0, 0));
+			lblCategory4.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		}
 	}
 } // End

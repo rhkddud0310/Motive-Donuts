@@ -37,7 +37,7 @@ public class MenuDao {
 		MenuDao dao = new MenuDao();
 
 		List<MenuListViewDto> listByCategory = dao.selectAllByCategory("도넛");
-		List<MenuListViewDto> listByKeyword = dao.searchAllByCategoryOrName("스트로");
+		List<MenuListViewDto> listByKeyword = dao.searchAllByCategoryOrName("스트로", "전체");
 		
 		System.out.printf("""
 				List by Category "도넛": %s
@@ -88,14 +88,18 @@ public class MenuDao {
 		}
 	}
 	
-	public List<MenuListViewDto> searchAllByCategoryOrName(String keyword) {
+	public List<MenuListViewDto> searchAllByCategoryOrName(String keyword, String categoryName) {
 		if (keyword == null || keyword.length() == 0) {
 			// 검색창에 아무것도 안 썼을 땐 빈 화면
 			return Collections.emptyList();
 		}
 		
 		// JDK 15+
-		String sql = """
+		String categoryFilter = !"전체".equals(categoryName) ?
+				String.format("AND c.item = '%s'", categoryName) 
+				: "";
+		
+		String sql = String.format("""
 				SELECT
 					p.proname,
 					p.engproname,
@@ -108,11 +112,14 @@ public class MenuDao {
 					ON 			p.proname = s.proname
 					INNER JOIN 	category c
 					ON 			s.cateitem = c.item
-				WHERE 	c.item LIKE CONCAT('%', ?, '%')
-					OR 	p.proname LIKE CONCAT('%', ?, '%')
-					OR	p.engproname LIKE CONCAT('%', ?, '%')
+				WHERE (
+						c.item LIKE CONCAT('%%', ?, '%%')
+						OR 	p.proname LIKE CONCAT('%%', ?, '%%')
+						OR	p.engproname LIKE CONCAT('%%', ?, '%%')
+					)
+					%s
 				ORDER BY c.item, p.proname
-				""";
+				""", categoryFilter);
 		
 		try (
 				// DB에 접속할 때마다 커넥션을 매번 만들어서 -> 매번 close 했단 사실.
