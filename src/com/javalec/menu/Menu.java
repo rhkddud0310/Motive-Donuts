@@ -43,11 +43,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,10 +65,14 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 import com.javalec.account.Account;
+import com.javalec.base.AfterMain;
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
+import com.javalec.common.ShareVar;
 import com.javalec.dao.CartDao;
+import com.javalec.dao.MenuDao;
 import com.javalec.dto.CartDto;
+import com.javalec.dto.MenuListViewDto;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -115,16 +121,16 @@ public class Menu extends JFrame {
 	private Point initialClick;	// <-- *************************************************************
 	
 	private JLabel lblSuperCategory1;
-	private JLabel lblSuperCategory2;
 	private JLabel lblBaseCategory1;
 	private JLabel lblBaseCategory2;
 	private JLabel lblBaseCategory3;
 	private JScrollPane scrollPane;
 	private JTable innerTable;
 	
-//	private JPanel mainPanel;
-//	private JScrollPane scrollPane;
-//	private JPanel panel;
+	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
+	private String custid = ShareVar.loginID;
+	
+	private List<MenuListViewDto> products;
 	
 	// ******************************************************************************************************************
 	// -- Table
@@ -160,8 +166,7 @@ public class Menu extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				tableInit();
-//				searchAction();
+				drawMenuListByCategoryName("도넛");
 			}
 		});
 		contentPane = new JPanel();
@@ -213,7 +218,6 @@ public class Menu extends JFrame {
 		contentPane.add(getLblAccount1());
 		contentPane.add(getLblMenuLogo());
 		contentPane.add(getLblSuperCategory1());
-		contentPane.add(getLblSuperCategory2());
 		contentPane.add(getLblBaseCategory1());
 		contentPane.add(getLblBaseCategory2());
 		contentPane.add(getLblBaseCategory3());
@@ -384,8 +388,7 @@ public class Menu extends JFrame {
 	// Home화면
 	private void homeScreen() {
 		this.setVisible(false); // 현재화면 끄고
-		Main window = new Main();
-		window.main(null); // 홈 화면 키기
+		AfterMain.main(null); // 홈 화면 키기
 	}
 	
 	// Menu화면
@@ -407,6 +410,13 @@ public class Menu extends JFrame {
 		this.setVisible(false);
 		Account account = new Account();
 		account.setVisible(true);
+	}
+	
+	// 제품 상세 화면
+	private void goToProductDetailed(String productId) {
+		this.setVisible(false);
+		ProductDetailed nextPage = new ProductDetailed(productId);
+		nextPage.setVisible(true);
 	}
 	
 	// *******************************************************************************************************************
@@ -509,28 +519,38 @@ public class Menu extends JFrame {
 		}
 		return lblSuperCategory1;
 	}
-	private JLabel getLblSuperCategory2() {
-		if (lblSuperCategory2 == null) {
-			lblSuperCategory2 = new JLabel("나만의 메뉴");
-			lblSuperCategory2.setHorizontalAlignment(SwingConstants.CENTER);
-			lblSuperCategory2.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-			lblSuperCategory2.setBounds(130, 150, 90, 35);
-		}
-		return lblSuperCategory2;
-	}
 	private JLabel getLblBaseCategory1() {
 		if (lblBaseCategory1 == null) {
-			lblBaseCategory1 = new JLabel("푸드");
-			lblBaseCategory1.setForeground(new Color(0, 0, 128));
+			lblBaseCategory1 = new JLabel("도넛");
+			lblBaseCategory1.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						changeCategoryFontWeightBySelect(1);
+						drawMenuListByCategoryName("도넛");
+					}
+				}
+			});
 			lblBaseCategory1.setHorizontalAlignment(SwingConstants.CENTER);
+			lblBaseCategory1.setForeground(new Color(0, 0, 128));
 			lblBaseCategory1.setFont(new Font("맑은 고딕", Font.BOLD, 13));
 			lblBaseCategory1.setBounds(35, 192, 50, 28);
 		}
 		return lblBaseCategory1;
 	}
+	
 	private JLabel getLblBaseCategory2() {
 		if (lblBaseCategory2 == null) {
 			lblBaseCategory2 = new JLabel("음료");
+			lblBaseCategory2.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						changeCategoryFontWeightBySelect(2);
+						drawMenuListByCategoryName("음료");
+					}
+				}
+			});
 			lblBaseCategory2.setHorizontalAlignment(SwingConstants.CENTER);
 			lblBaseCategory2.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
 			lblBaseCategory2.setBounds(95, 192, 50, 28);
@@ -540,6 +560,15 @@ public class Menu extends JFrame {
 	private JLabel getLblBaseCategory3() {
 		if (lblBaseCategory3 == null) {
 			lblBaseCategory3 = new JLabel("Set");
+			lblBaseCategory3.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						changeCategoryFontWeightBySelect(3);
+						drawMenuListByCategoryName("셋트");
+					}
+				}
+			});
 			lblBaseCategory3.setHorizontalAlignment(SwingConstants.CENTER);
 			lblBaseCategory3.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
 			lblBaseCategory3.setBounds(155, 192, 50, 28);
@@ -548,65 +577,6 @@ public class Menu extends JFrame {
 	}
 	
 	// *******************************************************************************************************************
-
-//	private JScrollPane getScrollPane() {
-//		if (scrollPane == null) {
-//			scrollPane = new JScrollPane(getPanel());
-//			scrollPane.setBounds(8, 230, 355, 300);
-//			scrollPane.setViewportView(getPanel());
-//		}
-//		return scrollPane;
-//	}
-//	private JPanel getPanel() {
-//		if (panel == null) {
-//			panel = new JPanel();
-//			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//		}
-//		return panel;
-//	}
-	
-//	// 하위 카테고리를 JPanle로 생성 및 상하로 정렬하기.
-//	private JPanel getMainPanel() {
-//		if (mainPanel == null) {
-//			mainPanel = new JPanel(new BorderLayout());
-//			mainPanel.add(getScrollPane(), BorderLayout.CENTER);
-//		}
-//		return mainPanel;
-//	}
-//	
-//	private JScrollPane getScrollPane() {
-//		if (scrollPane == null) {
-//			scrollPane = new JScrollPane(getPanel());
-//			scrollPane.setPreferredSize(getPreferredSize());
-//		}
-//		return scrollPane;
-//	}
-//	
-//	private JPanel getPanel() {
-//		if (panel == null) {
-//			panel = new JPanel();
-//			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//			// panel에 필요한 컴포넌트를 추가하거나 데이터를 로드하는 코드를 여기에 추가하세요.
-//			
-//			// 여러 개의 JPanel을 생성하고 상하로 추가
-//			for (int i = 0; i < 5; i++) {
-//				JPanel childPanel = createChildPanel(); // 새로운 JPanel을 생성하는 메소드
-//				panel.add(childPanel);
-//			}
-//			
-//		}
-//		return panel;
-//	}
-//	
-//	
-//	// --- Functions (3) ----
-//	
-//	private JPanel createChildPanel() {
-//		JPanel childPanel = new JPanel();
-//		// childPanel에 필요한 컴포넌트를 추가하거나 데이터를 로드하는 코드를 여기에 추가하세요.
-//		
-//		return childPanel;
-//	}
 	
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
@@ -623,6 +593,18 @@ public class Menu extends JFrame {
 					return (column == 0) ? Icon.class : Object.class; 	// <--*********************************
 				}
 			};
+			innerTable.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()==1) {
+						// 선택한 상품 정보 갖고 와서
+						int index = innerTable.getSelectedRow();
+						MenuListViewDto selectedProduct = products.get(index);
+						// 화면 전환에 상품 ID 사용
+						goToProductDetailed(selectedProduct.proName());
+					}
+				}
+			});
 			innerTable.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			innerTable.setRowHeight(100); 		// <--***************************************************
@@ -682,11 +664,62 @@ public class Menu extends JFrame {
 		
 	}
 	
-	
 	// DB에서 Data 불러오기(검색).
-	private void searchAction() {
-		
+	private void drawMenuListByCategoryName(String categoryName) {
+		tableInit();
+		appendMenuItemsByCategory(categoryName);
 	}
 	
+	private void appendMenuItemsByCategory(String categoryName) {
+		NumberFormat numberFormat = NumberFormat.getInstance();
+		MenuDao dao = new MenuDao();
+		products = dao.selectAllByCategory(categoryName);
+		
+		for (MenuListViewDto item : products) {
+			// Image Size 조절
+			ImageIcon format = new ImageIcon(item.imageFile(), item.imageName());
+			Image img = format.getImage();
+			Image img2 = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+			ImageIcon icon = new ImageIcon(img2);
+			
+			String productName = item.proName();
+			String productNameEng = item.engProName();
+			String sellPriceWithComma = numberFormat.format(item.sellPrice());
+			
+			Object[] row = {
+					icon,
+					productName,
+					productNameEng,
+					String.format("%s원", sellPriceWithComma)
+			};
+			
+			outerTable.addRow(row);
+		}
+	}
 	
+	private void changeCategoryFontWeightBySelect(int selNum) {
+		if (selNum == 1) {
+			lblBaseCategory1.setForeground(new Color(0, 0, 128));
+			lblBaseCategory1.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+		} else {
+			lblBaseCategory1.setForeground(new Color(0, 0, 0));
+			lblBaseCategory1.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		}
+		
+		if (selNum == 2) {
+			lblBaseCategory2.setForeground(new Color(0, 0, 128));
+			lblBaseCategory2.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+		} else {
+			lblBaseCategory2.setForeground(new Color(0, 0, 0));
+			lblBaseCategory2.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		}
+		
+		if (selNum == 3) {
+			lblBaseCategory3.setForeground(new Color(0, 0, 128));
+			lblBaseCategory3.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+		} else {
+			lblBaseCategory3.setForeground(new Color(0, 0, 0));
+			lblBaseCategory3.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		}
+	}
 } // End

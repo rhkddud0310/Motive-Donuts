@@ -24,19 +24,8 @@
 
 package com.javalec.menu;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import com.javalec.account.Account;
-import com.javalec.base.Main;
-import com.javalec.cart.Cart;
-
 import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -46,8 +35,21 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
+
+import com.javalec.account.Account;
+import com.javalec.base.AfterMain;
+import com.javalec.base.Main;
+import com.javalec.cart.Cart;
+import com.javalec.common.ShareVar;
+import com.javalec.dao.MenuDao;
+import com.javalec.dto.MenuDetailedViewDto;
 
 public class Nutritional extends JFrame {
 
@@ -71,6 +73,12 @@ public class Nutritional extends JFrame {
 	private JLabel lblNutritionalLogo;
 	private JPanel panel;
 	
+	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
+	private String custid = ShareVar.loginID;
+	private JLabel lblNutritional;
+	
+	private MenuDetailedViewDto product;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -78,7 +86,11 @@ public class Nutritional extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Nutritional frame = new Nutritional();
+					MenuDao dao = new MenuDao();
+					Nutritional frame = new Nutritional(
+							dao.selectById("딸기 딜라이트 요거트 블렌디드")
+									.orElseThrow(() -> new IllegalArgumentException())
+					);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -90,7 +102,12 @@ public class Nutritional extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Nutritional() {
+	public Nutritional(MenuDetailedViewDto product) {
+		this.product = product;
+		initUi();
+	}
+	
+	private void initUi() {
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 0, 0));
 		setBounds(600, 100, 375, 680);
@@ -140,6 +157,7 @@ public class Nutritional extends JFrame {
 		contentPane.add(getLblAccount1());
 		contentPane.add(getLblBack());
 		contentPane.add(getPanel());
+		contentPane.add(getLblNutritional());
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -291,8 +309,7 @@ public class Nutritional extends JFrame {
 	// Home화면
 	private void homeScreen() {
 		this.setVisible(false); // 현재화면 끄고
-		Main window = new Main();
-		window.main(null); // 홈 화면 키기
+		AfterMain.main(null); // 홈 화면 키기
 	}
 	
 	// Menu화면
@@ -325,7 +342,7 @@ public class Nutritional extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
-						productDetailedScreen();
+						productDetailedScreen(product.proName());
 					}
 				}
 			});
@@ -354,9 +371,9 @@ public class Nutritional extends JFrame {
 	// --- Functions (2) ----
 	
 	// 제품 정보 화면으로 이동하기.
-	private void productDetailedScreen() {
+	private void productDetailedScreen(String productId) {
 		this.setVisible(false);
-		ProductDetailed productDetailed = new ProductDetailed();
+		ProductDetailed productDetailed = new ProductDetailed(productId);
 		productDetailed.setVisible(true);
 	}
 	private JPanel getPanel() {
@@ -368,5 +385,12 @@ public class Nutritional extends JFrame {
 			panel.add(getLblNutritionalLogo());
 		}
 		return panel;
+	}
+	private JLabel getLblNutritional() {
+		if (lblNutritional == null) {
+			lblNutritional = new JLabel(product.nutritional());
+			lblNutritional.setBounds(25, 219, 314, 337);
+		}
+		return lblNutritional;
 	}
 } // End

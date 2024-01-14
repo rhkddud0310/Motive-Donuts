@@ -24,34 +24,35 @@
 
 package com.javalec.menu;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import com.javalec.account.Account;
-import com.javalec.base.Main;
-import com.javalec.cart.Cart;
-
 import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import java.awt.GridLayout;
-import java.awt.CardLayout;
-import javax.swing.JSplitPane;
-import javax.swing.JButton;
+import javax.swing.border.EmptyBorder;
+
+import com.javalec.account.Account;
+import com.javalec.base.AfterMain;
+import com.javalec.base.Main;
+import com.javalec.cart.Cart;
+import com.javalec.common.ShareVar;
+import com.javalec.dao.MenuDao;
+import com.javalec.dto.MenuDetailedViewDto;
 
 public class ProductDetailed extends JFrame {
 
@@ -70,20 +71,23 @@ public class ProductDetailed extends JFrame {
 	private JLabel lblHome1;
 	
 	private Point initialClick;	// <-- *************************************************************
-	
-	private JLabel lblBack;
 	private JLabel lblProductName;
 	private JLabel lblProductEnglishName;
 	private JLabel lblProductPrice;
 	private JLabel lblProductImage;
 	private JButton btnNutrional;
 	private JPanel panelOfAlergy;
-	private JLabel lblNewLabel;
+	private JLabel lblIngredient;
 	private JLabel lblNewLabel_1;
 	private JPanel panelOfAction;
 	private JLabel lblProDetailedLogo;
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_3;
+	
+	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
+	private String custid = ShareVar.loginID;
+	
+	private MenuDetailedViewDto product;
 	
 	/**
 	 * Launch the application.
@@ -92,7 +96,7 @@ public class ProductDetailed extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProductDetailed frame = new ProductDetailed();
+					ProductDetailed frame = new ProductDetailed("딸기 딜라이트 요거트 블렌디드");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -104,7 +108,16 @@ public class ProductDetailed extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProductDetailed() {
+	public ProductDetailed(String productId) {
+		try {
+			initItem(productId);
+		} catch (IllegalArgumentException e) {
+			// open Error PopUp, ... etc
+		}
+		initUi();
+	}
+	
+	private void initUi() {
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 0, 0));
 		setBounds(600, 100, 375, 680);
@@ -152,7 +165,6 @@ public class ProductDetailed extends JFrame {
 		contentPane.add(getLblCart1());
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
-		contentPane.add(getLblBack());
 		contentPane.add(getLblProDetailedLogo());
 		contentPane.add(getLblProductImage());
 		contentPane.add(getLblProductName());
@@ -163,6 +175,17 @@ public class ProductDetailed extends JFrame {
 		contentPane.add(getPanelOfAction());
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
+	}
+	
+	private void initItem(String productId) {
+		MenuDao dao = new MenuDao();
+		
+//		Optional<MenuDetailedViewDto> optional = dao.selectById(productId);
+//		MenuDetailedViewDto product = optional.orElseThrow(() -> {
+//			return new IllegalArgumentException("상품 이름이 잘못되었습니다.");
+//		});
+		product = dao.selectById(productId) // optional
+				.orElseThrow(() -> new IllegalArgumentException("상품 이름이 잘못되었습니다.")); // product
 	}
 	
 	private JLabel getLblIPhone() {
@@ -312,8 +335,7 @@ public class ProductDetailed extends JFrame {
 	// Home화면
 	private void homeScreen() {
 		this.setVisible(false); // 현재화면 끄고
-		Main window = new Main();
-		window.main(null); // 홈 화면 키기
+		AfterMain.main(null); // 홈 화면 키기
 	}
 	
 	// Menu화면
@@ -337,34 +359,11 @@ public class ProductDetailed extends JFrame {
 		account.setVisible(true);
 	}
 	
-	// *******************************************************************************************************************
-	
-	private JLabel getLblBack() {
-		if (lblBack == null) {
-			lblBack = new JLabel("");
-			lblBack.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
-						searchScreen();
-					}
-					if(e.getButton()==3) {	// 마우스 우측 버튼 더블 클릭
-						menuScreen();
-					}
-				}
-			});
-			lblBack.setHorizontalAlignment(SwingConstants.CENTER);
-			lblBack.setIcon(new ImageIcon(ProductSearch_02.class.getResource("/com/javalec/image/왼쪽_꼬리선 없는 화살표_2개.gif")));
-			// ************************************************************************************************************************
-			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
-			lblBack.setToolTipText("<html><font face='맑은 고딕' size='5'>"
-									+ "<b>마우스 좌측버튼 클릭 시 제품 검색 페이지로 이동합니다."
-									+ "<br>마우스 우측버튼 클릭 시 Menu 페이지로 이동합니다.</b>"
-									+ "</font></html>");
-			// ************************************************************************************************************************
-			lblBack.setBounds(25, 55, 30, 30);
-		}
-		return lblBack;
+	// 제품 영양 정보 화면
+	private void goToNutritionalScreen() {
+		this.setVisible(false);
+		Nutritional nextScreen = new Nutritional(product);
+		nextScreen.setVisible(true);
 	}
 	
 	// *******************************************************************************************************************
@@ -379,7 +378,7 @@ public class ProductDetailed extends JFrame {
 	}
 	private JLabel getLblProductName() {
 		if (lblProductName == null) {
-			lblProductName = new JLabel("카야 버터 도넛");
+			lblProductName = new JLabel(product.proName());
 			lblProductName.setFont(new Font("맑은 고딕", Font.BOLD, 25));
 			lblProductName.setBounds(34, 270, 295, 30);
 		}
@@ -387,7 +386,7 @@ public class ProductDetailed extends JFrame {
 	}
 	private JLabel getLblProductEnglishName() {
 		if (lblProductEnglishName == null) {
-			lblProductEnglishName = new JLabel("Kaya Butter Doughnut");
+			lblProductEnglishName = new JLabel(product.engProName());
 			lblProductEnglishName.setForeground(new Color(0, 0, 128));
 			lblProductEnglishName.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 			lblProductEnglishName.setBounds(36, 300, 295, 25);
@@ -396,7 +395,10 @@ public class ProductDetailed extends JFrame {
 	}
 	private JLabel getLblProductPrice() {
 		if (lblProductPrice == null) {
-			lblProductPrice = new JLabel("3,900 원");
+			NumberFormat numberFormat = NumberFormat.getInstance();
+			String sellPriceWithComma = numberFormat.format(product.sellPrice());
+			
+			lblProductPrice = new JLabel(String.format("%s 원", sellPriceWithComma));
 			lblProductPrice.setFont(new Font("맑은 고딕", Font.BOLD, 22));
 			lblProductPrice.setBounds(36, 330, 150, 30);
 		}
@@ -404,8 +406,13 @@ public class ProductDetailed extends JFrame {
 	}
 	private JLabel getLblProductImage() {
 		if (lblProductImage == null) {
+			// Image Size 조절
+			Image resizedImage = new ImageIcon(product.imageFile(), product.imageName())
+					.getImage()
+					.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+			ImageIcon icon = new ImageIcon(resizedImage);
 			lblProductImage = new JLabel("");
-			lblProductImage.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/FirstDonut.png")));
+			lblProductImage.setIcon(icon);
 			lblProductImage.setHorizontalAlignment(SwingConstants.CENTER);
 			lblProductImage.setBounds(110, 125, 150, 150);
 		}
@@ -414,6 +421,14 @@ public class ProductDetailed extends JFrame {
 	private JButton getBtnNutrional() {
 		if (btnNutrional == null) {
 			btnNutrional = new JButton("제품 영양 정보");
+			btnNutrional.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						goToNutritionalScreen();
+					}
+				}
+			});
 			btnNutrional.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 			btnNutrional.setHorizontalAlignment(SwingConstants.LEADING);
 			btnNutrional.setBounds(36, 390, 327, 57);
@@ -426,22 +441,22 @@ public class ProductDetailed extends JFrame {
 			panelOfAlergy.setBackground(new Color(255, 255, 196));
 			panelOfAlergy.setBounds(36, 450, 327, 75);
 			panelOfAlergy.setLayout(null);
-			panelOfAlergy.add(getLblNewLabel());
+			panelOfAlergy.add(getLblIngredient());
 			panelOfAlergy.add(getLblNewLabel_1());
 		}
 		return panelOfAlergy;
 	}
-	private JLabel getLblNewLabel() {
-		if (lblNewLabel == null) {
-			lblNewLabel = new JLabel("알레르기 유발 요인");
-			lblNewLabel.setFont(new Font("맑은 고딕", Font.BOLD, 20));
-			lblNewLabel.setBounds(12, 10, 200, 30);
+	private JLabel getLblIngredient() {
+		if (lblIngredient == null) {
+			lblIngredient = new JLabel("알레르기 유발 요인");
+			lblIngredient.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+			lblIngredient.setBounds(12, 10, 200, 30);
 		}
-		return lblNewLabel;
+		return lblIngredient;
 	}
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
-			lblNewLabel_1 = new JLabel("밀, 우유, 대두, 계란 함유");
+			lblNewLabel_1 = new JLabel(product.ingredient());
 			lblNewLabel_1.setForeground(new Color(60, 68, 119));
 			lblNewLabel_1.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 			lblNewLabel_1.setBounds(14, 40, 250, 20);
@@ -462,7 +477,7 @@ public class ProductDetailed extends JFrame {
 		if (lblProDetailedLogo == null) {
 			lblProDetailedLogo = new JLabel("제품 정보");
 			lblProDetailedLogo.setFont(new Font("CookieRun Regular", Font.BOLD, 32));
-			lblProDetailedLogo.setBounds(65, 70, 130, 45);
+			lblProDetailedLogo.setBounds(50, 70, 130, 45);
 		}
 		return lblProDetailedLogo;
 	}
