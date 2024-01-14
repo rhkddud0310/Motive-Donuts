@@ -359,6 +359,13 @@ public class ProductDetailed extends JFrame {
 		account.setVisible(true);
 	}
 	
+	// 제품 영양 정보 화면
+	private void goToNutritionalScreen() {
+		this.setVisible(false);
+		Nutritional nextScreen = new Nutritional(product);
+		nextScreen.setVisible(true);
+	}
+	
 	// *******************************************************************************************************************
 	
 	// --- Functions (2) ----
@@ -414,6 +421,14 @@ public class ProductDetailed extends JFrame {
 	private JButton getBtnNutrional() {
 		if (btnNutrional == null) {
 			btnNutrional = new JButton("제품 영양 정보");
+			btnNutrional.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						goToNutritionalScreen();
+					}
+				}
+			});
 			btnNutrional.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 			btnNutrional.setHorizontalAlignment(SwingConstants.LEADING);
 			btnNutrional.setBounds(36, 390, 327, 57);
