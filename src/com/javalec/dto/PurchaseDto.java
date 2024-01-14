@@ -77,6 +77,15 @@ public class PurchaseDto {
 		this.point = point;
 	}
 
+	public PurchaseDto(int purseq, String imagename, byte[] imageFile, String proname, int sellprice, int purqty) {
+		super();
+		this.purseq = purseq; 
+		this.imagename = imagename;
+		this.imageFile = imageFile;
+		this.proname = proname;
+		this.sellprice = sellprice;
+		this.purqty = purqty;
+	}
 
 	
 	public PurchaseDto(int purseq, String imagename, String proname, int sellprice, int purqty) {

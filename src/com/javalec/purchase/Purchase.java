@@ -215,10 +215,14 @@ public class Purchase extends JFrame {
 	}
 	
 	private void initCart() {
-		// TODO select from cart table
-		purseq=3;	// 광영에게 받은 값으로 추후 변경.
-		PurchaseDao PurchaseDao = new PurchaseDao();
-		cart = PurchaseDao.selectList(purseq, custId);
+		// select from cart table
+		purseq=3;	// TODO 광영에게 받은 값으로 추후 변경.
+		PurchaseDao dao = new PurchaseDao();
+		// cart = dao.selectList(purseq, custId);
+		if (custId == null) {
+			custId = "(noname)";
+		}
+		cart = dao.selectByCustId(custId);
 	}
 	
 	private JLabel getLblIPhone() {
@@ -799,7 +803,6 @@ public class Purchase extends JFrame {
 
 			String proname = dtoList.get(i).getProname();
 			int orderseq = dtoList.get(i).getPurseq();
-			
 			
 			MyOrderDao myOrderDao = new MyOrderDao(orderseq, custId, proname, payment, payprice, spendpoints, accupoints);
 			result = myOrderDao.ordersUpdate();

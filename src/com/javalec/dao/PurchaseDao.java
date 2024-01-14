@@ -8,8 +8,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.javalec.common.ShareVar;
 import com.javalec.dto.PurchaseDto;
@@ -120,7 +122,54 @@ public class PurchaseDao {
 		}
 
 		return dtoList;
-
+	}
+	
+	public ArrayList<PurchaseDto> selectByCustId(String custId) {
+		ArrayList<PurchaseDto> list = new ArrayList<>();
+		String sql = """
+				SELECT 	pur.purseq as purseq,
+				 		pd.image as image,
+				 		pd.imagename as imagename,
+				 		pd.proname as proname,
+				 		pd.sellprice as sellprice,
+				 		pur.purqty as purqty
+		 		FROM 	purchase pur
+						INNER JOIN product pd
+						ON pur.proname = pd.proname
+				WHERE	pur.custid = ?
+				""";
+		
+		try (
+				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				PreparedStatement stmt = conn_mysql.prepareStatement(sql);
+		) {
+			stmt.setString(1, custId);
+			
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					int purseq = rs.getInt("purseq");
+					String imageName = rs.getString("imagename");
+					byte[] imageFile = rs.getBytes("image");
+					String proName = rs.getString("proname");
+					int sellPrice = rs.getInt("sellprice");
+					int purQty = rs.getInt("purqty");
+					PurchaseDto item = new PurchaseDto(
+							purseq,
+							imageName,
+							imageFile,
+							proName,
+							sellPrice,
+							purQty
+					);
+					
+					list.add(item);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
 
 //	
