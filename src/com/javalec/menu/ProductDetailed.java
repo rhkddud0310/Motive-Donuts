@@ -71,8 +71,6 @@ public class ProductDetailed extends JFrame {
 	private JLabel lblHome1;
 	
 	private Point initialClick;	// <-- *************************************************************
-	
-	private JLabel lblBack;
 	private JLabel lblProductName;
 	private JLabel lblProductEnglishName;
 	private JLabel lblProductPrice;
@@ -167,7 +165,6 @@ public class ProductDetailed extends JFrame {
 		contentPane.add(getLblCart1());
 		contentPane.add(getLblAccount());
 		contentPane.add(getLblAccount1());
-		contentPane.add(getLblBack());
 		contentPane.add(getLblProDetailedLogo());
 		contentPane.add(getLblProductImage());
 		contentPane.add(getLblProductName());
@@ -364,36 +361,6 @@ public class ProductDetailed extends JFrame {
 	
 	// *******************************************************************************************************************
 	
-	private JLabel getLblBack() {
-		if (lblBack == null) {
-			lblBack = new JLabel("");
-			lblBack.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					if(e.getButton()==1) {	// 마우스 좌측 버튼 클릭
-						searchScreen();
-					}
-					if(e.getButton()==3) {	// 마우스 우측 버튼 더블 클릭
-						menuScreen();
-					}
-				}
-			});
-			lblBack.setHorizontalAlignment(SwingConstants.CENTER);
-			lblBack.setIcon(new ImageIcon(ProductSearch_02.class.getResource("/com/javalec/image/왼쪽_꼬리선 없는 화살표_2개.gif")));
-			// ************************************************************************************************************************
-			// 돋보기 아이콘에 마우스 커서 둘 경우 나타나는 상태메세지 출력하기.
-			lblBack.setToolTipText("<html><font face='맑은 고딕' size='5'>"
-									+ "<b>마우스 좌측버튼 클릭 시 제품 검색 페이지로 이동합니다."
-									+ "<br>마우스 우측버튼 클릭 시 Menu 페이지로 이동합니다.</b>"
-									+ "</font></html>");
-			// ************************************************************************************************************************
-			lblBack.setBounds(25, 55, 30, 30);
-		}
-		return lblBack;
-	}
-	
-	// *******************************************************************************************************************
-	
 	// --- Functions (2) ----
 	
 	// 제품 검색 화면으로 이동하기.
@@ -495,7 +462,7 @@ public class ProductDetailed extends JFrame {
 		if (lblProDetailedLogo == null) {
 			lblProDetailedLogo = new JLabel("제품 정보");
 			lblProDetailedLogo.setFont(new Font("CookieRun Regular", Font.BOLD, 32));
-			lblProDetailedLogo.setBounds(65, 70, 130, 45);
+			lblProDetailedLogo.setBounds(50, 70, 130, 45);
 		}
 		return lblProDetailedLogo;
 	}

@@ -102,6 +102,7 @@ public class ProductSearch_02 extends JFrame {
 	private String currentKeyword = "";
 	private int currentCategoryNumber = 1;
 	private String currentCategoryName = "전체";
+	private List<MenuListViewDto> products;
 	
 	// ******************************************************************************************************************
 	// -- Table
@@ -364,6 +365,13 @@ public class ProductSearch_02 extends JFrame {
 		Account account = new Account();
 		account.setVisible(true);
 	}
+
+	// 제품 상세 화면
+	private void goToProductDetailed(String productId) {
+		this.setVisible(false);
+		ProductDetailed nextPage = new ProductDetailed(productId);
+		nextPage.setVisible(true);
+	}
 	
 	// *******************************************************************************************************************
 	
@@ -536,6 +544,18 @@ public class ProductSearch_02 extends JFrame {
 					return (column == 0) ? Icon.class : Object.class; 	// <--*********************************
 				}
 			};
+			innerTable.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()==1) {
+						// 선택한 상품 정보 갖고 와서
+						int index = innerTable.getSelectedRow();
+						MenuListViewDto selectedProduct = products.get(index);
+						// 화면 전환에 상품 ID 사용
+						goToProductDetailed(selectedProduct.proName());
+					}
+				}
+			});
 			innerTable.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			innerTable.setRowHeight(100); 		// <--***************************************************
@@ -592,7 +612,6 @@ public class ProductSearch_02 extends JFrame {
 		for(int j = 0; j < i; j++) {
 			outerTable.removeRow(0);
 		}
-		
 	}
 	
 	// DB에서 Data 불러오기(검색).
@@ -604,9 +623,9 @@ public class ProductSearch_02 extends JFrame {
 	private void appendMenuItemsByCategory(String keyword, String categoryName) {
 		NumberFormat numberFormat = NumberFormat.getInstance();
 		MenuDao dao = new MenuDao();
-		List<MenuListViewDto> list = dao.searchAllByCategoryOrName(keyword, categoryName);
+		products = dao.searchAllByCategoryOrName(keyword, categoryName);
 		
-		for (MenuListViewDto item : list) {
+		for (MenuListViewDto item : products) {
 			// Image Size 조절
 			ImageIcon format = new ImageIcon(item.imageFile(), item.imageName());
 			Image img = format.getImage();

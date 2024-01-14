@@ -130,6 +130,8 @@ public class Menu extends JFrame {
 	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
 	private String custid = ShareVar.loginID;
 	
+	private List<MenuListViewDto> products;
+	
 	// ******************************************************************************************************************
 	// -- Table
 	private final DefaultTableModel outerTable = new DefaultTableModel() {
@@ -410,6 +412,13 @@ public class Menu extends JFrame {
 		account.setVisible(true);
 	}
 	
+	// 제품 상세 화면
+	private void goToProductDetailed(String productId) {
+		this.setVisible(false);
+		ProductDetailed nextPage = new ProductDetailed(productId);
+		nextPage.setVisible(true);
+	}
+	
 	// *******************************************************************************************************************
 	
 	private JLabel getLblMenuLogo() {
@@ -584,6 +593,18 @@ public class Menu extends JFrame {
 					return (column == 0) ? Icon.class : Object.class; 	// <--*********************************
 				}
 			};
+			innerTable.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton()==1) {
+						// 선택한 상품 정보 갖고 와서
+						int index = innerTable.getSelectedRow();
+						MenuListViewDto selectedProduct = products.get(index);
+						// 화면 전환에 상품 ID 사용
+						goToProductDetailed(selectedProduct.proName());
+					}
+				}
+			});
 			innerTable.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			innerTable.setRowHeight(100); 		// <--***************************************************
@@ -652,9 +673,9 @@ public class Menu extends JFrame {
 	private void appendMenuItemsByCategory(String categoryName) {
 		NumberFormat numberFormat = NumberFormat.getInstance();
 		MenuDao dao = new MenuDao();
-		List<MenuListViewDto> list = dao.selectAllByCategory(categoryName);
+		products = dao.selectAllByCategory(categoryName);
 		
-		for (MenuListViewDto item : list) {
+		for (MenuListViewDto item : products) {
 			// Image Size 조절
 			ImageIcon format = new ImageIcon(item.imageFile(), item.imageName());
 			Image img = format.getImage();
