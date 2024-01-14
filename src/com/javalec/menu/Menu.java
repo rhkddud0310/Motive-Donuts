@@ -482,7 +482,7 @@ public class Menu extends JFrame {
 			lblCartCountNum.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 			lblCartCountNum.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCartCountNum.setBounds(309, 557, 30, 21);
-//			cartQty();
+			cartQty();
 		}
 		return lblCartCountNum;
 	}
@@ -500,11 +500,13 @@ public class Menu extends JFrame {
 	
 	// 장바구니 수량 확인하기.
 	private void cartQty() {
-		CartDao CartDao = new CartDao();
-		ArrayList<CartDto> dtoList = CartDao.selectList();
+		CartDao dao = new CartDao();
 		
-		int listCount = dtoList.size();
+		if (custid == null) {
+			custid = "(noname)";
+		}
 		
+		int listCount = dao.getTotalCount(custid);
 		lblCartCountNum.setText(Integer.toString(listCount));
 	}
 	

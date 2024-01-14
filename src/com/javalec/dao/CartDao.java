@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import com.javalec.common.ShareVar;
 import com.javalec.dto.CartDto;
@@ -213,6 +214,34 @@ public class CartDao {
 		}
 		
 		return true; 		
+	}
+	
+	public int getTotalCount(String custId) {
+		Objects.requireNonNull(custId);
+		
+		String sql = """ 
+				SELECT 	SUM(pur.purqty) as count
+				FROM	purchase pur
+				WHERE 	pur.custid = ?
+				""";
+		int totalCount = 0;
+		
+		try (
+				Connection conn = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				PreparedStatement stmt = conn.prepareStatement(sql)
+		) {
+			stmt.setString(1, custId);
+			
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					totalCount = rs.getInt("count");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return totalCount;
 	}
 	
 	public int addToCart(CartAppendingDto dto) {
