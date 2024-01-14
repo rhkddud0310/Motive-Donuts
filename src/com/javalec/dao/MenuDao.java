@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,7 +60,9 @@ public class MenuDao {
 					p.proname,
 					p.engproname,
 					p.sellprice,
-					p.imagename
+					p.imagename,
+					p.image as imageFile,
+					c.item as categoryName
 				FROM product p
 					INNER JOIN 	sell s
 					ON 			p.proname = s.proname
@@ -83,14 +84,14 @@ public class MenuDao {
 		} catch (Exception e) {
 			// 리스트 종류는: null보다는 빈 리스트 반환
 			e.printStackTrace();
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 	}
 	
 	public List<MenuListViewDto> searchAllByCategoryOrName(String keyword) {
 		if (keyword == null || keyword.length() == 0) {
 			// 검색창에 아무것도 안 썼을 땐 빈 화면
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		
 		// JDK 15+
@@ -99,7 +100,9 @@ public class MenuDao {
 					p.proname,
 					p.engproname,
 					p.sellprice,
-					p.imagename
+					p.imagename,
+					p.image as imageFile,
+					c.item as categoryName
 				FROM product p
 					INNER JOIN 	sell s
 					ON 			p.proname = s.proname
@@ -124,7 +127,7 @@ public class MenuDao {
 			
 			return list;
 		} catch (Exception e) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 	}
 	
@@ -140,9 +143,17 @@ public class MenuDao {
 					sellprice = null;
 				}
 				String imagename = rs.getString("imagename");
+				byte[] imageFile = rs.getBytes("imageFile");
+				String categoryName = rs.getString("categoryName");
 				
-				MenuListViewDto item =
-						new MenuListViewDto(proname, engproname, sellprice, imagename);
+				MenuListViewDto item = new MenuListViewDto(
+						proname,
+						engproname,
+						sellprice,
+						imagename,
+						imageFile,
+						categoryName
+				);
 				
 				list.add(item);
 			}

@@ -161,7 +161,7 @@ public class Menu extends JFrame {
 			@Override
 			public void windowOpened(WindowEvent e) {
 				tableInit();
-//				searchAction();
+				searchAction();
 			}
 		});
 		contentPane = new JPanel();
