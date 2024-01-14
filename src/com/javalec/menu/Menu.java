@@ -49,6 +49,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -120,7 +121,6 @@ public class Menu extends JFrame {
 	private Point initialClick;	// <-- *************************************************************
 	
 	private JLabel lblSuperCategory1;
-	private JLabel lblSuperCategory2;
 	private JLabel lblBaseCategory1;
 	private JLabel lblBaseCategory2;
 	private JLabel lblBaseCategory3;
@@ -216,7 +216,6 @@ public class Menu extends JFrame {
 		contentPane.add(getLblAccount1());
 		contentPane.add(getLblMenuLogo());
 		contentPane.add(getLblSuperCategory1());
-		contentPane.add(getLblSuperCategory2());
 		contentPane.add(getLblBaseCategory1());
 		contentPane.add(getLblBaseCategory2());
 		contentPane.add(getLblBaseCategory3());
@@ -511,15 +510,6 @@ public class Menu extends JFrame {
 		}
 		return lblSuperCategory1;
 	}
-	private JLabel getLblSuperCategory2() {
-		if (lblSuperCategory2 == null) {
-			lblSuperCategory2 = new JLabel("나만의 메뉴");
-			lblSuperCategory2.setHorizontalAlignment(SwingConstants.CENTER);
-			lblSuperCategory2.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-			lblSuperCategory2.setBounds(130, 150, 90, 35);
-		}
-		return lblSuperCategory2;
-	}
 	private JLabel getLblBaseCategory1() {
 		if (lblBaseCategory1 == null) {
 			lblBaseCategory1 = new JLabel("도넛");
@@ -719,6 +709,7 @@ public class Menu extends JFrame {
 	}
 	
 	private void appendMenuItemsByCategory(String categoryName) {
+		NumberFormat numberFormat = NumberFormat.getInstance();
 		MenuDao dao = new MenuDao();
 		List<MenuListViewDto> list = dao.selectAllByCategory(categoryName);
 		
@@ -729,11 +720,15 @@ public class Menu extends JFrame {
 			Image img2 = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
 			ImageIcon icon = new ImageIcon(img2);
 			
+			String productName = item.proName();
+			String productNameEng = item.engProName();
+			String sellPriceWithComma = numberFormat.format(item.sellPrice());
+			
 			Object[] row = {
 					icon,
-					item.proName(),
-					item.engProName(),
-					item.sellPrice()
+					productName,
+					productNameEng,
+					String.format("%s원", sellPriceWithComma)
 			};
 			
 			outerTable.addRow(row);
