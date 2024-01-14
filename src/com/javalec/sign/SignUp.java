@@ -874,20 +874,19 @@ public class SignUp extends JFrame {
 
 	private void filePath() {
 		JFileChooser chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG", "PNG", "BMP", "GIF", "jpg", "png", "bmp",
-				"gif");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG", "PNG", "BMP", "GIF", "jpg", "png", "bmp", "gif");
 		chooser.setFileFilter(filter);
 
 		int ret = chooser.showOpenDialog(null);
 		if (ret != JFileChooser.APPROVE_OPTION) {
 			JOptionPane.showMessageDialog(null, "파일을 선택하지 않았습니다.");
-			return;
+			return; 
 		}
 		String filePath = chooser.getSelectedFile().getPath();
 		tfFilePath.setText(filePath);
 		ImageIcon icon = new ImageIcon(filePath);
 		Image img = icon.getImage();
-		Image changeImg = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+		Image changeImg = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH); // 사이즈를 100, 100으로 조정해준다
 		ImageIcon icon1 = new ImageIcon(changeImg);
 		lblImage.setIcon(icon1);
 

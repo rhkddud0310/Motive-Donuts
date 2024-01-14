@@ -16,11 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
+import com.javalec.account.Account;
 import com.javalec.cart.Cart;
 import com.javalec.menu.Menu;
-import com.javalec.sign.SignIn;
 
-public class Main {
+public class AfterMain {
 
 	private JFrame frame;
 	private JLabel lblIPhone;
@@ -49,7 +49,7 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main window = new Main();
+					AfterMain window = new AfterMain();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,7 +61,7 @@ public class Main {
 	/**
 	 * Create the application.
 	 */
-	public Main() {
+	public AfterMain() {
 		initialize();
 	}
 
@@ -106,7 +106,7 @@ public class Main {
 	private JLabel getLblIPhone() {
 		if (lblIPhone == null) {
 			lblIPhone = new JLabel("New label");
-			lblIPhone.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/아이폰 테두리.png")));
+			lblIPhone.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/아이폰 테두리.png")));
 			lblIPhone.setBounds(0, 0, 374, 680);
 		}
 		return lblIPhone;
@@ -114,7 +114,7 @@ public class Main {
 	private JLabel getLblHomeScreen() {
 		if (lblHomeScreen == null) {
 			lblHomeScreen = new JLabel("New label");
-			lblHomeScreen.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Main.png")));
+			lblHomeScreen.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/Main.png")));
 			lblHomeScreen.setBounds(8, 10, 358, 665);
 		}
 		return lblHomeScreen;
@@ -138,7 +138,7 @@ public class Main {
 					homeScreen();
 				}
 			});
-			lblHome.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Home button.png")));
+			lblHome.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/Home button.png")));
 			lblHome.setHorizontalAlignment(SwingConstants.CENTER);
 			lblHome.setBounds(40, 600, 50, 50);
 		}
@@ -150,10 +150,10 @@ public class Main {
 			lblMenu.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					signInScreen();
+					menuScreen();
 				}
 			});
-			lblMenu.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Menu button.png")));
+			lblMenu.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/Menu button.png")));
 			lblMenu.setHorizontalAlignment(SwingConstants.CENTER);
 			lblMenu.setBounds(120, 600, 50, 50);
 		}
@@ -165,10 +165,10 @@ public class Main {
 			lblCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					signInScreen();
+					cartScreen();
 				}
 			});
-			lblCart.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Cart button.png")));
+			lblCart.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/Cart button.png")));
 			lblCart.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCart.setBounds(200, 600, 50, 50);
 		}
@@ -180,10 +180,10 @@ public class Main {
 			lblAccount.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					signInScreen();
+					accountScreen();
 				}
 			});
-			lblAccount.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/Account button.png")));
+			lblAccount.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/Account button.png")));
 			lblAccount.setHorizontalAlignment(SwingConstants.CENTER);
 			lblAccount.setBounds(280, 600, 50, 50);
 		}
@@ -228,7 +228,7 @@ public class Main {
 	private JLabel getLblMainAdvert1() {
 		if (lblMainAdvert1 == null) {
 			lblMainAdvert1 = new JLabel("");
-			lblMainAdvert1.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/MainAdvert1.png")));
+			lblMainAdvert1.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/MainAdvert2.png")));
 			lblMainAdvert1.setBounds(15, 179, 340, 200);
 		}
 		return lblMainAdvert1;
@@ -258,18 +258,18 @@ public class Main {
 			lblMainDonut1.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					lblMainDonut1.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/MainDrink1.png")));
+					lblMainDonut1.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/MainDrink4.png")));
 				}
 				@Override
 				public void mouseExited(MouseEvent e) {
-					lblMainDonut1.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/MainDonut1.png")));
+					lblMainDonut1.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/MainDonut4.png")));
 				}
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					signInScreen();
+					menuScreen();
 				}
 			});
-			lblMainDonut1.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/MainDonut1.png")));
+			lblMainDonut1.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/MainDonut4.png")));
 			lblMainDonut1.setBounds(21, 462, 105, 105);
 		}
 		return lblMainDonut1;
@@ -280,18 +280,18 @@ public class Main {
 			lblMainDonut2.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					lblMainDonut2.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/MainDrink2.png")));
+					lblMainDonut2.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/MainDrink5.png")));
 				}
 				@Override
 				public void mouseExited(MouseEvent e) {
-					lblMainDonut2.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/MainDonut2.png")));
+					lblMainDonut2.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/MainDonut5.png")));
 				}
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					signInScreen();
+					menuScreen();
 				}
 			});
-			lblMainDonut2.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/MainDonut2.png")));
+			lblMainDonut2.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/MainDonut5.png")));
 			lblMainDonut2.setBounds(134, 462, 105, 105);
 		}
 		return lblMainDonut2;
@@ -302,18 +302,18 @@ public class Main {
 			lblMainDonut3.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					lblMainDonut3.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/MainDrink3.png")));
+					lblMainDonut3.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/MainDrink6.png")));
 				}
 				@Override
 				public void mouseExited(MouseEvent e) {
-					lblMainDonut3.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/MainDonut3.png")));
+					lblMainDonut3.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/MainDonut6.png")));
 				}
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					signInScreen();
+					menuScreen();
 				}
 			});
-			lblMainDonut3.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/MainDonut3.png")));
+			lblMainDonut3.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/MainDonut6.png")));
 			lblMainDonut3.setBounds(246, 462, 105, 105);
 		}
 		return lblMainDonut3;
@@ -321,8 +321,8 @@ public class Main {
 	private JLabel getLblOrderButton() {
 		if (lblOrderButton == null) {
 			lblOrderButton = new JLabel("ORDER");
-			lblOrderButton.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/image/OrderButton.png")));
-			lblOrderButton.setBounds(56, 335, 86, 25);
+			lblOrderButton.setIcon(new ImageIcon(AfterMain.class.getResource("/com/javalec/image/OrderButton.png")));
+			lblOrderButton.setBounds(234, 335, 86, 25);
 		}
 		return lblOrderButton;
 	}
@@ -335,10 +335,10 @@ public class Main {
 			lblOrder.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					signInScreen();
+					menuScreen();
 				}
 			});
-			lblOrder.setBounds(56, 335, 86, 25);
+			lblOrder.setBounds(234, 335, 86, 25);
 		}
 		return lblOrder;
 	}
@@ -354,14 +354,25 @@ public class Main {
 	// Home화면
 	private void homeScreen() {
 		this.frame.setVisible(false); // 현재화면 끄고
-		Main window = new Main();
+		AfterMain window = new AfterMain();
 		window.frame.setVisible(true); // 홈 화면 키기
 	}
-	
-	// 로그인전이라서 Menu, Cart, Account 눌렀을시 모두 로그인 화면으로
-	private void signInScreen() {
-		this.frame.setVisible(false);
-		SignIn signIn = new SignIn();
-		signIn.setVisible(true);
+	// Menu화면
+	private void menuScreen() {
+		this.frame.setVisible(false); // 현재화면 끄고
+		Menu menu = new Menu();
+		menu.setVisible(true); // 홈 화면 키기
+	}
+	// Cart화면
+	private void cartScreen() {
+		this.frame.setVisible(false); // 현재화면 끄고
+		Cart cart = new Cart();
+		cart.setVisible(true); // 홈 화면 키기
+	}
+	// Account화면
+	private void accountScreen() {
+		this.frame.setVisible(false); // 현재화면 끄고
+		Account account = new Account();
+		account.setVisible(true); // 홈 화면 키기
 	}
 } // End
