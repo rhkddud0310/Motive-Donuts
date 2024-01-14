@@ -43,6 +43,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -67,7 +68,9 @@ import com.javalec.base.AfterMain;
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
 import com.javalec.dao.CartDao;
+import com.javalec.dao.MenuDao;
 import com.javalec.dto.CartDto;
+import com.javalec.dto.MenuListViewDto;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -161,8 +164,7 @@ public class Menu extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				tableInit();
-				searchAction();
+				drawMenuListByCategoryName("도넛");
 			}
 		});
 		contentPane = new JPanel();
@@ -521,16 +523,35 @@ public class Menu extends JFrame {
 	private JLabel getLblBaseCategory1() {
 		if (lblBaseCategory1 == null) {
 			lblBaseCategory1 = new JLabel("도넛");
-			lblBaseCategory1.setForeground(new Color(0, 0, 128));
+			lblBaseCategory1.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						changeCategoryFontWeightBySelect(1);
+						drawMenuListByCategoryName("도넛");
+					}
+				}
+			});
 			lblBaseCategory1.setHorizontalAlignment(SwingConstants.CENTER);
+			lblBaseCategory1.setForeground(new Color(0, 0, 128));
 			lblBaseCategory1.setFont(new Font("맑은 고딕", Font.BOLD, 13));
 			lblBaseCategory1.setBounds(35, 192, 50, 28);
 		}
 		return lblBaseCategory1;
 	}
+	
 	private JLabel getLblBaseCategory2() {
 		if (lblBaseCategory2 == null) {
 			lblBaseCategory2 = new JLabel("음료");
+			lblBaseCategory2.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						changeCategoryFontWeightBySelect(2);
+						drawMenuListByCategoryName("음료");
+					}
+				}
+			});
 			lblBaseCategory2.setHorizontalAlignment(SwingConstants.CENTER);
 			lblBaseCategory2.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
 			lblBaseCategory2.setBounds(95, 192, 50, 28);
@@ -540,6 +561,15 @@ public class Menu extends JFrame {
 	private JLabel getLblBaseCategory3() {
 		if (lblBaseCategory3 == null) {
 			lblBaseCategory3 = new JLabel("Set");
+			lblBaseCategory3.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						changeCategoryFontWeightBySelect(3);
+						drawMenuListByCategoryName("셋트");
+					}
+				}
+			});
 			lblBaseCategory3.setHorizontalAlignment(SwingConstants.CENTER);
 			lblBaseCategory3.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
 			lblBaseCategory3.setBounds(155, 192, 50, 28);
@@ -682,11 +712,57 @@ public class Menu extends JFrame {
 		
 	}
 	
-	
 	// DB에서 Data 불러오기(검색).
-	private void searchAction() {
-		
+	private void drawMenuListByCategoryName(String categoryName) {
+		tableInit();
+		appendMenuItemsByCategory(categoryName);
 	}
 	
+	private void appendMenuItemsByCategory(String categoryName) {
+		MenuDao dao = new MenuDao();
+		List<MenuListViewDto> list = dao.selectAllByCategory(categoryName);
+		
+		for (MenuListViewDto item : list) {
+			// Image Size 조절
+			ImageIcon format = new ImageIcon(item.imageFile(), item.imageName());
+			Image img = format.getImage();
+			Image img2 = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+			ImageIcon icon = new ImageIcon(img2);
+			
+			Object[] row = {
+					icon,
+					item.proName(),
+					item.engProName(),
+					item.sellPrice()
+			};
+			
+			outerTable.addRow(row);
+		}
+	}
 	
+	private void changeCategoryFontWeightBySelect(int selNum) {
+		if (selNum == 1) {
+			lblBaseCategory1.setForeground(new Color(0, 0, 128));
+			lblBaseCategory1.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+		} else {
+			lblBaseCategory1.setForeground(new Color(0, 0, 0));
+			lblBaseCategory1.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		}
+		
+		if (selNum == 2) {
+			lblBaseCategory2.setForeground(new Color(0, 0, 128));
+			lblBaseCategory2.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+		} else {
+			lblBaseCategory2.setForeground(new Color(0, 0, 0));
+			lblBaseCategory2.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		}
+		
+		if (selNum == 3) {
+			lblBaseCategory3.setForeground(new Color(0, 0, 128));
+			lblBaseCategory3.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+		} else {
+			lblBaseCategory3.setForeground(new Color(0, 0, 0));
+			lblBaseCategory3.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		}
+	}
 } // End
