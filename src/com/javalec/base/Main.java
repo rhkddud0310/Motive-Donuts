@@ -21,6 +21,12 @@ import com.javalec.menu.Menu;
 import com.javalec.sign.SignIn;
 
 public class Main {
+	// --------------------------------------------------------------//
+	// Desc : 로그인 전 화면
+	// Date : 2024.01.12(Ver1.0.0)
+	// Author : Daegeun Lee, Sumin Kim
+	// History : 1. 화면 디자인 및 페이지 처리
+	// --------------------------------------------------------------//
 
 	private JFrame frame;
 	private JLabel lblIPhone;

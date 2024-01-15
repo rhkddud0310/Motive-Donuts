@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -13,6 +15,9 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -35,8 +40,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.javalec.dao.SignDao;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 
 public class SignUp extends JFrame {
 	// --------------------------------------------------------------//
@@ -776,13 +779,33 @@ public class SignUp extends JFrame {
 		
 		// Image File
 		FileInputStream input = null;
-		File file = new File(imagePath);
-		try {
-			input = new FileInputStream(file);
+		File file;
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		if (imagePath.isEmpty()) {
+	        // 이미지를 선택하지 않은 경우 디폴트 이미지 경로로 설정
+			URL defaultImagePath = SignUp.class.getResource("/com/javalec/image/Profile.png");
+
+		    try {
+		        URI uri = defaultImagePath.toURI();
+		        file = new File(uri);
+		        try {
+		        	input = new FileInputStream(file);
+		        } catch (FileNotFoundException e) {
+		            // 예외 처리
+		        }
+		    } catch (URISyntaxException e) {
+		        e.printStackTrace();  // 예외 처리
+		    }
+			
+	    } else {
+	        // 이미지를 선택한 경우 입력 받은 경로 사용
+	        file = new File(imagePath);
+	        try {
+	            input = new FileInputStream(file);
+	        } catch (FileNotFoundException e) {
+	            // 예외 처리
+	        }
+	    }
 		
 		if (check != 0) {
 			JOptionPane.showMessageDialog(null, "항목을 입력 하세요.");

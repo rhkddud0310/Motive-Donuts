@@ -18,9 +18,16 @@ import javax.swing.Timer;
 
 import com.javalec.account.Account;
 import com.javalec.cart.Cart;
+import com.javalec.common.ShareVar;
 import com.javalec.menu.Menu;
 
 public class AfterMain {
+	// --------------------------------------------------------------//
+	// Desc : 로그인 후 화면
+	// Date : 2024.01.12(Ver1.0.0)
+	// Author : Daegeun Lee, Sumin Kim
+	// History : 1. 화면 디자인 및 페이지 처리
+	// --------------------------------------------------------------//
 
 	private JFrame frame;
 	private JLabel lblIPhone;
@@ -42,6 +49,9 @@ public class AfterMain {
 	private JLabel lblOrderButton;
 	private JLabel lblOrder;
 
+	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
+    String custid = ShareVar.loginID;
+    
 	/**
 	 * Launch the application.
 	 */
