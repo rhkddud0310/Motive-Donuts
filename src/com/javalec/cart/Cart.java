@@ -470,8 +470,7 @@ public class Cart extends JFrame {
 	private void cartTableClick() {
 	
 			int i = cart_Table.getSelectedRow();
-//			String tkSequence = (String) cart_Table.getValueAt(i, 1);
-			String tkSequence = (String) cart_Table.getValueAt(i, 0);
+			String tkSequence = (String) cart_Table.getValueAt(i, 1);
 
 			CartDao dao = new CartDao(tkSequence);
 			CartDto dto = dao.cartTableClick();
@@ -508,6 +507,7 @@ public class Cart extends JFrame {
 	
 	private void deleteItem() {
 		
+//		cartTableClick();
 		CartDao dao = new CartDao(purseq, custid, proname);
 		boolean result = dao.deleteItem();
 
