@@ -81,12 +81,12 @@ public class ProductDetailed extends JFrame {
 	private JLabel lblProductImage;
 	private JButton btnNutrional;
 	private JPanel panelOfAlergy;
-	private JLabel lblIngredient;
-	private JLabel lblNewLabel_1;
+	private JLabel lblIngredientTitle;
+	private JLabel lblIngredientContents;
 	private JPanel panelOfAction;
 	private JLabel lblProDetailedLogo;
-	private JLabel lblNewLabel_2;
-	private JLabel lblNewLabel_3;
+	private JLabel lblGoToPurchase;
+	private JLabel lblGoToCart;
 	
 	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
 	private String custid = ShareVar.loginID;
@@ -451,35 +451,35 @@ public class ProductDetailed extends JFrame {
 			panelOfAlergy.setBackground(new Color(255, 255, 196));
 			panelOfAlergy.setBounds(36, 450, 327, 75);
 			panelOfAlergy.setLayout(null);
-			panelOfAlergy.add(getLblIngredient());
-			panelOfAlergy.add(getLblNewLabel_1());
+			panelOfAlergy.add(getLblIngredientTitle());
+			panelOfAlergy.add(getLblIngredientContents());
 		}
 		return panelOfAlergy;
 	}
-	private JLabel getLblIngredient() {
-		if (lblIngredient == null) {
-			lblIngredient = new JLabel("알레르기 유발 요인");
-			lblIngredient.setFont(new Font("맑은 고딕", Font.BOLD, 20));
-			lblIngredient.setBounds(12, 10, 200, 30);
+	private JLabel getLblIngredientTitle() {
+		if (lblIngredientTitle == null) {
+			lblIngredientTitle = new JLabel("알레르기 유발 요인");
+			lblIngredientTitle.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+			lblIngredientTitle.setBounds(12, 10, 200, 30);
 		}
-		return lblIngredient;
+		return lblIngredientTitle;
 	}
-	private JLabel getLblNewLabel_1() {
-		if (lblNewLabel_1 == null) {
-			lblNewLabel_1 = new JLabel(product.ingredient());
-			lblNewLabel_1.setForeground(new Color(60, 68, 119));
-			lblNewLabel_1.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-			lblNewLabel_1.setBounds(14, 40, 250, 20);
+	private JLabel getLblIngredientContents() {
+		if (lblIngredientContents == null) {
+			lblIngredientContents = new JLabel(product.ingredient());
+			lblIngredientContents.setForeground(new Color(60, 68, 119));
+			lblIngredientContents.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+			lblIngredientContents.setBounds(14, 40, 250, 20);
 		}
-		return lblNewLabel_1;
+		return lblIngredientContents;
 	}
 	private JPanel getPanelOfAction() {
 		if (panelOfAction == null) {
 			panelOfAction = new JPanel();
 			panelOfAction.setBounds(8, 546, 355, 57);
 			panelOfAction.setLayout(null);
-			panelOfAction.add(getLblNewLabel_2());
-			panelOfAction.add(getLblNewLabel_3());
+			panelOfAction.add(getLblGoToCart());
+			panelOfAction.add(getLblGoToPurchase());
 		}
 		return panelOfAction;
 	}
@@ -491,27 +491,10 @@ public class ProductDetailed extends JFrame {
 		}
 		return lblProDetailedLogo;
 	}
-	private JLabel getLblNewLabel_2() {
-		if (lblNewLabel_2 == null) {
-			lblNewLabel_2 = new JLabel("");
-			lblNewLabel_2.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					if (e.getButton() == 1) {
-						goToPurchaseWithSingleProduct();
-					}
-				}
-			});
-			lblNewLabel_2.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/Ordernotclicked.png")));
-			lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel_2.setBounds(185, 10, 131, 40);
-		}
-		return lblNewLabel_2;
-	}
-	private JLabel getLblNewLabel_3() {
-		if (lblNewLabel_3 == null) {
-			lblNewLabel_3 = new JLabel("");
-			lblNewLabel_3.addMouseListener(new MouseAdapter() {
+	private JLabel getLblGoToCart() {
+		if (lblGoToCart == null) {
+			lblGoToCart = new JLabel("");
+			lblGoToCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					if (e.getButton() == 1) {
@@ -527,11 +510,44 @@ public class ProductDetailed extends JFrame {
 						cartScreen();
 					}
 				}
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					lblGoToCart.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/CartMoveClick.png")));
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					lblGoToCart.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/CartMoveNotClick.png")));
+				}
 			});
-			lblNewLabel_3.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/CartMoveNotClick.png")));
-			lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel_3.setBounds(35, 10, 131, 40);
+			lblGoToCart.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/CartMoveNotClick.png")));
+			lblGoToCart.setHorizontalAlignment(SwingConstants.CENTER);
+			lblGoToCart.setBounds(35, 10, 131, 40);
 		}
-		return lblNewLabel_3;
+		return lblGoToCart;
+	}
+	private JLabel getLblGoToPurchase() {
+		if (lblGoToPurchase == null) {
+			lblGoToPurchase = new JLabel("");
+			lblGoToPurchase.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == 1) {
+						goToPurchaseWithSingleProduct();
+					}
+				}
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					lblGoToPurchase.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/Orderclicked.png")));
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					lblGoToPurchase.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/Ordernotclicked.png")));
+				}
+			});
+			lblGoToPurchase.setIcon(new ImageIcon(ProductDetailed.class.getResource("/com/javalec/image/Ordernotclicked.png")));
+			lblGoToPurchase.setHorizontalAlignment(SwingConstants.CENTER);
+			lblGoToPurchase.setBounds(185, 10, 131, 40);
+		}
+		return lblGoToPurchase;
 	}
 } // End
