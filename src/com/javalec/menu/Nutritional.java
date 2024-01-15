@@ -400,7 +400,9 @@ public class Nutritional extends JFrame {
 	private JLabel getLblNutritionalTitle() {
 		if (lblNutritionalTitle == null) {
 			lblNutritionalTitle = new JLabel(nutritionalHeader);
-			lblNutritionalTitle.setBounds(23, 214, 307, 40);
+			lblNutritionalTitle.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNutritionalTitle.setFont(new Font("맑은 고딕", Font.BOLD, 25));
+			lblNutritionalTitle.setBounds(23, 225, 307, 40);
 		}
 		return lblNutritionalTitle;
 	}
@@ -422,6 +424,8 @@ public class Nutritional extends JFrame {
 			String html = stringBuilder.toString();
 			
 			lblNutritionalContents = new JLabel(html);
+			lblNutritionalContents.setVerticalAlignment(SwingConstants.TOP);
+			lblNutritionalContents.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 			lblNutritionalContents.setBounds(25, 275, 314, 281);
 		}
 		return lblNutritionalContents;
