@@ -99,7 +99,7 @@ public class PaymentCompleteDao {
 
 		public ArrayList<PaymentCompleteDto> selectList() {
 			ArrayList<PaymentCompleteDto> dtoList = new ArrayList<PaymentCompleteDto>(); 
-			String where = "SELECT p.proname, pr.sellprice, p.purqty, p.purdate FROM product pr, purchase p WHERE pr.proname = p.proname AND p.purdate = '2023-12-12' ";
+			String where = "SELECT p.proname, pr.sellprice, p.purqty, p.purdate FROM product pr, purchase p WHERE pr.proname = p.proname AND DATE_FORMAT(purdate, \"%Y-%m-%d\") = curdate() ";
 
 			try {
  				Class.forName("com.mysql.cj.jdbc.Driver");
@@ -140,7 +140,7 @@ public class PaymentCompleteDao {
 
 		public int totalPrice() {
 			int totalPrice=0; 
-			String where = "select payprice from myorder where custid = 'jojo' ";
+			String where = "select payprice from myorder where custid = '"+ShareVar.loginID+"' ";
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -166,7 +166,7 @@ public class PaymentCompleteDao {
 
 		public String myPayment() {
 			String payment=""; 
-			String where = "select payment from myorder where custid = 'jojo' ";
+			String where = "select payment from myorder where custid = '"+ShareVar.loginID+"' ";
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -193,7 +193,7 @@ public class PaymentCompleteDao {
 		public int myGetSpentPoints() {
 			int getSetPoints =0; 
 	
-			String where = "SELECT m.spendpoints,  p.purdate FROM myorder m, purchase p WHERE m.proname = p.proname AND p.purdate = '2023-12-12' ";
+			String where = "SELECT m.spendpoints,  p.purdate FROM myorder m, purchase p WHERE m.proname = p.proname AND DATE_FORMAT(p.purdate, \"%Y-%m-%d\") = curdate()  AND m.custid = '"+ShareVar.loginID+"'";
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -218,7 +218,7 @@ public class PaymentCompleteDao {
 		public int receivedPoints() {
 			int getRecievedPoints =0; 
 	
-			String where = "SELECT m.accupoints,  p.purdate FROM myorder m, purchase p WHERE m.proname = p.proname AND p.purdate = '2023-12-12' ";
+			String where = "SELECT m.accupoints,  p.purdate FROM myorder m, purchase p WHERE m.proname = p.proname AND DATE_FORMAT(p.purdate, \"%Y-%m-%d\") = curdate()  AND m.custid = '"+ShareVar.loginID+"'";
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);

@@ -86,12 +86,13 @@ public class PurchaseDao {
 	public ArrayList<PurchaseDto> selectList(int ppurseq, String pcustid) {
 		ArrayList<PurchaseDto> dtoList = new ArrayList<PurchaseDto>();
 		String whereDefault = "SELECT p.purseq, pr.image, pr.imagename, pr.proname, pr.sellprice, p.purqty FROM purchase p, product pr WHERE pr.proname = p.proname ";
-		String where = "AND p.purseq = " + ppurseq + " AND p.custid =  '" + pcustid + "'";
+		String where = " AND p.custid =  '" + pcustid + "'";
+//		String where = "AND p.purseq = " + ppurseq + " AND p.custid =  '" + pcustid + "'";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
-
+System.out.println(whereDefault + where);
 			ResultSet rs = stmt_mysql.executeQuery(whereDefault + where);
 
 			while (rs.next()) {
