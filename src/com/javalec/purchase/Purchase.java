@@ -107,7 +107,7 @@ public class Purchase extends JFrame {
 	int purseq; 
 	int purqty; 
 	String purdate; 
-	String status; 
+	String gubun; 
 	
 	//Table 
 	
@@ -754,29 +754,41 @@ public class Purchase extends JFrame {
 	
 	//'사용' 눌렀을시 포인트 넣어주자.
 	
-		private void usePoint() {
+	private void usePoint() {
+	
+	int usePoint = Integer.parseInt(tfUsePoint.getText());
 		
-		int usePoint = Integer.parseInt(tfUsePoint.getText());
-			
-		JOptionPane.showMessageDialog(null, "포인트가 적용되었습니다."); 
-		tfPointDiscount.setText(Integer.toString(usePoint));		
+	JOptionPane.showMessageDialog(null, "포인트가 적용되었습니다."); 
+	tfPointDiscount.setText(Integer.toString(usePoint));		
 		
 	//상품금액 표시하자.
 		
-		int sumprice = 0;
+//		int sumprice = 0;
+//		
+//		PurchaseDao dao = new PurchaseDao(sumprice);
+//		sumprice = dao.sumPrice();
+//		tfItemPrice.setText(Integer.toString(sumprice));
 		
-		PurchaseDao dao = new PurchaseDao(sumprice);
-		sumprice = dao.sumPrice();
-		tfItemPrice.setText(Integer.toString(sumprice));
+	int sumPrice = 0;
+
+	for (int i = 0; i < cart.size(); i++) {
+	    PurchaseDto item = cart.get(i);
+
+	    int unitPrice = item.getSellprice();
+	    int qty = item.getPurqty();
+
+	    sumPrice += unitPrice * qty;
+	}
+	tfItemPrice.setText(Integer.toString(sumPrice));
 		
 	//할인받은 결제금액을 표시하자.
 		
-		tfTotalPrice.setText(Integer.toString(sumprice-usePoint));
+	tfTotalPrice.setText(Integer.toString(sumPrice-usePoint));
 		
 	//적립된 포인트를 표시하자.
 		
-		int accurPoints = (sumprice-usePoint)/100;
-		tfPointsGiven.setText(Integer.toString(accurPoints));
+	int accurPoints = (sumPrice-usePoint)/100;
+	tfPointsGiven.setText(Integer.toString(accurPoints));
 	}
 	
 

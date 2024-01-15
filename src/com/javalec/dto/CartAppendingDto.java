@@ -3,13 +3,13 @@ package com.javalec.dto;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-import com.javalec.dto.types.PurchaseStatus;
+import com.javalec.dto.types.PurchaseGubun;
 
 public record CartAppendingDto(
 		String custid,
 		String proname,
 		Instant purdate,
-		PurchaseStatus status
+		PurchaseGubun gubun
 ) {
 	public CartAppendingDto {
 		Objects.requireNonNull(proname);

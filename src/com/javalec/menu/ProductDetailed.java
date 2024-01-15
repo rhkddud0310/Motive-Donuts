@@ -55,7 +55,7 @@ import com.javalec.dao.CartDao;
 import com.javalec.dao.MenuDao;
 import com.javalec.dto.CartAppendingDto;
 import com.javalec.dto.MenuDetailedViewDto;
-import com.javalec.dto.types.PurchaseStatus;
+import com.javalec.dto.types.PurchaseGubun;
 import com.javalec.purchase.Purchase;
 
 public class ProductDetailed extends JFrame {
@@ -503,7 +503,7 @@ public class ProductDetailed extends JFrame {
 								custid,
 								product.proName(),
 								null,
-								PurchaseStatus.ON_CART
+								PurchaseGubun.ON_CART
 						);
 						
 						dao.addToCart(dto);

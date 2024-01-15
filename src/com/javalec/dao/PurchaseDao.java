@@ -30,7 +30,7 @@ public class PurchaseDao {
 	String proname;
 	int purqty;
 	String purdate;
-	String status;
+	String gubun;
 	int point;
 	int spendpoints;
 
@@ -267,7 +267,7 @@ public class PurchaseDao {
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 
-			String A = "insert into purchase  (purseq, custid, proname, purqty, purdate, status";
+			String A = "insert into purchase  (purseq, custid, proname, purqty, purdate, gubun";
 			String B = " ) values (?,?,?,?,?,?)";
 
 			ps = conn_mysql.prepareStatement(A + B);
@@ -276,7 +276,7 @@ public class PurchaseDao {
 			ps.setString(3, proname);
 			ps.setInt(4, purqty);
 			ps.setString(5, purdate);
-			ps.setString(6, status);
+			ps.setString(6, gubun);
 
 			ps.executeUpdate();
 
