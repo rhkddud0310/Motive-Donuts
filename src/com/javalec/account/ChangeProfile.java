@@ -48,10 +48,12 @@ import com.javalec.sign.SignUp;
 public class ChangeProfile extends JFrame {
 	// --------------------------------------------------------------//
 	// Desc : 개인정보 수정
-	// Date : 2024.01.08(Ver1.0)
+	// Date : 2024.01.08(Ver1.0.0)
+	//			   2024.01.15(Ver1.0.1
 	// Author : Daegeun Lee
 	// History : 1. ID&PW를 받아서 DB에 있는 데이터와 비교한뒤 true, false로 체크한다
-	// 2. 정규식으로 예외처리한다
+	//					2. 정규식으로 예외처리한다
+	//					3. 수정일 추가
 	// --------------------------------------------------------------//
 
 	private static final long serialVersionUID = 1L;
