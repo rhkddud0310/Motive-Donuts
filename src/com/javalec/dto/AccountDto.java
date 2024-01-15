@@ -48,6 +48,18 @@ public class AccountDto {
 		this.question2 = question2;
 		this.answer2 = answer2;
 	}
+	
+	public AccountDto(String custpw, String custname, String phone, String question1, String answer1, String question2,
+			String answer2) {
+		super();
+		this.custpw = custpw;
+		this.custname = custname;
+		this.phone = phone;
+		this.question1 = question1;
+		this.answer1 = answer1;
+		this.question2 = question2;
+		this.answer2 = answer2;
+	}
 
 	public AccountDto(String custid, String custpw, String custname, String phone, String birthday, String question1,
 			String answer1, String question2, String answer2, String joinactive, String modidate, Timestamp deactive) {
