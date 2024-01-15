@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,7 +24,9 @@ import com.javalec.base.Main;
 import com.javalec.cart.Cart;
 import com.javalec.common.ShareVar;
 import com.javalec.dao.AccountDao;
+import com.javalec.dao.MyOrderListDao;
 import com.javalec.dto.AccountDto;
+import com.javalec.dto.MyOrderListDto;
 import com.javalec.menu.Menu;
 
 public class Account extends JFrame {
@@ -66,7 +69,12 @@ public class Account extends JFrame {
 	String custid = ShareVar.loginID;
 	AccountDao accountdao = new AccountDao(custid);
 	AccountDto accountdto = accountdao.showProfile1();
-
+	
+	int accupoints;
+	int spendpoints;
+	MyOrderListDao myOrderListDao = new MyOrderListDao(custid, accupoints, spendpoints);
+	MyOrderListDto myOrderListDto = myOrderListDao.myPoints();
+	
 	/**
 	 * Launch the application.
 	 */
@@ -411,7 +419,8 @@ public class Account extends JFrame {
 
 	private JLabel getLblPoints() {
 		if (lblPoints == null) {
-			lblPoints = new JLabel("0 pts");
+			lblPoints = new JLabel("");
+			myPoints();
 			lblPoints.setFont(new Font("굴림", Font.BOLD, 15));
 			lblPoints.setHorizontalAlignment(SwingConstants.TRAILING);
 			lblPoints.setBounds(214, 391, 124, 37);
@@ -495,4 +504,14 @@ public class Account extends JFrame {
 		lblName.setText(accountdto.getCustname() + " 님");
 	}
 	
+	// 나의 누적 포인트
+	private void myPoints() {
+		// 숫자 포맷 설정
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+
+        // 숫자 포맷 적용
+        int allPoints = myOrderListDto.getAccupoints() - myOrderListDto.getSpendpoints();
+        String formattedNumber = decimalFormat.format(allPoints);
+		lblPoints.setText(formattedNumber + " pts");
+	}
 } // End
