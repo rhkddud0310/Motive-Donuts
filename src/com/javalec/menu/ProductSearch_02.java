@@ -3,9 +3,9 @@
 		(1) Desc :	Menu Page에서 돋보기 선택 시 제품 검색 Page 구현하기.
 		
 		(2) Date
-			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1)
-			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 2)
-			3) 2024.01.13. (Ver 0.0.0.2) => (4)History - 
+			1) 2024.01.10. (Ver 0.0.0) => (4)History - 1)
+			2) 2024.01.11. (Ver 0.0.1) => (4)History - 2)
+			3) 2024.01.14. (Ver 0.0.2) => (4)History - 
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -29,8 +29,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import com.javalec.account.Account;
 import com.javalec.base.AfterMain;
@@ -645,6 +647,21 @@ public class ProductSearch_02 extends JFrame {
 			
 			outerTable.addRow(row);
 		}
+		
+		// Table Cell 내용 정렬하기.
+		// 가운데 정렬
+		DefaultTableCellRenderer center = new DefaultTableCellRenderer();
+		center.setHorizontalAlignment(SwingConstants.CENTER);
+		TableColumnModel tcm = innerTable.getColumnModel();
+		
+		tcm.getColumn(1).setCellRenderer(center);
+		tcm.getColumn(2).setCellRenderer(center);
+		
+		// 오른쪽 정렬
+		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
+		right.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		tcm.getColumn(3).setCellRenderer(right);
 	}
 	
 	private void changeCategoryFontWeightBySelect(int selNum) {

@@ -1,12 +1,13 @@
 /*	---------------------------------------------------------------------------------------------------------------
 
-		(1) Desc :	Menu를 카테고리 별로 나열하는 Page 구현하기.
+		(1) Desc :	Menu를 카테고리 별로 분류해서 나열하는 Page 구현하기.
 		
 		(2) Date
-			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1), 2), 3), 4)
-			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 5)
-			3) 2024.01.12. (Ver 0.0.0.2) => (4)History - 6)
-			4) 2024.01.13. (ver 0.0.0.3) => (4)History - 7)
+			1) 2024.01.10. (Ver 0.0.0) => (4)History - 1), 2), 3), 4)
+			2) 2024.01.11. (Ver 0.0.1) => (4)History - 5)
+			3) 2024.01.12. (Ver 0.0.2) => (4)History - 6)
+			4) 2024.01.13. (ver 0.0.3) => (4)History - 7)
+			5) 2024.01.14. (ver 0.0.4) => (4)History -
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -81,8 +82,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.JProgressBar;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
@@ -482,7 +485,7 @@ public class Menu extends JFrame {
 			lblCartCountNum.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 			lblCartCountNum.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCartCountNum.setBounds(309, 557, 30, 21);
-//			cartQty();
+			cartQty();
 		}
 		return lblCartCountNum;
 	}
@@ -494,17 +497,19 @@ public class Menu extends JFrame {
 	// 제품 검색 화면으로 이동하기.
 	private void searchScreen() {
 		this.setVisible(false);
-		ProductSearch_01 proSearch = new ProductSearch_01();
+		ProductSearch_02 proSearch = new ProductSearch_02();
 		proSearch.setVisible(true);
 	}
 	
 	// 장바구니 수량 확인하기.
 	private void cartQty() {
-		CartDao CartDao = new CartDao();
-		ArrayList<CartDto> dtoList = CartDao.selectList();
+		CartDao dao = new CartDao();
 		
-		int listCount = dtoList.size();
+		if (custid == null) {
+			custid = "(noname)";
+		}
 		
+		int listCount = dao.getTotalCount(custid);
 		lblCartCountNum.setText(Integer.toString(listCount));
 	}
 	
@@ -695,6 +700,21 @@ public class Menu extends JFrame {
 			
 			outerTable.addRow(row);
 		}
+		
+		// Table Cell 내용 정렬하기.
+		// 가운데 정렬
+		DefaultTableCellRenderer center = new DefaultTableCellRenderer();
+		center.setHorizontalAlignment(SwingConstants.CENTER);
+		TableColumnModel tcm = innerTable.getColumnModel();
+		
+		tcm.getColumn(1).setCellRenderer(center);
+		tcm.getColumn(2).setCellRenderer(center);
+		
+		// 오른쪽 정렬
+		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
+		right.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		tcm.getColumn(3).setCellRenderer(right);
 	}
 	
 	private void changeCategoryFontWeightBySelect(int selNum) {

@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
@@ -40,6 +41,8 @@ import com.javalec.cart.Cart;
 import com.javalec.common.ShareVar;
 import com.javalec.dao.MyOrderDao;
 import com.javalec.dao.PurchaseDao;
+import com.javalec.dto.CartDto;
+import com.javalec.dto.MenuDetailedViewDto;
 import com.javalec.dto.PurchaseDto;
 import com.javalec.menu.Menu;
 import com.javalec.paymentcomplete.PaymentComplete;
@@ -94,14 +97,12 @@ public class Purchase extends JFrame {
 	
 	//Set up a separate variable to use within this class. 
 	int orderseq; 
-	String custid; 
 	String proname; 
 	String payment; 
 	int payprice; 
 	int spendpoints; 
 	int accupoints; 
 	String orderdate; 
-	
 	
 	int purseq; 
 	int purqty; 
@@ -114,7 +115,8 @@ public class Purchase extends JFrame {
 	private JLabel lblusePoints;
 	private JLabel lblCheckoutButton;
 	
-
+	private List<PurchaseDto> cart;
+	private String custId = ShareVar.loginID;
 	
 
 	/**
@@ -137,6 +139,18 @@ public class Purchase extends JFrame {
 	 * Create the frame.
 	 */
 	public Purchase() {
+		// TODO select from cart table
+		initCart();
+		initUi();
+	}
+	
+	public Purchase(MenuDetailedViewDto product) {
+		PurchaseDto cartItem = new PurchaseDto(product, custId, /* purqty */ 1);
+		cart = List.of(cartItem);
+		initUi();
+	}
+	
+	private void initUi() {
 		setBackground(new Color(244, 208, 208));
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -198,6 +212,17 @@ public class Purchase extends JFrame {
 		contentPane.add(getLblCheckoutButton());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
+	}
+	
+	private void initCart() {
+		// select from cart table
+		purseq=3;	// TODO 광영에게 받은 값으로 추후 변경.
+		PurchaseDao dao = new PurchaseDao();
+		// cart = dao.selectList(purseq, custId);
+		if (custId == null) {
+			custId = "(noname)";
+		}
+		cart = dao.selectByCustId(custId);
 	}
 	
 	private JLabel getLblIPhone() {
@@ -536,7 +561,6 @@ public class Purchase extends JFrame {
 			table_Purchase.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table_Purchase.setRowHeight(100); 	
 			table_Purchase.setModel(outerTable);
-			
 		}
 		return table_Purchase;
 	}
@@ -685,26 +709,29 @@ public class Purchase extends JFrame {
 	//PURCHASE TABLE DATA 불러오기 
 	
 	private void purchaseTableData() {
-		purseq=3;	// 광영에게 받은 값으로 추후 변경.
-		custid = "jojo"; // 광영에게 받은 값으로 추후 변경.
-		PurchaseDao PurchaseDao = new PurchaseDao();
-		ArrayList<PurchaseDto> dtoList = PurchaseDao.selectList(purseq, custid);
-
-		int listCount = dtoList.size();
+		
+		int listCount = cart.size();
 
 		for (int i = 0; i < listCount; i++) {
-			
-			ImageIcon icon = new ImageIcon("./"+dtoList.get(i).getImagename());
-			Image img = icon.getImage();
-			Image changeImg = img.getScaledInstance(100,100, Image.SCALE_SMOOTH);
-			ImageIcon changeIcon = new ImageIcon(changeImg);
-			
-		
+			PurchaseDto product = cart.get(i);
+//			ImageIcon icon = new ImageIcon("./" + cart.get(i).getImagename());
+//			Image img = icon.getImage();
+//			Image changeImg = img.getScaledInstance(100,100, Image.SCALE_SMOOTH);
+//			ImageIcon changeIcon = new ImageIcon(changeImg);
 
-			Object[] temp = { changeIcon,
-							  dtoList.get(i).getProname(),
-							  Integer.toString(dtoList.get(i).getSellprice()),						  
-							  Integer.toString(dtoList.get(i).getPurqty()), };
+			// Image Size 조절
+			Image resizedImage = new ImageIcon(product.imageFile(), product.getImagename())
+					.getImage()
+					.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+			ImageIcon icon = new ImageIcon(resizedImage);
+			
+			Object[] temp = {
+					icon,
+					product.getProname(),
+					Integer.toString(product.getSellprice()),
+					Integer.toString(product.getPurqty())
+			};
+			
 			outerTable.addRow(temp);
 		}
 
@@ -756,50 +783,49 @@ public class Purchase extends JFrame {
 	
 	//결제하기 눌렀을 경우 orders table 데이터 값으로 넣어주자. 
 	
-			private void ordersUpdate() {
-			boolean result = false ;
-			PurchaseDao purchaseDao = new PurchaseDao();
-			ArrayList<PurchaseDto> dtoList = purchaseDao.selectList(purseq, custid);
+	private void ordersUpdate() {
+		boolean result = false ;
+		PurchaseDao purchaseDao = new PurchaseDao();
+		ArrayList<PurchaseDto> dtoList = purchaseDao.selectList(purseq, custId);
 
-			int listCount = dtoList.size();
-			
-			spendpoints = Integer.parseInt(tfUsePoint.getText());
-			accupoints =Integer.parseInt(tfPointsGiven.getText());
-		    if (rbtnCard.isSelected() == true) {
-		    	payment = "card";   		    	
-		    }else {
-		    	payment = "kakao";
-		    }
-		    payprice= Integer.parseInt(tfTotalPrice.getText());
-	
-			for (int i = 0; i < listCount; i++) {
+		int listCount = dtoList.size();
+		
+		spendpoints = Integer.parseInt(tfUsePoint.getText());
+		accupoints =Integer.parseInt(tfPointsGiven.getText());
+	    if (rbtnCard.isSelected() == true) {
+	    	payment = "card";   		    	
+	    }else {
+	    	payment = "kakao";
+	    }
+	    payprice= Integer.parseInt(tfTotalPrice.getText());
 
-				String proname = dtoList.get(i).getProname();
-				int orderseq = dtoList.get(i).getPurseq();
-				
-				
-				MyOrderDao myOrderDao = new MyOrderDao(orderseq, custid, proname, payment, payprice, spendpoints, accupoints);
-				result = myOrderDao.ordersUpdate();
+		for (int i = 0; i < listCount; i++) {
+
+			String proname = dtoList.get(i).getProname();
+			int orderseq = dtoList.get(i).getPurseq();
 			
-			}
-	
-				if(result ==true) {
-				JOptionPane.showMessageDialog(null, "결제가 완료되었습니다!"); 
-				
-		//결제후 결제완료페이지로 넘어가기   
-				
-				this.setVisible(false);
-				PaymentComplete paymentcomplete = new PaymentComplete();
-				paymentcomplete.main(null);
-				
-		//결제완료가 안됬을경우 	
-				
-			}else {
-				JOptionPane.showMessageDialog(null, "결제중 문제 발생");
-			}
+			MyOrderDao myOrderDao = new MyOrderDao(orderseq, custId, proname, payment, payprice, spendpoints, accupoints);
+			result = myOrderDao.ordersUpdate();
+		
+		}
+
+		if(result ==true) {
+			JOptionPane.showMessageDialog(null, "결제가 완료되었습니다!"); 
+			
+			//결제후 결제완료페이지로 넘어가기   
+			
+			this.setVisible(false);
+			PaymentComplete paymentcomplete = new PaymentComplete();
+			paymentcomplete.main(null);
+			
+			//결제완료가 안됬을경우 	
+			
+		} else {
+			JOptionPane.showMessageDialog(null, "결제중 문제 발생");
+		}
 		
 			
-		}
+	}
 }
 			
 	

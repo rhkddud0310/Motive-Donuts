@@ -4,9 +4,9 @@
 					제품에 대한 영양 정보 Page 구현하기.
 		
 		(2) Date
-			1) 2024.01.10. (Ver 0.0.0.0) => (4)History - 1)
-			2) 2024.01.11. (Ver 0.0.0.1) => (4)History - 2)
-			3) 2024.01.13. (Ver 0.0.0.2) => (4)History - 
+			1) 2024.01.10. (Ver 0.0.0) => (4)History - 1)
+			2) 2024.01.11. (Ver 0.0.1) => (4)History - 2)
+			3) 2024.01.14. (Ver 0.0.2) => (4)History - 
 			
 		(3) Author : Gwangyeong Kim
 		
@@ -33,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
@@ -72,12 +73,15 @@ public class Nutritional extends JFrame {
 	private JLabel lblBack;
 	private JLabel lblNutritionalLogo;
 	private JPanel panel;
+	private JLabel lblNutritionalTitle;
+	private JLabel lblNutritionalContents;
 	
 	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
 	private String custid = ShareVar.loginID;
-	private JLabel lblNutritional;
 	
 	private MenuDetailedViewDto product;
+	private String nutritionalHeader;
+	private String[] nutritionalItems;
 	
 	/**
 	 * Launch the application.
@@ -88,7 +92,7 @@ public class Nutritional extends JFrame {
 				try {
 					MenuDao dao = new MenuDao();
 					Nutritional frame = new Nutritional(
-							dao.selectById("딸기 딜라이트 요거트 블렌디드")
+							dao.selectById("미니언즈 셋트")
 									.orElseThrow(() -> new IllegalArgumentException())
 					);
 					frame.setVisible(true);
@@ -104,6 +108,11 @@ public class Nutritional extends JFrame {
 	 */
 	public Nutritional(MenuDetailedViewDto product) {
 		this.product = product;
+
+		String[] parsedItems = product.nutritional().split("/");
+		
+		this.nutritionalHeader = parsedItems[0];
+		this.nutritionalItems = Arrays.copyOfRange(parsedItems, 1, parsedItems.length);
 		initUi();
 	}
 	
@@ -157,7 +166,8 @@ public class Nutritional extends JFrame {
 		contentPane.add(getLblAccount1());
 		contentPane.add(getLblBack());
 		contentPane.add(getPanel());
-		contentPane.add(getLblNutritional());
+		contentPane.add(getLblNutritionalTitle());
+		contentPane.add(getLblNutritionalContents());
 		contentPane.add(getLblScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -386,11 +396,34 @@ public class Nutritional extends JFrame {
 		}
 		return panel;
 	}
-	private JLabel getLblNutritional() {
-		if (lblNutritional == null) {
-			lblNutritional = new JLabel(product.nutritional());
-			lblNutritional.setBounds(25, 219, 314, 337);
+	
+	private JLabel getLblNutritionalTitle() {
+		if (lblNutritionalTitle == null) {
+			lblNutritionalTitle = new JLabel(nutritionalHeader);
+			lblNutritionalTitle.setBounds(23, 214, 307, 40);
 		}
-		return lblNutritional;
+		return lblNutritionalTitle;
+	}
+	
+	private JLabel getLblNutritionalContents() {
+		if (lblNutritionalContents == null) {
+			StringBuilder stringBuilder = new StringBuilder();
+			
+			stringBuilder.append("<html>");
+			for (String item : nutritionalItems) {
+				stringBuilder.append("<li>");
+				item = item.strip();
+				stringBuilder.append(item);
+				stringBuilder.append("</li>");
+			}
+			
+			stringBuilder.append("</ul></html>");
+			
+			String html = stringBuilder.toString();
+			
+			lblNutritionalContents = new JLabel(html);
+			lblNutritionalContents.setBounds(25, 275, 314, 281);
+		}
+		return lblNutritionalContents;
 	}
 } // End

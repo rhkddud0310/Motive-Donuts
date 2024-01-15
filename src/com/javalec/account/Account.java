@@ -21,15 +21,21 @@ import javax.swing.border.EmptyBorder;
 
 import com.javalec.base.Main;
 import com.javalec.cart.Cart;
+import com.javalec.common.ShareVar;
+import com.javalec.dao.AccountDao;
+import com.javalec.dto.AccountDto;
 import com.javalec.menu.Menu;
 
 public class Account extends JFrame {
 	// --------------------------------------------------------------//
 	// Desc : MyPage - 프로필 사진과 나의 정보, 보유 포인트, 구매내역 보기
-	// Date : 2024.01.11(Ver1.0.0) - 기본 뼈대 구성
-	//			   2024.01.13(Ver1.0.1) - DB에서 값 가져오기
+	// Date : 2024.01.11(Ver1.0.0)
+	//			   2024.01.14(Ver.1.0.1)
+	// 2024.01.13(Ver1.0.1)
 	// Author : Daegeun Lee
-	// History : 1. 
+	// History : 1. 기본 뼈대 구성
+	// 			    2. DB에서 값 가져오기
+	//					3. DB에서 가져오지 못하면 실행 못함 (주의)
 	// --------------------------------------------------------------//
 
 	private static final long serialVersionUID = 1L;
@@ -55,6 +61,11 @@ public class Account extends JFrame {
 	private JLabel lblMyOrder;
 	private JLabel lblPoints;
 	private JLabel lblName;
+
+	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
+	String custid = ShareVar.loginID;
+	AccountDao accountdao = new AccountDao(custid);
+	AccountDto accountdto = accountdao.showProfile1();
 
 	/**
 	 * Launch the application.
@@ -250,7 +261,7 @@ public class Account extends JFrame {
 	private JLabel getLblImage() {
 		if (lblImage == null) {
 			lblImage = new JLabel("");
-			lblImage.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/Profile.png")));
+			showImage();
 			lblImage.setHorizontalAlignment(SwingConstants.CENTER);
 			lblImage.setBackground(new Color(233, 233, 233));
 			lblImage.setBounds(137, 85, 108, 108);
@@ -283,10 +294,12 @@ public class Account extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					homeScreen();
 				}
+
 				@Override
 				public void mouseEntered(MouseEvent e) {
 					lblLogout.setIcon(changeIcon2);
 				}
+
 				@Override
 				public void mouseExited(MouseEvent e) {
 					lblLogout.setIcon(changeIcon);
@@ -296,6 +309,7 @@ public class Account extends JFrame {
 		}
 		return lblLogout;
 	}
+
 	private JLabel getLblFirst() {
 		if (lblFirst == null) {
 			lblFirst = new JLabel("");
@@ -304,6 +318,7 @@ public class Account extends JFrame {
 				public void mouseEntered(MouseEvent e) {
 					lblFirst.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/FirstDrink.png")));
 				}
+
 				@Override
 				public void mouseExited(MouseEvent e) {
 					lblFirst.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/FirstDonut.png")));
@@ -314,6 +329,7 @@ public class Account extends JFrame {
 		}
 		return lblFirst;
 	}
+
 	private JLabel getLblSecond() {
 		if (lblSecond == null) {
 			lblSecond = new JLabel("");
@@ -322,6 +338,7 @@ public class Account extends JFrame {
 				public void mouseEntered(MouseEvent e) {
 					lblSecond.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/SecondDrink.png")));
 				}
+
 				@Override
 				public void mouseExited(MouseEvent e) {
 					lblSecond.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/SecondDonut.png")));
@@ -332,6 +349,7 @@ public class Account extends JFrame {
 		}
 		return lblSecond;
 	}
+
 	private JLabel getLblThird() {
 		if (lblThird == null) {
 			lblThird = new JLabel("");
@@ -340,6 +358,7 @@ public class Account extends JFrame {
 				public void mouseEntered(MouseEvent e) {
 					lblThird.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/ThirdDrink.png")));
 				}
+
 				@Override
 				public void mouseExited(MouseEvent e) {
 					lblThird.setIcon(new ImageIcon(Account.class.getResource("/com/javalec/image/ThirdDonut.png")));
@@ -350,6 +369,7 @@ public class Account extends JFrame {
 		}
 		return lblThird;
 	}
+
 	private JLabel getLblMyprofile() {
 		if (lblMyprofile == null) {
 			lblMyprofile = new JLabel("나의 정보");
@@ -364,6 +384,7 @@ public class Account extends JFrame {
 		}
 		return lblMyprofile;
 	}
+
 	private JLabel getLblMyPoint() {
 		if (lblMyPoint == null) {
 			lblMyPoint = new JLabel("보유 포인트");
@@ -372,6 +393,7 @@ public class Account extends JFrame {
 		}
 		return lblMyPoint;
 	}
+
 	private JLabel getLblMyOrder() {
 		if (lblMyOrder == null) {
 			lblMyOrder = new JLabel("구매 내역");
@@ -386,6 +408,7 @@ public class Account extends JFrame {
 		}
 		return lblMyOrder;
 	}
+
 	private JLabel getLblPoints() {
 		if (lblPoints == null) {
 			lblPoints = new JLabel("0 pts");
@@ -395,9 +418,11 @@ public class Account extends JFrame {
 		}
 		return lblPoints;
 	}
+
 	private JLabel getLblName() {
 		if (lblName == null) {
-			lblName = new JLabel("조조 님");
+			lblName = new JLabel("");
+			showName();
 			lblName.setFont(new Font("CookieRun Regular", Font.BOLD, 20));
 			lblName.setHorizontalAlignment(SwingConstants.CENTER);
 			lblName.setBounds(120, 192, 141, 27);
@@ -442,19 +467,32 @@ public class Account extends JFrame {
 		Account account = new Account();
 		account.setVisible(true);
 	}
-	
+
 	// MyProfile화면
 	private void myProfile() {
 		this.setVisible(false);
 		MyProfile myProfile = new MyProfile();
 		myProfile.setVisible(true);
 	}
-	
+
 	// MyOrders화면
 	private void myOrders() {
 		this.setVisible(false);
 		MyOrderList myOrderList = new MyOrderList();
 		myOrderList.setVisible(true);
+	}
+
+	// 로그인한 고객 이미지 가져오기
+	private void showImage() {
+		// 데이터를 가져와서 처리하니깐 여기에 Image를 받는다
+		int filenameValue = (Integer.toString(ShareVar.filename) != null) ? ShareVar.filename : 0;
+        String filePath = Integer.toString(filenameValue);
+        lblImage.setIcon(new ImageIcon(filePath));
+	}
+	
+	// 로그인한 고객의 이름 가져오기
+	private void showName() {
+		lblName.setText(accountdto.getCustname() + " 님");
 	}
 	
 } // End
