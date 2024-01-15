@@ -61,18 +61,20 @@ public class MenuDao {
 		// JDK 15+
 		String sql = """
 				SELECT
-					p.proname,
-					p.engproname,
-					p.sellprice,
-					p.imagename,
-					p.image as imageFile,
-					c.item as categoryName
+					DISTINCT	p.proname,
+								p.engproname,
+								p.sellprice,
+								p.imagename,
+								p.image as imageFile,
+								c.item as categoryName
 				FROM product p
 					INNER JOIN 	sell s
 					ON 			p.proname = s.proname
 					INNER JOIN 	category c
 					ON 			s.cateitem = c.item
 				WHERE c.item = ?
+					AND DATE_FORMAT(s.selldate, '%%Y-%%m-%%d')
+									= DATE_FORMAT(current_timestamp(), '%%Y-%%m-%%d')
 				""";
 		
 		try (
@@ -105,12 +107,12 @@ public class MenuDao {
 		
 		String sql = String.format("""
 				SELECT
-					p.proname,
-					p.engproname,
-					p.sellprice,
-					p.imagename,
-					p.image as imageFile,
-					c.item as categoryName
+					DISTINCT	p.proname,
+								p.engproname,
+								p.sellprice,
+								p.imagename,
+								p.image as imageFile,
+								c.item as categoryName
 				FROM product p
 					INNER JOIN 	sell s
 					ON 			p.proname = s.proname
@@ -121,6 +123,8 @@ public class MenuDao {
 						OR 	p.proname LIKE CONCAT('%%', ?, '%%')
 						OR	p.engproname LIKE CONCAT('%%', ?, '%%')
 					)
+					AND	DATE_FORMAT(s.selldate, '%%Y-%%m-%%d')
+									= DATE_FORMAT(current_timestamp(), '%%Y-%%m-%%d')
 					%s
 				ORDER BY c.item, p.proname
 				""", categoryFilter);
@@ -145,21 +149,23 @@ public class MenuDao {
 	public Optional<MenuDetailedViewDto> selectById(String productId) {
 		String sql = """
 				SELECT
-					p.proname,
-					p.engproname,
-					p.sellprice,
-					p.detail,
-					p.nutritional,
-					p.ingredient,
-					p.image as imageFile,
-					p.imagename,
-					c.item as categoryName
+					DISTINCT	p.proname,
+								p.engproname,
+								p.sellprice,
+								p.detail,
+								p.nutritional,
+								p.ingredient,
+								p.image as imageFile,
+								p.imagename,
+								c.item as categoryName
 				FROM product p
 					INNER JOIN 	sell s
 					ON 			p.proname = s.proname
 					INNER JOIN 	category c
 					ON 			s.cateitem = c.item
 				WHERE p.proname = ?
+					AND	DATE_FORMAT(s.selldate, '%%Y-%%m-%%d')
+									= DATE_FORMAT(current_timestamp(), '%%Y-%%m-%%d')
 				""";
 		
 		try (
