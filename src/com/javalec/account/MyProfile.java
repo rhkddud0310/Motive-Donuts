@@ -10,29 +10,29 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
-import com.javalec.sign.SignIn;
+import com.javalec.base.Main;
+import com.javalec.common.ShareVar;
+import com.javalec.dao.AccountDao;
+import com.javalec.dto.AccountDto;
 
 public class MyProfile extends JFrame {
 	// --------------------------------------------------------------//
 	// Desc : 나의 정보
-	// Date : 2024.01.11(Ver1.0)
+	// Date : 2024.01.11(Ver1.0.0)
+	//			   2024.01.14(Ver.1.0.1)
 	// Author : Daegeun Lee
 	// History : 1. 나의 프로필 화면을 보여준다
+	//					2. 탈퇴처리(Update - sysdate())
 	// --------------------------------------------------------------//
 	
 	private static final long serialVersionUID = 1L;
@@ -73,6 +73,11 @@ public class MyProfile extends JFrame {
 	private JTextField tfDay;
 	private JLabel lblChangeMyProfile;
 
+	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
+	String custid = ShareVar.loginID;
+	AccountDao accountdao = new AccountDao(custid);
+	AccountDto accountdto = accountdao.showProfile2();
+	private JLabel lblDeactive;
 	/**
 	 * Launch the application.
 	 */
@@ -141,6 +146,7 @@ public class MyProfile extends JFrame {
 		contentPane.add(getTfMonth());
 		contentPane.add(getTfDay());
 		contentPane.add(getLblChangeMyProfile());
+		contentPane.add(getLblDeactive());
 		contentPane.add(getLblHomeScreen());
 		contentPane.add(getLblIPhone());
 	}
@@ -256,6 +262,7 @@ public class MyProfile extends JFrame {
 	private JTextField getTfId() {
 		if (tfId == null) {
 			tfId = new JTextField();
+			tfId.setText(accountdto.getCustid());
 			tfId.setEditable(false);
 			tfId.setBounds(91, 199, 96, 30);
 			tfId.setColumns(10);
@@ -265,6 +272,7 @@ public class MyProfile extends JFrame {
 	private JTextField getTfName() {
 		if (tfName == null) {
 			tfName = new JTextField();
+			tfName.setText(accountdto.getCustname());
 			tfName.setEditable(false);
 			tfName.setColumns(10);
 			tfName.setBounds(91, 239, 154, 30);
@@ -285,6 +293,11 @@ public class MyProfile extends JFrame {
 	private JTextField getTfPhone2() {
 		if (tfPhone2 == null) {
 			tfPhone2 = new JTextField();
+			// 전화번호를 나누어서 텍스트필드에 설정
+		    String[] phoneParts = splitPhoneNumber(accountdto.getPhone());
+		    if (phoneParts.length == 3) {
+		        tfPhone2.setText(phoneParts[1]); 
+		    }
 			tfPhone2.setEditable(false);
 			tfPhone2.setHorizontalAlignment(SwingConstants.CENTER);
 			tfPhone2.setColumns(10);
@@ -295,6 +308,11 @@ public class MyProfile extends JFrame {
 	private JTextField getTfPhone3() {
 		if (tfPhone3 == null) {
 			tfPhone3 = new JTextField();
+			// 전화번호를 나누어서 텍스트필드에 설정
+		    String[] phoneParts = splitPhoneNumber(accountdto.getPhone());
+		    if (phoneParts.length == 3) {
+		        tfPhone3.setText(phoneParts[2]); 
+		    }
 			tfPhone3.setEditable(false);
 			tfPhone3.setHorizontalAlignment(SwingConstants.CENTER);
 			tfPhone3.setColumns(10);
@@ -345,6 +363,7 @@ public class MyProfile extends JFrame {
 	private JTextField getTfAnswer1() {
 		if (tfAnswer1 == null) {
 			tfAnswer1 = new JTextField();
+			tfAnswer1.setText(accountdto.getAnswer1());
 			tfAnswer1.setEditable(false);
 			tfAnswer1.setColumns(10);
 			tfAnswer1.setBounds(91, 392, 250, 30);
@@ -354,6 +373,7 @@ public class MyProfile extends JFrame {
 	private JTextField getTfAnswer2() {
 		if (tfAnswer2 == null) {
 			tfAnswer2 = new JTextField();
+			tfAnswer2.setText(accountdto.getAnswer2());
 			tfAnswer2.setEditable(false);
 			tfAnswer2.setColumns(10);
 			tfAnswer2.setBounds(91, 458, 250, 30);
@@ -387,6 +407,7 @@ public class MyProfile extends JFrame {
 	private JLabel getLblImage() {
 		if (lblImage == null) {
 			lblImage = new JLabel("");
+			showMyProfile();
 			lblImage.setBackground(new Color(233, 233, 233));
 			lblImage.setIcon(new ImageIcon(MyProfile.class.getResource("/com/javalec/image/Profile.png")));
 			lblImage.setHorizontalAlignment(SwingConstants.CENTER);
@@ -410,6 +431,7 @@ public class MyProfile extends JFrame {
 	private JTextField getTfQuestion1() {
 		if (tfQuestion1 == null) {
 			tfQuestion1 = new JTextField();
+			tfQuestion1.setText(accountdto.getQuestion1());
 			tfQuestion1.setEditable(false);
 			tfQuestion1.setColumns(10);
 			tfQuestion1.setBounds(91, 359, 250, 30);
@@ -419,6 +441,7 @@ public class MyProfile extends JFrame {
 	private JTextField getTfQuestion2() {
 		if (tfQuestion2 == null) {
 			tfQuestion2 = new JTextField();
+			tfQuestion2.setText(accountdto.getQuestion2());
 			tfQuestion2.setEditable(false);
 			tfQuestion2.setColumns(10);
 			tfQuestion2.setBounds(91, 425, 250, 30);
@@ -428,8 +451,14 @@ public class MyProfile extends JFrame {
 	private JTextField getTfYear() {
 		if (tfYear == null) {
 			tfYear = new JTextField();
+			// 생년월일을 나누어서 텍스트필드에 설정
+		    String[] birthdayParts = splitBirthday(accountdto.getBirthday());
+		    if (birthdayParts.length == 3) {
+		        tfYear.setText(birthdayParts[0]); 
+		    }
 			tfYear.setHorizontalAlignment(SwingConstants.CENTER);
 			tfYear.setEditable(false);
+			showMyProfile();
 			tfYear.setColumns(10);
 			tfYear.setBounds(91, 319, 51, 30);
 		}
@@ -438,8 +467,14 @@ public class MyProfile extends JFrame {
 	private JTextField getTfMonth() {
 		if (tfMonth == null) {
 			tfMonth = new JTextField();
+			// 생년월일을 나누어서 텍스트필드에 설정
+		    String[] birthdayParts = splitBirthday(accountdto.getBirthday());
+		    if (birthdayParts.length == 3) {
+		        tfMonth.setText(birthdayParts[1]); 
+		    }
 			tfMonth.setHorizontalAlignment(SwingConstants.CENTER);
 			tfMonth.setEditable(false);
+			showMyProfile();
 			tfMonth.setColumns(10);
 			tfMonth.setBounds(164, 319, 42, 30);
 		}
@@ -448,8 +483,14 @@ public class MyProfile extends JFrame {
 	private JTextField getTfDay() {
 		if (tfDay == null) {
 			tfDay = new JTextField();
+			// 생년월일을 나누어서 텍스트필드에 설정
+		    String[] birthdayParts = splitBirthday(accountdto.getBirthday());
+		    if (birthdayParts.length == 3) {
+		        tfDay.setText(birthdayParts[2]); 
+		    }
 			tfDay.setHorizontalAlignment(SwingConstants.CENTER);
 			tfDay.setEditable(false);
+			showMyProfile();
 			tfDay.setColumns(10);
 			tfDay.setBounds(226, 319, 42, 30);
 		}
@@ -467,6 +508,21 @@ public class MyProfile extends JFrame {
 			lblChangeMyProfile.setBounds(62, 603, 108, 30);
 		}
 		return lblChangeMyProfile;
+	}
+	private JLabel getLblDeactive() {
+		if (lblDeactive == null) {
+			lblDeactive = new JLabel("");
+			lblDeactive.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					deactive();
+				}
+			});
+			lblDeactive.setIcon(new ImageIcon(MyProfile.class.getResource("/com/javalec/image/deactive.png")));
+			lblDeactive.setFont(new Font("굴림", Font.PLAIN, 12));
+			lblDeactive.setBounds(270, 530, 70, 30);
+		}
+		return lblDeactive;
 	}
 	// --- Function ---
 	
@@ -492,4 +548,71 @@ public class MyProfile extends JFrame {
 		changeProfile.setVisible(true);
 	}
 
+	// 고객 정보 보기
+	private void showMyProfile() {
+	int filenameValue = (Integer.toString(ShareVar.filename) != null) ? ShareVar.filename : 0;
+    String filePath = Integer.toString(filenameValue);
+    lblImage.setIcon(new ImageIcon(filePath));
+	}
+	
+	// 전화번호를 나누는 메서드
+	private String[] splitPhoneNumber(String phoneNumber) {
+	    String[] phoneParts = new String[3];
+	    
+	    // 전화번호에서 "-"를 기준으로 분리
+	    String[] parts = phoneNumber.split("-");
+	    
+	    // parts 배열의 길이가 3일 때만 처리
+	    if (parts.length == 3) {
+	        phoneParts[0] = parts[0]; // "010"
+	        phoneParts[1] = parts[1]; // "????"
+	        phoneParts[2] = parts[2]; // "????"
+	    }
+	    
+	    return phoneParts;
+	}
+	
+	// 생년월일을 나누는 메서드
+	private String[] splitBirthday(String birthdayNumber) {
+	    String[] birthdayParts = new String[3];
+	    
+	    // 전화번호에서 "-"를 기준으로 분리
+	    String[] parts = birthdayNumber.split("-");
+	    
+	    // parts 배열의 길이가 3일 때만 처리
+	    if (parts.length == 3) {
+	    	birthdayParts[0] = parts[0]; 
+	    	birthdayParts[1] = parts[1]; 
+	    	birthdayParts[2] = parts[2]; 
+	    }
+	    
+	    return birthdayParts;
+	}
+	
+	// 탈퇴하기
+	private void deactive() {
+		 int option = JOptionPane.showConfirmDialog(this, "정말 탈퇴하시겠습니까?", "탈퇴 확인", JOptionPane.YES_NO_OPTION);
+
+		    if (option == JOptionPane.YES_OPTION) {
+		        // 사용자가 "예"를 선택한 경우
+		        AccountDao accountDao = new AccountDao(custid);
+		        boolean result = accountDao.deactiveAction();
+		        
+		        if (result) {
+					// 탈퇴 성공시
+		        	JOptionPane.showMessageDialog(this, "그동안 감사합니다. 탈퇴가 완료 되었습니다.", "탈퇴 완료", JOptionPane.INFORMATION_MESSAGE);
+		        	// 메인 화면으로 이동
+		        	this.setVisible(false); // 현재화면 끄고
+		        	Main main = new Main();
+		        	main.main(null); // 홈 화면 키기
+					} else {
+					// 탈퇴 실패 시
+					JOptionPane.showMessageDialog(null, "헹~ 속았지~!! 탈퇴 안되지롱!!");
+					}
+		    } else {
+		        // 사용자가 "아니오"를 선택한 경우
+		        JOptionPane.showMessageDialog(this, "그래요 가지말아요. 우리랑 함께해요.", "취소", JOptionPane.INFORMATION_MESSAGE);
+		    }
+	}
+	
 } // End

@@ -42,11 +42,6 @@ public class SignDao {
 		this.custid = custid;
 	}
 	
-//	public SignDao(String custpw) {
-//		super();
-//		this.custpw = custpw;
-//	}
-
 	public SignDao(String custid, String custname, String phone, String birthday, String question1, String answer1,
 			String question2, String answer2, Timestamp deactive) {
 		super();
