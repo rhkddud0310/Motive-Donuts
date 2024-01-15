@@ -507,8 +507,7 @@ public class Cart extends JFrame {
 	//CART TABLE 에서 SWIPE 경우 PURCHASE table 에서 데이터에서 삭제 
 	
 	private void deleteItem() {
-
-
+		
 		CartDao dao = new CartDao(purseq, custid, proname);
 		boolean result = dao.deleteItem();
 
