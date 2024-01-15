@@ -42,11 +42,7 @@ public class PaymentCompleteDao {
 		
 		//Constructor
 		
-		
-
-		
-
-		
+	
 		public PaymentCompleteDao(String proname, int sellprice, int purqty, String purdate) {
 			super();
 			this.proname = proname;
@@ -140,7 +136,7 @@ public class PaymentCompleteDao {
 
 		public int totalPrice() {
 			int totalPrice=0; 
-			String where = "select payprice from myorder where custid = '"+ShareVar.loginID+"' ";
+			String where = "select payprice from myorder where custid = '"+ShareVar.loginID+"' order by orderdate desc";
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -166,7 +162,7 @@ public class PaymentCompleteDao {
 
 		public String myPayment() {
 			String payment=""; 
-			String where = "select payment from myorder where custid = '"+ShareVar.loginID+"' ";
+			String where = "select payment from myorder where custid = '"+ShareVar.loginID+"' order by orderdate desc ";
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -193,11 +189,15 @@ public class PaymentCompleteDao {
 		public int myGetSpentPoints() {
 			int getSetPoints =0; 
 	
-			String where = "SELECT m.spendpoints,  p.purdate FROM myorder m, purchase p WHERE m.proname = p.proname AND DATE_FORMAT(p.purdate, \"%Y-%m-%d\") = curdate()  AND m.custid = '"+ShareVar.loginID+"'";
+			String where = "select spendpoints from myorder where custid = '"+ShareVar.loginID+"' order by orderdate desc";
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 				Statement stmt_mysql = conn_mysql.createStatement(); 
+				
+				
+				
+				System.out.println(where);
 				
 				ResultSet rs = stmt_mysql.executeQuery(where); 
 				if(rs.next()) {
@@ -218,11 +218,14 @@ public class PaymentCompleteDao {
 		public int receivedPoints() {
 			int getRecievedPoints =0; 
 	
-			String where = "SELECT m.accupoints,  p.purdate FROM myorder m, purchase p WHERE m.proname = p.proname AND DATE_FORMAT(p.purdate, \"%Y-%m-%d\") = curdate()  AND m.custid = '"+ShareVar.loginID+"'";
+			String where = "select accupoints from myorder where custid = '"+ShareVar.loginID+"' order by orderdate desc";
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 				Statement stmt_mysql = conn_mysql.createStatement(); 
+				
+				System.out.println(where);
+				
 				
 				ResultSet rs = stmt_mysql.executeQuery(where); 
 				if(rs.next()) {

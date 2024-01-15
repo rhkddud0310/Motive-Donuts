@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -41,15 +43,10 @@ import com.javalec.cart.Cart;
 import com.javalec.common.ShareVar;
 import com.javalec.dao.MyOrderDao;
 import com.javalec.dao.PurchaseDao;
-import com.javalec.dto.CartDto;
 import com.javalec.dto.MenuDetailedViewDto;
 import com.javalec.dto.PurchaseDto;
 import com.javalec.menu.Menu;
 import com.javalec.paymentcomplete.PaymentComplete;
-
-
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 
 
@@ -116,8 +113,11 @@ public class Purchase extends JFrame {
 	private JLabel lblCheckoutButton;
 	
 	private List<PurchaseDto> cart;
-	private String custId = ShareVar.loginID;
+	String custId = ShareVar.loginID;
 	
+	
+	PurchaseDao purchaseDao = new PurchaseDao(custId, accupoints, spendpoints);
+	PurchaseDto purchaseDto = purchaseDao.allPoints();
 
 	/**
 	 * Launch the application.
@@ -157,7 +157,8 @@ public class Purchase extends JFrame {
 			public void windowActivated(WindowEvent e) {
 				purchaseTableInit(); 
 				purchaseTableData(); 
-				myPoints(); 
+//				myPoints(); 
+				allPoints();
 	
 				
 			}
@@ -568,6 +569,7 @@ public class Purchase extends JFrame {
 	private JTextField getTfMyPoints() {
 		if (tfMyPoints == null) {
 			tfMyPoints = new JTextField();
+			allPoints();
 			tfMyPoints.setHorizontalAlignment(SwingConstants.TRAILING);
 			tfMyPoints.setEditable(false);
 			tfMyPoints.setColumns(10);
@@ -740,16 +742,16 @@ public class Purchase extends JFrame {
 	
 	//마이 포인트 표시 
 	
-	private void myPoints() {
-		
-		int point = 0;
-
-		PurchaseDao dao = new PurchaseDao(point);
-		point = dao.myPoints();
-		tfMyPoints.setText(Integer.toString(point));
-	
-		
-	}
+//	private void myPoints() {
+//		
+//		int point = 0;
+//
+//		PurchaseDao dao = new PurchaseDao(point);
+//		point = dao.myPoints();
+//		tfMyPoints.setText(Integer.toString(point));
+//	
+//		
+//	}
 	
 	
 	//'사용' 눌렀을시 포인트 넣어주자.
@@ -841,7 +843,30 @@ public class Purchase extends JFrame {
 		
 			
 	}
-}
+	
+	private void allPoints() {
+		// 나의 누적 포인트
+			// 숫자 포맷 설정
+	        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+
+	        // 숫자 포맷 적용
+	        int allPoints = purchaseDto.getAccupoints() - purchaseDto.getSpendpoints();
+	        String formattedNumber = decimalFormat.format(allPoints);
+			tfMyPoints.setText(formattedNumber );
+		}
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+
 			
 	
 		

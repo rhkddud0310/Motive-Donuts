@@ -39,13 +39,23 @@ public class PurchaseDao {
 	int payprice;
 	int accupoints;
 	String orderdate;
+	
+	
+	
 
-	public PurchaseDao(String proname, int orderseq, int payprice) {
+	public PurchaseDao(String custid, int accupoints, int spendpoints) {
 		super();
-		this.proname = proname;
-		this.orderseq = orderseq;
-		this.payprice = payprice;
+		this.custid = custid;
+		this.accupoints = accupoints;
+		this.spendpoints = spendpoints;
 	}
+
+//	public PurchaseDao(String proname, int orderseq, int payprice) {
+//		super();
+//		this.proname = proname;
+//		this.orderseq = orderseq;
+//		this.payprice = payprice;
+//	}
 
 	public PurchaseDao() {
 		// TODO Auto-generated constructor stub
@@ -216,7 +226,7 @@ System.out.println(whereDefault + where);
 
 	public int myPoints() {
 		int returnPoint = 0;
-		String where = "select sum(accupoints) from myorder where custid = 'jojo' ";
+		String where = "select sum(accupoints) as totalAccu from myorder where custid = '"+ShareVar.loginID+"'";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -239,7 +249,7 @@ System.out.println(whereDefault + where);
 
 	public int sumPrice() {
 		int sumprice = 0;
-		String where = " SELECT sum(pr.sellprice) FROM purchase p, product pr WHERE pr.proname = p.proname and custid = 'jojo' ";
+		String where = " SELECT sum(pr.sellprice) FROM purchase p, product pr WHERE pr.proname = p.proname and custid = '"+ShareVar.loginID+"'";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -289,5 +299,64 @@ System.out.println(whereDefault + where);
 
 		return true;
 	}
+	
+	
+	public PurchaseDto allPoints() {
+		PurchaseDto purchaseDto = null;
+		
+		String where = "select SUM(accupoints) as totalAccu,  SUM(spendpoints) as totalSpend from myorder where custid = '" + custid + "'";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			ResultSet rs = stmt_mysql.executeQuery(where);
+			
+			if(rs.next()) {
+				int accupoints = rs.getInt("totalAccu");
+				int spendpoints = rs.getInt("totalSpend");
+				
+				
+				purchaseDto = new PurchaseDto(custid, accupoints, spendpoints );
+			}
+			conn_mysql.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return purchaseDto;
+	}
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
