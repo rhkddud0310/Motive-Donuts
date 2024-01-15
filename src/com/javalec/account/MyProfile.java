@@ -72,12 +72,12 @@ public class MyProfile extends JFrame {
 	private JTextField tfMonth;
 	private JTextField tfDay;
 	private JLabel lblChangeMyProfile;
+	private JLabel lblDeactive;
 
 	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
 	String custid = ShareVar.loginID;
 	AccountDao accountdao = new AccountDao(custid);
 	AccountDto accountdto = accountdao.showProfile2();
-	private JLabel lblDeactive;
 	/**
 	 * Launch the application.
 	 */

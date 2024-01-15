@@ -64,6 +64,19 @@ public class AccountDao {
 		this.answer2 = answer2;
 	}
 
+	public AccountDao(String custpw, String custname, String phone, String question1, String answer1, String question2,
+			String answer2, FileInputStream image) {
+		super();
+		this.custpw = custpw;
+		this.custname = custname;
+		this.phone = phone;
+		this.question1 = question1;
+		this.answer1 = answer1;
+		this.question2 = question2;
+		this.answer2 = answer2;
+		this.image = image;
+	}
+
 	public AccountDao(String custid, String custpw, String custname, String phone, String birthday, String question1,
 			String answer1, String question2, String answer2, String joinactive, String modidate, Timestamp deactive,
 			FileInputStream image) {
@@ -143,6 +156,7 @@ public class AccountDao {
 				String question2 = rs.getString(7);
 				String answer2 = rs.getString(8);
 				
+				
 				// file
 				ShareVar.filename = ShareVar.filename + 1; // 맨처음 0 인데 불러올때 1씩 이름이 생겨서 들어간다
 				File file = new File(Integer.toString(ShareVar.filename));
@@ -171,7 +185,7 @@ public class AccountDao {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 
-				String A = "UPDATE customer SET deactive = sysdate() WHERE custid = '" + custid +"'";;
+				String A = "UPDATE customer SET deactive = sysdate() WHERE custid = '" + custid +"'";
 
 				ps = conn_mysql.prepareStatement(A);
 				ps.executeUpdate();
@@ -184,4 +198,37 @@ public class AccountDao {
 			}
 			return true;
 		}
-}
+		
+		// 수정
+		public boolean updateAction() {
+			PreparedStatement ps = null; // 보안상 사용, 불러올때는 그냥 Statement를 사용하면 됨
+			
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				Statement stmt_mysql = conn_mysql.createStatement();
+				
+				String A = "UPDATE customer SET custpw = ?, custname = ?, phone = ?, question1 = ?, answer1 = ?, question2 = ?, answer2 = ?, modidate = sysdate(), image = ? ";
+				String B = " WHERE custid = '" + ShareVar.loginID +"'";
+
+				ps = conn_mysql.prepareStatement(A+B);
+				ps.setString(1, custpw);
+				ps.setString(2, custname);
+				ps.setString(3, phone);
+				ps.setString(4, question1);
+				ps.setString(5, answer1);
+				ps.setString(6, question2);
+				ps.setString(7, answer2);
+				ps.setBinaryStream(8, image);
+				
+				ps.executeUpdate();
+				
+				conn_mysql.close();
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+			return true;
+		}
+} // End

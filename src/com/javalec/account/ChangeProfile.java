@@ -42,11 +42,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.javalec.common.ShareVar;
 import com.javalec.dao.AccountDao;
 import com.javalec.dao.SignDao;
+import com.javalec.dto.AccountDto;
 import com.javalec.sign.SignUp;
 
 public class ChangeProfile extends JFrame {
 	// --------------------------------------------------------------//
-	// Desc : 로그인&회원가입
+	// Desc : 개인정보 수정
 	// Date : 2024.01.08(Ver1.0)
 	// Author : Daegeun Lee
 	// History : 1. ID&PW를 받아서 DB에 있는 데이터와 비교한뒤 true, false로 체크한다
@@ -95,13 +96,14 @@ public class ChangeProfile extends JFrame {
 	private JLabel lblChange;
 	private JCheckBox chkAgree;
 	private JTextField tfFilePath;
+	private JTextField tfYear;
+	private JTextField tfMonth;
+	private JTextField tfDay;
 
 	// ShareVar.loginID를 이용하여 로그인한 사용자의 아이디에 접근
 	String custid = ShareVar.loginID;
 	AccountDao accountdao = new AccountDao(custid);
-	private JTextField tfYear;
-	private JTextField tfMonth;
-	private JTextField tfDay;
+	AccountDto accountdto = accountdao.showProfile2();
 	/**
 	 * Launch the application.
 	 */
@@ -352,6 +354,7 @@ public class ChangeProfile extends JFrame {
 	private JTextField getTfName() {
 		if (tfName == null) {
 			tfName = new JTextField();
+			tfName.setText(accountdto.getCustname());
 			tfName.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
@@ -385,6 +388,11 @@ public class ChangeProfile extends JFrame {
 	private JTextField getTfPhone2() {
 		if (tfPhone2 == null) {
 			tfPhone2 = new JTextField();
+			// 전화번호를 나누어서 텍스트필드에 설정
+		    String[] phoneParts = splitPhoneNumber(accountdto.getPhone());
+		    if (phoneParts.length == 3) {
+		        tfPhone2.setText(phoneParts[1]); 
+		    }
 			tfPhone2.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
@@ -414,6 +422,11 @@ public class ChangeProfile extends JFrame {
 	private JTextField getTfPhone3() {
 		if (tfPhone3 == null) {
 			tfPhone3 = new JTextField();
+			// 전화번호를 나누어서 텍스트필드에 설정
+		    String[] phoneParts = splitPhoneNumber(accountdto.getPhone());
+		    if (phoneParts.length == 3) {
+		        tfPhone3.setText(phoneParts[2]); 
+		    }
 			tfPhone3.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
@@ -644,6 +657,13 @@ public class ChangeProfile extends JFrame {
 	private JTextField getTfFilePath() {
 		if (tfFilePath == null) {
 			tfFilePath = new JTextField();
+			// 클릭하면 데이트를 가져와서 처리하니깐 여기에 Image를 받는다
+			// Image 처리 : filename이 틀려야 보여주기가 가능
+			tfFilePath.setVisible(false);
+//			String filePath = Integer.toString(ShareVar.filename);
+//			tfFilePath.setText(filePath);
+//			lblImage.setIcon(new ImageIcon(filePath));
+			lblImage.setHorizontalAlignment(SwingConstants.CENTER);
 			tfFilePath.setEditable(false);
 			tfFilePath.setColumns(10);
 			tfFilePath.setBounds(193, 471, 148, 25);
@@ -746,56 +766,60 @@ public class ChangeProfile extends JFrame {
 		String question2 = (String) cbQuestion2.getSelectedItem();
 		String answer2 = tfAnswer2.getText().trim();
 		String imagePath = tfFilePath.getText().trim();
-		
 		// Image File
 		FileInputStream input = null;
 		File file;
 
-		if (imagePath.isEmpty()) {
+		if (imagePath.isEmpty() ) {
 	        // 이미지를 선택하지 않은 경우 디폴트 이미지 경로로 설정
-			URL defaultImagePath = SignUp.class.getResource("/com/javalec/image/Profile.png");
-
-		    try {
-		        URI uri = defaultImagePath.toURI();
-		        file = new File(uri);
+//			URL defaultImagePath = SignUp.class.getResource("/com/javalec/image/Profile.png");
+			String filePath = Integer.toString(ShareVar.filename);
+//			tfFilePath.setText(filePath);
+//		    try {
+//		        URI uri = defaultImagePath.toURI();
+		        file = new File(filePath);
 		        try {
 		        	input = new FileInputStream(file);
 		        } catch (FileNotFoundException e) {
 		            // 예외 처리
 		        }
-		    } catch (URISyntaxException e) {
-		        e.printStackTrace();  // 예외 처리
-		    }
+//		    } catch (URISyntaxException e) {
+//		        e.printStackTrace();  // 예외 처리
+//		    }
 			
 	    } else {
-	        // 이미지를 선택한 경우 입력 받은 경로 사용
+//	         이미지를 선택한 경우 입력 받은 경로 사용
 	        file = new File(imagePath);
+	        
 	        try {
+	        	
 	            input = new FileInputStream(file);
 	        } catch (FileNotFoundException e) {
 	            // 예외 처리
 	        }
 	    }
 		
-//		if (check != 0) {
-//			JOptionPane.showMessageDialog(null, "항목을 입력 하세요.");
-//		} else {
-//			SignDao signDao = new SignDao(custid, custpw, custname, phone, birthday, question1, answer1, question2, answer2, input);
-//			boolean result = signDao.insertAction(); // 회원가입 성공 여부 확인
-//
-//			if (result) {
-//			// 회원가입 성공 시
-//			JOptionPane.showMessageDialog(null, custname + "님의 회원가입을 환영합니다!");
-//			// 로그인 화면으로 전환
-//				signInScreen();
-//			} else {
-//			// 회원가입 실패 시
-//			JOptionPane.showMessageDialog(null, "회원가입에 실패하였습니다! 다시 작성하여 주세요");
-//			// 다시 맨 처음 화면
-//			this.setVisible(false);
-//			setVisible(true);
-//			}
-//		}
+		if (check != 0) {
+			JOptionPane.showMessageDialog(null, "항목을 입력 하세요.");
+		} else {
+			AccountDao accountDao = new AccountDao(custpw, custname, phone, question1, answer1, question2, answer2, input);
+			boolean result = accountDao.updateAction(); // 회원가입 성공 여부 확인
+
+			if (result) {
+			// 회원정보 변경 성공
+				JOptionPane.showMessageDialog(null, custname + "님의 회원정보가 변경되었습니다!");
+			// 로그인 화면으로 전환
+				this.setVisible(false);
+				MyProfile myProfile = new MyProfile();
+				myProfile.setVisible(true);
+			} else {
+			// 정보변경 실패 시
+			JOptionPane.showMessageDialog(null, "정보변경에 실패하였습니다! 다시 작성하여 주세요");
+			// 다시 맨 처음 화면
+			this.setVisible(false);
+			setVisible(true);
+			}
+		}
 	}
 
 	// 작성 안했을시 처리
@@ -857,6 +881,7 @@ public class ChangeProfile extends JFrame {
 		int ret = chooser.showOpenDialog(null);
 		if (ret != JFileChooser.APPROVE_OPTION) {
 			JOptionPane.showMessageDialog(null, "파일을 선택하지 않았습니다.");
+			tfFilePath.setVisible(false);
 			return; 
 		}
 		String filePath = chooser.getSelectedFile().getPath();
@@ -865,6 +890,7 @@ public class ChangeProfile extends JFrame {
 		Image img = icon.getImage();
 		Image changeImg = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH); // 사이즈를 100, 100으로 조정해준다
 		ImageIcon icon1 = new ImageIcon(changeImg);
+		tfFilePath.setVisible(true);
 		lblImage.setIcon(icon1);
 
 	}// filePath
@@ -894,4 +920,20 @@ public class ChangeProfile extends JFrame {
 		    return birthdayParts;
 		}
 	
+		// 전화번호를 나누는 메서드
+		private String[] splitPhoneNumber(String phoneNumber) {
+		    String[] phoneParts = new String[3];
+		    
+		    // 전화번호에서 "-"를 기준으로 분리
+		    String[] parts = phoneNumber.split("-");
+		    
+		    // parts 배열의 길이가 3일 때만 처리
+		    if (parts.length == 3) {
+		        phoneParts[0] = parts[0]; // "010"
+		        phoneParts[1] = parts[1]; // "????"
+		        phoneParts[2] = parts[2]; // "????"
+		    }
+		    
+		    return phoneParts;
+		}
 } // End
