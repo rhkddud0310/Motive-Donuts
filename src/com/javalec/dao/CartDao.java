@@ -149,7 +149,7 @@ public class CartDao {
 	
 		public CartDto cartTableClick() {
 			CartDto CartDto = null; 
-			String where = "SELECT purseq, custid, proname, purqty, purdate, status FROM purchase ";
+			String where = "SELECT purseq, custid, proname, purqty, purdate, gubun FROM purchase ";
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -254,7 +254,7 @@ public class CartDao {
 					proname,
 					purqty,
 					purdate,
-					status
+					gubun
 				) VALUES (
 					?,
 					?,
@@ -284,7 +284,7 @@ public class CartDao {
 				stmt.setString(3, dto.proname());
 				stmt.setInt(4, 1);
 				stmt.setObject(5, timestamp);
-				stmt.setInt(6, dto.status().statusCode());
+				stmt.setInt(6, dto.gubun().gubunCode());
 			} else {
 				stmt.setString(1, dto.custid());
 				stmt.setString(2, dto.proname());
