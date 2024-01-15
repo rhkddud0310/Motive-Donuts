@@ -3,6 +3,7 @@ package com.javalec.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import com.javalec.common.ShareVar;
@@ -88,6 +89,7 @@ public class MyOrderDao {
 				String A = "insert into myorder (orderseq, custid, proname, payment, payprice, spendpoints, accupoints, orderdate";
 				String B = " ) values (?,?,?,?,?,?,?,sysdate())";
 				
+				System.out.println(A+B);
 				System.out.println(orderseq);
 				System.out.println(custid);
 				System.out.println(proname);
@@ -118,7 +120,28 @@ public class MyOrderDao {
 			return true;	
 		}
 
-
+	    public int getMaxPurnum() {
+			int maxpurnum = 0;
+			String whereDefault = "SELECT MAX(orderseq) FROM myorder";
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				Statement stmt_mysql = conn_mysql.createStatement(); 
+				
+				ResultSet rs = stmt_mysql.executeQuery(whereDefault);
+				
+				
+				while(rs.next()) {
+					maxpurnum = rs.getInt(1);
+				}
+				conn_mysql.close();
+				
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return maxpurnum;
+		}
 
 	    
 	    

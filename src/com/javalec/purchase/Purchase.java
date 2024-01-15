@@ -216,9 +216,9 @@ public class Purchase extends JFrame {
 	
 	private void initCart() {
 		// select from cart table
-		purseq=3;	// TODO 광영에게 받은 값으로 추후 변경.
+//		purseq=3;	// TODO 광영에게 받은 값으로 추후 변경.
 		PurchaseDao dao = new PurchaseDao();
-		// cart = dao.selectList(purseq, custId);
+		cart = dao.selectList(purseq, custId);
 		if (custId == null) {
 			custId = "(noname)";
 		}
@@ -811,12 +811,15 @@ public class Purchase extends JFrame {
 	    }
 	    payprice= Integer.parseInt(tfTotalPrice.getText());
 
+	    MyOrderDao myOrderMaxNumDao = new MyOrderDao();
+	    int intoderseq = myOrderMaxNumDao.getMaxPurnum()+1;
+	    System.out.println(intoderseq);
+	    
 		for (int i = 0; i < listCount; i++) {
 
 			String proname = dtoList.get(i).getProname();
-			int orderseq = dtoList.get(i).getPurseq();
-			
-			MyOrderDao myOrderDao = new MyOrderDao(orderseq, custId, proname, payment, payprice, spendpoints, accupoints);
+//			int orderseq = dtoList.get(i).getPurseq();
+			MyOrderDao myOrderDao = new MyOrderDao(intoderseq, custId, proname, payment, payprice, spendpoints, accupoints);
 			result = myOrderDao.ordersUpdate();
 		
 		}
