@@ -59,19 +59,12 @@ public class Cart extends JFrame {
 	private String custid;
 	private String proname;
 	
-	//Table
-	
+	// -- Table
 	private final DefaultTableModel outerTable = new DefaultTableModel();
+	
 	private JLabel lblNewLabel_1;
 	private JLabel lblOrderButton;
 	private JLabel lblItemAdd;
-	
-	
-	
-	
-	
-	
-	
 
 	/**
 	 * Launch the application.
@@ -435,7 +428,6 @@ public class Cart extends JFrame {
 	}
 	
 	//CART TABLE DATA 불러오기 
-	
 	private void cartTableData() {
 		CartDao CartDao = new CartDao();
 		ArrayList<CartDto> dtoList = CartDao.selectList();
@@ -466,7 +458,6 @@ public class Cart extends JFrame {
 	
 	
 	//CART TABLE 클릭하였을경우 
-	
 	private void cartTableClick() {
 	
 			int i = cart_Table.getSelectedRow();
@@ -483,7 +474,6 @@ public class Cart extends JFrame {
 	
 	
 	//CART TABLE 에서 "아이템 추가하기" 눌렸을 경우 MENU 페이지로 이동한다. 
-	
 	private void backToMenu() {
 
 			this.setVisible(false);
@@ -493,7 +483,6 @@ public class Cart extends JFrame {
 		}
 		
 	//CART TABLE 에서 "결제하기" 눌렸을 경우 PURCHASE 페이지로 이동한다. 
-		
 	private void moveToPurchase() {	
 		
 		this.setVisible(false);
@@ -504,10 +493,9 @@ public class Cart extends JFrame {
 	
 	
 	//CART TABLE 에서 SWIPE 경우 PURCHASE table 에서 데이터에서 삭제 
-	
 	private void deleteItem() {
 		
-//		cartTableClick();
+		cartTableClick();
 		CartDao dao = new CartDao(purseq, custid, proname);
 		boolean result = dao.deleteItem();
 
@@ -518,33 +506,4 @@ public class Cart extends JFrame {
 		}
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 } // End

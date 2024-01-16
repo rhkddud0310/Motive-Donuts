@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -41,15 +43,10 @@ import com.javalec.cart.Cart;
 import com.javalec.common.ShareVar;
 import com.javalec.dao.MyOrderDao;
 import com.javalec.dao.PurchaseDao;
-import com.javalec.dto.CartDto;
 import com.javalec.dto.MenuDetailedViewDto;
 import com.javalec.dto.PurchaseDto;
 import com.javalec.menu.Menu;
 import com.javalec.paymentcomplete.PaymentComplete;
-
-
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 
 
@@ -107,7 +104,7 @@ public class Purchase extends JFrame {
 	int purseq; 
 	int purqty; 
 	String purdate; 
-	String status; 
+	String gubun; 
 	
 	//Table 
 	
@@ -118,6 +115,9 @@ public class Purchase extends JFrame {
 	private List<PurchaseDto> cart;
 	String custId = ShareVar.loginID;
 	
+	
+	PurchaseDao purchaseDao = new PurchaseDao(custId, accupoints, spendpoints);
+	PurchaseDto purchaseDto = purchaseDao.allPoints();
 
 	/**
 	 * Launch the application.
@@ -157,7 +157,8 @@ public class Purchase extends JFrame {
 			public void windowActivated(WindowEvent e) {
 				purchaseTableInit(); 
 				purchaseTableData(); 
-				myPoints(); 
+//				myPoints(); 
+				allPoints();
 	
 				
 			}
@@ -216,9 +217,9 @@ public class Purchase extends JFrame {
 	
 	private void initCart() {
 		// select from cart table
-		purseq=3;	// TODO 광영에게 받은 값으로 추후 변경.
+//		purseq=3;	// TODO 광영에게 받은 값으로 추후 변경.
 		PurchaseDao dao = new PurchaseDao();
-		// cart = dao.selectList(purseq, custId);
+		cart = dao.selectList(purseq, custId);
 		if (custId == null) {
 			custId = "(noname)";
 		}
@@ -568,6 +569,7 @@ public class Purchase extends JFrame {
 	private JTextField getTfMyPoints() {
 		if (tfMyPoints == null) {
 			tfMyPoints = new JTextField();
+			allPoints();
 			tfMyPoints.setHorizontalAlignment(SwingConstants.TRAILING);
 			tfMyPoints.setEditable(false);
 			tfMyPoints.setColumns(10);
@@ -740,43 +742,55 @@ public class Purchase extends JFrame {
 	
 	//마이 포인트 표시 
 	
-	private void myPoints() {
-		
-		int point = 0;
-
-		PurchaseDao dao = new PurchaseDao(point);
-		point = dao.myPoints();
-		tfMyPoints.setText(Integer.toString(point));
-	
-		
-	}
+//	private void myPoints() {
+//		
+//		int point = 0;
+//
+//		PurchaseDao dao = new PurchaseDao(point);
+//		point = dao.myPoints();
+//		tfMyPoints.setText(Integer.toString(point));
+//	
+//		
+//	}
 	
 	
 	//'사용' 눌렀을시 포인트 넣어주자.
 	
-		private void usePoint() {
+	private void usePoint() {
+	
+	int usePoint = Integer.parseInt(tfUsePoint.getText());
 		
-		int usePoint = Integer.parseInt(tfUsePoint.getText());
-			
-		JOptionPane.showMessageDialog(null, "포인트가 적용되었습니다."); 
-		tfPointDiscount.setText(Integer.toString(usePoint));		
+	JOptionPane.showMessageDialog(null, "포인트가 적용되었습니다."); 
+	tfPointDiscount.setText(Integer.toString(usePoint));		
 		
 	//상품금액 표시하자.
 		
-		int sumprice = 0;
+//		int sumprice = 0;
+//		
+//		PurchaseDao dao = new PurchaseDao(sumprice);
+//		sumprice = dao.sumPrice();
+//		tfItemPrice.setText(Integer.toString(sumprice));
 		
-		PurchaseDao dao = new PurchaseDao(sumprice);
-		sumprice = dao.sumPrice();
-		tfItemPrice.setText(Integer.toString(sumprice));
+	int sumPrice = 0;
+
+	for (int i = 0; i < cart.size(); i++) {
+	    PurchaseDto item = cart.get(i);
+
+	    int unitPrice = item.getSellprice();
+	    int qty = item.getPurqty();
+
+	    sumPrice += unitPrice * qty;
+	}
+	tfItemPrice.setText(Integer.toString(sumPrice));
 		
 	//할인받은 결제금액을 표시하자.
 		
-		tfTotalPrice.setText(Integer.toString(sumprice-usePoint));
+	tfTotalPrice.setText(Integer.toString(sumPrice-usePoint));
 		
 	//적립된 포인트를 표시하자.
 		
-		int accurPoints = (sumprice-usePoint)/100;
-		tfPointsGiven.setText(Integer.toString(accurPoints));
+	int accurPoints = (sumPrice-usePoint)/100;
+	tfPointsGiven.setText(Integer.toString(accurPoints));
 	}
 	
 
@@ -799,12 +813,15 @@ public class Purchase extends JFrame {
 	    }
 	    payprice= Integer.parseInt(tfTotalPrice.getText());
 
+	    MyOrderDao myOrderMaxNumDao = new MyOrderDao();
+	    int intoderseq = myOrderMaxNumDao.getMaxPurnum()+1;
+	    System.out.println(intoderseq);
+	    
 		for (int i = 0; i < listCount; i++) {
 
 			String proname = dtoList.get(i).getProname();
-			int orderseq = dtoList.get(i).getPurseq();
-			
-			MyOrderDao myOrderDao = new MyOrderDao(orderseq, custId, proname, payment, payprice, spendpoints, accupoints);
+//			int orderseq = dtoList.get(i).getPurseq();
+			MyOrderDao myOrderDao = new MyOrderDao(intoderseq, custId, proname, payment, payprice, spendpoints, accupoints);
 			result = myOrderDao.ordersUpdate();
 		
 		}
@@ -826,7 +843,30 @@ public class Purchase extends JFrame {
 		
 			
 	}
-}
+	
+	private void allPoints() {
+		// 나의 누적 포인트
+			// 숫자 포맷 설정
+	        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+
+	        // 숫자 포맷 적용
+	        int allPoints = purchaseDto.getAccupoints() - purchaseDto.getSpendpoints();
+	        String formattedNumber = decimalFormat.format(allPoints);
+			tfMyPoints.setText(formattedNumber );
+		}
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+
 			
 	
 		

@@ -98,7 +98,12 @@ public class PurchaseDto {
 	}
 	
 	
-	
+	public PurchaseDto(String custid, int accupoints, int spendpoints) {
+		super();
+		this.custid = custid;
+		this.accupoints = accupoints;
+		this.spendpoints = spendpoints;
+	}
 	
 	
 	

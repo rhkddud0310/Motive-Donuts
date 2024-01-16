@@ -30,7 +30,7 @@ public class PurchaseDao {
 	String proname;
 	int purqty;
 	String purdate;
-	String status;
+	String gubun;
 	int point;
 	int spendpoints;
 
@@ -39,13 +39,23 @@ public class PurchaseDao {
 	int payprice;
 	int accupoints;
 	String orderdate;
+	
+	
+	
 
-	public PurchaseDao(String proname, int orderseq, int payprice) {
+	public PurchaseDao(String custid, int accupoints, int spendpoints) {
 		super();
-		this.proname = proname;
-		this.orderseq = orderseq;
-		this.payprice = payprice;
+		this.custid = custid;
+		this.accupoints = accupoints;
+		this.spendpoints = spendpoints;
 	}
+
+//	public PurchaseDao(String proname, int orderseq, int payprice) {
+//		super();
+//		this.proname = proname;
+//		this.orderseq = orderseq;
+//		this.payprice = payprice;
+//	}
 
 	public PurchaseDao() {
 		// TODO Auto-generated constructor stub
@@ -86,12 +96,13 @@ public class PurchaseDao {
 	public ArrayList<PurchaseDto> selectList(int ppurseq, String pcustid) {
 		ArrayList<PurchaseDto> dtoList = new ArrayList<PurchaseDto>();
 		String whereDefault = "SELECT p.purseq, pr.image, pr.imagename, pr.proname, pr.sellprice, p.purqty FROM purchase p, product pr WHERE pr.proname = p.proname ";
-		String where = "AND p.purseq = " + ppurseq + " AND p.custid =  '" + pcustid + "'";
+		String where = " AND p.custid =  '" + pcustid + "'";
+//		String where = "AND p.purseq = " + ppurseq + " AND p.custid =  '" + pcustid + "'";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
-
+System.out.println(whereDefault + where);
 			ResultSet rs = stmt_mysql.executeQuery(whereDefault + where);
 
 			while (rs.next()) {
@@ -215,7 +226,7 @@ public class PurchaseDao {
 
 	public int myPoints() {
 		int returnPoint = 0;
-		String where = "select sum(accupoints) from myorder where custid = 'jojo' ";
+		String where = "select sum(accupoints) as totalAccu from myorder where custid = '"+ShareVar.loginID+"'";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -238,7 +249,7 @@ public class PurchaseDao {
 
 	public int sumPrice() {
 		int sumprice = 0;
-		String where = " SELECT sum(pr.sellprice) FROM purchase p, product pr WHERE pr.proname = p.proname and custid = 'jojo' ";
+		String where = " SELECT sum(pr.sellprice) FROM purchase p, product pr WHERE pr.proname = p.proname and custid = '"+ShareVar.loginID+"'";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -267,7 +278,7 @@ public class PurchaseDao {
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 
-			String A = "insert into purchase  (purseq, custid, proname, purqty, purdate, status";
+			String A = "insert into purchase  (purseq, custid, proname, purqty, purdate, gubun";
 			String B = " ) values (?,?,?,?,?,?)";
 
 			ps = conn_mysql.prepareStatement(A + B);
@@ -276,7 +287,7 @@ public class PurchaseDao {
 			ps.setString(3, proname);
 			ps.setInt(4, purqty);
 			ps.setString(5, purdate);
-			ps.setString(6, status);
+			ps.setString(6, gubun);
 
 			ps.executeUpdate();
 
@@ -288,5 +299,64 @@ public class PurchaseDao {
 
 		return true;
 	}
+	
+	
+	public PurchaseDto allPoints() {
+		PurchaseDto purchaseDto = null;
+		
+		String where = "select SUM(accupoints) as totalAccu,  SUM(spendpoints) as totalSpend from myorder where custid = '" + custid + "'";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			ResultSet rs = stmt_mysql.executeQuery(where);
+			
+			if(rs.next()) {
+				int accupoints = rs.getInt("totalAccu");
+				int spendpoints = rs.getInt("totalSpend");
+				
+				
+				purchaseDto = new PurchaseDto(custid, accupoints, spendpoints );
+			}
+			conn_mysql.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return purchaseDto;
+	}
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
