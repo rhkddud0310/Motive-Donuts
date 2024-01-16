@@ -116,7 +116,7 @@ public class Purchase extends JFrame {
 	private JLabel lblCheckoutButton;
 	
 	private List<PurchaseDto> cart;
-	private String custId = ShareVar.loginID;
+	String custId = ShareVar.loginID;
 	
 
 	/**

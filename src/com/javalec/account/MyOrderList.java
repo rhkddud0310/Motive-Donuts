@@ -10,8 +10,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -27,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import com.javalec.common.ShareVar;
+import com.javalec.dao.MyOrderListDao;
 import com.javalec.dto.MyOrderListDto;
 
 public class MyOrderList extends JFrame {
@@ -50,9 +51,9 @@ public class MyOrderList extends JFrame {
 	private JLabel lblOK;
 	// -- Table
 	private final DefaultTableModel outerTable = new DefaultTableModel();
-	
-	private List<MyOrderListDto> myOrderList;
-	private String custId = ShareVar.loginID;
+
+	String custId = ShareVar.loginID;
+
 	/**
 	 * Launch the application.
 	 */
@@ -80,7 +81,6 @@ public class MyOrderList extends JFrame {
 			public void windowActivated(WindowEvent e) {
 				tableInit();
 				tableData();
-//				myPoints();
 
 			}
 		});
@@ -188,60 +188,43 @@ public class MyOrderList extends JFrame {
 	private void tableInit() {
 
 		// Table Column 명 정하기
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.addColumn("");
-		outerTable.setColumnCount(8);
+		outerTable.addColumn("상품명");
+		outerTable.addColumn("결제수단");
+		outerTable.addColumn("결제가격");
+		outerTable.addColumn("사용한 포인트");
+		outerTable.addColumn("적립 포인트");
+		outerTable.addColumn("구매 날짜");
+		outerTable.setColumnCount(6);
 
 		// Table Column 크기 정하기
 		int colNo = 0;
 		TableColumn col = innerTable.getColumnModel().getColumn(colNo);
-		int width = 100;
+		int width = 80;
 		col.setPreferredWidth(width);
 
 		colNo = 1;
 		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 20;
+		width = 30;
 		col.setPreferredWidth(width);
 
 		colNo = 2;
 		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 50;
+		width = 70;
 		col.setPreferredWidth(width);
 
 		colNo = 3;
 		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 20;
+		width = 60;
 		col.setPreferredWidth(width);
-		
+
 		colNo = 4;
 		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 30;
+		width = 60;
 		col.setPreferredWidth(width);
-		
+
 		colNo = 5;
 		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 30;
-		col.setPreferredWidth(width);
-		
-		colNo = 6;
-		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 30;
-		col.setPreferredWidth(width);
-		
-		colNo = 7;
-		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 30;
-		col.setPreferredWidth(width);
-		
-		colNo = 8;
-		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 50;
+		width = 100;
 		col.setPreferredWidth(width);
 
 		innerTable.setAutoResizeMode(innerTable.AUTO_RESIZE_OFF);
@@ -251,24 +234,44 @@ public class MyOrderList extends JFrame {
 			outerTable.removeRow(0);
 		}
 	}
+
 	private void tableData() {
-		
-		int listCount = myOrderList.size();
+
+//		int listCount = myOrderList.size();
+//
+//		for (int i = 0; i < listCount; i++) {
+//			MyOrderListDto myOrderList = MyOrderList.get(i);
+//			
+//			ArrayList<Dto> dtoList = dao.selectList();
+//			
+//			int listCount = dtoList.size();
+//			
+//			for(int i=0; i<listCount; i++) {
+//				String temp = Integer.toString(dtoList.get(i).getSeqno());
+//				String[] qTxt = {temp, dtoList.get(i).getName(), 
+//						  		 	   dtoList.get(i).getTelno(), 
+//						  		 	   dtoList.get(i).getRelation()};
+//				outerTable.addRow(qTxt);
+//		}
+
+		MyOrderListDao myOrderListDao = new MyOrderListDao();
+		ArrayList<MyOrderListDto> dtoList = myOrderListDao.selectList();
+
+		int listCount = dtoList.size();
 
 		for (int i = 0; i < listCount; i++) {
-//			MyOrderListDto myOrderList = myOrderList.get(i);
-//			
-//			Object[] temp = {
-////					icon,
-//					product.getProname(),
-//					Integer.toString(product.getSellprice()),
-//					Integer.toString(product.getPurqty())
-//			};
-			
-//			outerTable.addRow(temp);
-		}
-		
+	        String temp = dtoList.get(i).getProname();
+	        String[] qTxt = { temp, dtoList.get(i).getPayment(), String.valueOf(dtoList.get(i).getPayprice()),
+	                String.valueOf(dtoList.get(i).getSpendpoints()), String.valueOf(dtoList.get(i).getAccupoints()),
+	                String.valueOf(dtoList.get(i).getOrderdate()) };
+	        outerTable.addRow(qTxt);
+	    }
+//		for (int i = 0; i < listCount; i++) {
+//			String temp = dtoList.get(i).getProname();
+//			String[] qTxt = { temp, dtoList.get(i).getPayment(), dtoList.get(i).getPayprice(),
+//					dtoList.get(i).getSpendpoints(), dtoList.get(i).getOrderdate() };
+//			outerTable.addRow(qTxt);
+//		}
 	}
-	
-	
+
 } // End

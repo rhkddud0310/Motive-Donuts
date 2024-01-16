@@ -487,97 +487,88 @@ public class PaymentComplete extends JFrame {
 
 	// PURCHASE TABLE DATA 구매내역 데이터에서 불러오기
 
-	private void receiptTableData() {
+		private void receiptTableData() {
 
-		PaymentCompleteDao paymentCompleteDao = new PaymentCompleteDao(proname, sellprice, purqty);
-		ArrayList<PaymentCompleteDto> dtoList = paymentCompleteDao.selectList();
+			PaymentCompleteDao paymentCompleteDao = new PaymentCompleteDao(proname, sellprice, purqty);
+			ArrayList<PaymentCompleteDto> dtoList = paymentCompleteDao.selectList();
 
-		int listCount = dtoList.size();
+			int listCount = dtoList.size();
 
-		for (int i = 0; i < listCount; i++) {
+			for (int i = 0; i < listCount; i++) {
 
-			String[] temp = { dtoList.get(i).getProname(), 
-										   Integer.toString(dtoList.get(i).getSellprice()),
-										   Integer.toString(dtoList.get(i).getPurqty()),
-										   };
-			
-			outerTable.addRow(temp);
+				String[] temp = { dtoList.get(i).getProname(), 
+											   Integer.toString(dtoList.get(i).getSellprice()),
+											   Integer.toString(dtoList.get(i).getPurqty()),
+											   };
+				
+				outerTable.addRow(temp);
+
+			}
 
 		}
-
-	}
-	
-	
-	//PURCHASE TABLE DATA 결제금액  불러오기 
-	
-	private void totalPrice() {
-		
-		int price = 0;
-
-		PaymentCompleteDao dao = new PaymentCompleteDao(price);
-		price = dao.totalPrice();
-		tfTotalPrice.setText(Integer.toString(price));
-	
-		
-	}
-	
-	
-
-	//PURCHASE TABLE DATA 결제수단  불러오기 
-	private void myPayment() {
-	
-		
-		String paymentmethod = "";
-
-		PaymentCompleteDao dao = new  PaymentCompleteDao(paymentmethod);
-		paymentmethod = dao.myPayment();
-		tfPaymentMethod.setText(paymentmethod);
-	
-		
-	}
-	
-
-	//PURCHASE TABLE DATA  사용한 포인트 불러오기 
-	private void myGetSpentPoints() {
-		
-		int points = 0;
-
-		PaymentCompleteDao dao = new PaymentCompleteDao(points);
-		points = dao.myGetSpentPoints();
-		tfUsedPoints.setText(Integer.toString(points));
-	
 		
 		
-	}
-	
-	
-	
-	//PURCHASE TABLE DATA  받은 포인트 불러오기 
-	
-	
-	private void receivedPoints() {
-
-		int receivedPoints = 0;
-
-		PaymentCompleteDao dao = new PaymentCompleteDao(receivedPoints);
-		receivedPoints = dao.receivedPoints();
-		tfGetPoints.setText(Integer.toString(receivedPoints));
-	
+		//PURCHASE TABLE DATA 결제금액  불러오기 
 		
-	
+		private void totalPrice() {
+			
+			int price = 0;
+
+			PaymentCompleteDao dao = new PaymentCompleteDao(price);
+			price = dao.totalPrice();
+			tfTotalPrice.setText(Integer.toString(price));
 		
-	}
+			
+		}
+		
+		
+
+		//PURCHASE TABLE DATA 결제수단  불러오기 
+		private void myPayment() {
+		
+			
+			String paymentmethod = "";
+
+			PaymentCompleteDao dao = new  PaymentCompleteDao(paymentmethod);
+			paymentmethod = dao.myPayment();
+			tfPaymentMethod.setText(paymentmethod);
+		
+			
+		}
+		
+
+		//PURCHASE TABLE DATA  사용한 포인트 불러오기 
+		private void myGetSpentPoints() {
+			
+			int points = 0;
+
+			PaymentCompleteDao dao = new PaymentCompleteDao(points);
+			points = dao.myGetSpentPoints();
+			tfUsedPoints.setText(Integer.toString(points));
+		
+			
+			
+		}
+		
+		
+		
+		//PURCHASE TABLE DATA  받은 포인트 불러오기 
+		
+		
+		private void receivedPoints() {
+
+			int receivedPoints = 0;
+
+			PaymentCompleteDao dao = new PaymentCompleteDao(receivedPoints);
+			receivedPoints = dao.receivedPoints();
+			tfGetPoints.setText(Integer.toString(receivedPoints));
+		
+			
+		
+			
+		}
 
 
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-} // End
+		
+	} // End

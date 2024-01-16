@@ -19,7 +19,18 @@ public class MyOrderListDto {
 		// TODO Auto-generated constructor stub
 	}
 	
-	
+	public MyOrderListDto(String proname, String payment, int payprice, int spendpoints, int accupoints,
+			Timestamp orderdate) {
+		super();
+		this.proname = proname;
+		this.payment = payment;
+		this.payprice = payprice;
+		this.spendpoints = spendpoints;
+		this.accupoints = accupoints;
+		this.orderdate = orderdate;
+	}
+
+
 	public MyOrderListDto(String custid, int accupoints, int spendpoints) {
 		super();
 		this.custid = custid;
